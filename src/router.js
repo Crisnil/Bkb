@@ -24,6 +24,7 @@ import ServiceRequest from "./containers/ServiceRequest";
 import SrList from "./containers/SrList";
 import Registration from "./containers/Registration";
 import SrInformation from "./containers/SrInformation";
+import TestMap from "./containers/TestMap";
 
 
 
@@ -106,7 +107,8 @@ const Drawer = createDrawerNavigator(
     SRList:{screen: SrList} ,
     Services:{screen: ServiceRequest},
     Registration:{screen: Registration},
-    SrInformation:{screen: SrInformation}
+    SrInformation:{screen: SrInformation},
+    TestMap:{screen:TestMap}
   },
   {
     initialRouteName: "Home",
@@ -116,6 +118,8 @@ const Drawer = createDrawerNavigator(
     contentComponent: props => <SideBar {...props} />
   }
 );
+
+
 
 const AppNavigator = createStackNavigator(
   {

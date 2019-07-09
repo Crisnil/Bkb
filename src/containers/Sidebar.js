@@ -40,6 +40,12 @@ class SideBar extends Component {
                 bg: "#C5F442"
             },
             {
+                name: "Map",
+                route: "TestMap",
+                icon: "phone-portrait",
+                bg: "#C5F442"
+            },
+            {
                 name: "Settings",
                 route: "Login",
                 icon: "phone-portrait",
