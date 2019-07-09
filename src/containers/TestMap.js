@@ -1,89 +1,82 @@
 import React from 'react';
-import {
-    StyleSheet,
-    View,
-    Text,
-    Dimensions,
-    TouchableOpacity,
-    Platform,
-} from 'react-native';
+import { Platform,StyleSheet, View, Text, Dimensions } from 'react-native';
 
-import MapView, {
-    ProviderPropType,
-    Marker,
-    AnimatedRegion,
-} from 'react-native-maps';
+import MapView, { Callout, Marker, ProviderPropType,PROVIDER_GOOGLE, PROVIDER_DEFAULT } from 'react-native-maps';
 
-const screen = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
-const ASPECT_RATIO = screen.width / screen.height;
+const ASPECT_RATIO = width / height;
 const LATITUDE = 37.78825;
 const LONGITUDE = -122.4324;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+
+const IOS = Platform.OS === 'ios';
+const ANDROID = Platform.OS === 'android';
 
 class TestMap extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            coordinate: new AnimatedRegion({
+            region: {
                 latitude: LATITUDE,
                 longitude: LONGITUDE,
-            }),
+                latitudeDelta: LATITUDE_DELTA,
+                longitudeDelta: LONGITUDE_DELTA,
+            },
+            poi: null,
         };
+
+        this.onPoiClick = this.onPoiClick.bind(this);
     }
 
-    animate() {
-        const { coordinate } = this.state;
-        const newCoordinate = {
-            latitude: LATITUDE + (Math.random() - 0.5) * (LATITUDE_DELTA / 2),
-            longitude: LONGITUDE + (Math.random() - 0.5) * (LONGITUDE_DELTA / 2),
-        };
+    onPoiClick = (e)=> {
+            const poi = e.nativeEvent;
 
-        if (Platform.OS === 'android') {
-            if (this.marker) {
-                this.marker._component.animateMarkerToCoordinate(newCoordinate, 500);
-            }
-        } else {
-            coordinate.timing(newCoordinate).start();
-        }
+            this.setState({
+                poi,
+            });
     }
 
     render() {
         return (
             <View style={styles.container}>
                 <MapView
+                    provider={Platform.OS === 'android' ? PROVIDER_GOOGLE : PROVIDER_DEFAULT}
                     style={styles.map}
-                    initialRegion={{
-                        latitude: 37.78825,
-                        longitude: -122.4324,
-                        latitudeDelta: 0.0922,
-                        longitudeDelta: 0.0421,
-                    }}
-                />
+                    initialRegion={this.state.region}
+                    onPoiClick={this.onPoiClick}
+                >
+                    {this.state.poi && (
+                        <Marker coordinate={this.state.poi.coordinate}>
+                            <Callout>
+                                <View>
+                                    <Text>Place Id: {this.state.poi.placeId}</Text>
+                                    <Text>Name: {this.state.poi.name}</Text>
+                                </View>
+                            </Callout>
+                        </Marker>
+                    )}
+                </MapView>
             </View>
         );
     }
 }
 
+TestMap.propTypes = {
+    provider: ProviderPropType,
+};
+
 const styles = StyleSheet.create({
     container: {
-        position:'absolute',
-        top:0,
-        left:0,
-        right:0,
-        bottom:0,
-        alignItems: 'center',
+        ...StyleSheet.absoluteFillObject,
         justifyContent: 'flex-end',
+        alignItems: 'center',
     },
     map: {
-        position:'absolute',
-        top:0,
-        left:0,
-        right:0,
-        bottom:0,
+        ...StyleSheet.absoluteFillObject,
     },
 });
 
-export  default TestMap
+export default TestMap;
