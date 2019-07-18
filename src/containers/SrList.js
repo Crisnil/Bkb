@@ -12,7 +12,7 @@ import {
     Thumbnail,
     Left,
     Body,
-    Right
+    Right, FooterTab, Footer
 } from "native-base";
 
 import {FlatList, StyleSheet} from "react-native";
@@ -71,10 +71,11 @@ class SrList extends Component {
     }
 
     renderItems =({item})=>{
+
         return(
             <ListItem thumbnail>
                 <Left>
-                    <Icon name ="speedometer" />
+                    <Icon name='checkmark-circle' />
                 </Left>
                 <Body>
                 <Text>
@@ -95,27 +96,41 @@ class SrList extends Component {
         )
     }
     render() {
+        const { navigate } = this.props.navigation;
         return (
             <Container style={styles.container}>
                 <Header>
-                    <Left>
-                        <Button transparent onPress={() => this.props.navigation.goBack()}>
-                            <Icon name="arrow-back" />
-                        </Button>
-                    </Left>
+                    <Button
+                        transparent
+                        onPress={() => this.props.navigation.openDrawer()}
+                    >
+                        <Icon name="ios-menu" />
+                    </Button>
                     <Body>
                     <Title>SR History </Title>
                     </Body>
                     <Right />
                 </Header>
 
-                <Content>
+                <Content padder>
                     <FlatList
                         data={datas}
                         keyExtractor={item => item.text}
                         renderItem={this.renderItems}
                     />
                 </Content>
+                <Footer>
+                    <FooterTab>
+                        <Button >
+                            <Icon type="MaterialIcons" name="check" />
+                            <Text>Active</Text>
+                        </Button>
+                        <Button vertical>
+                            <Icon name="close" />
+                            <Text>Archive</Text>
+                        </Button>
+                    </FooterTab>
+                </Footer>
             </Container>
         );
     }

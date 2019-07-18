@@ -2,7 +2,9 @@
   package="com.bkbproject">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <application
       android:name=".MainApplication"
       android:label="@string/app_name"
@@ -12,7 +14,7 @@
       android:theme="@style/AppTheme">
         <meta-data
                 android:name="com.google.android.geo.API_KEY"
-                android:value="API_key"/>
+                android:value="AIzaSyDAMt8MF8rgeK3FbWsq8MCWL0NHsDy6Oys"/>
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"

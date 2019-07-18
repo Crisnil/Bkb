@@ -10,8 +10,9 @@ export default {
   },
   logoContainer: {
     flex: 1,
-    marginTop: deviceHeight / 8,
-    marginBottom: 30
+    marginTop: deviceHeight / 10,
+    marginBottom: 30,
+    alignItems:'center'
   },
   logo: {
     position: "absolute",

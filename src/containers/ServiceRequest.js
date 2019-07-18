@@ -48,7 +48,7 @@ class ServiceRequest extends Component {
                         </Button>
                     </Left>
                     <Body>
-                    <Title>Login</Title>
+                    <Title>Create Service Request</Title>
                     </Body>
                     <Right>
                         <Button
@@ -59,7 +59,6 @@ class ServiceRequest extends Component {
                         </Button>
                     </Right>
                 </Header>
-
                 <Content padder>
                     <Form>
                         <Item stackedLabel>
@@ -82,34 +81,33 @@ class ServiceRequest extends Component {
                             <Picker
                                 mode="dropdown"
                                 iosIcon={<Icon name="arrow-down" />}
-                                style={{ width: undefined,padding:10,marginTop:5 }}
-                                placeholder="Select your SIM"
-                                placeholderStyle={{ color: "#bfc6ea" }}
-                                placeholderIconColor="#007aff"
-                                selectedValue={this.state.selected1}
+                                headerStyle={{ backgroundColor: "#b95dd3" }}
+                                headerBackButtonTextStyle={{ color: "#fff" }}
+                                headerTitleStyle={{ color: "#fff" }}
+                                selectedValue={this.state.selected}
                                 onValueChange={this.onValueChange.bind(this)}
                             >
-                                <Picker.Item label="Wallet" value="key0" />
-                                <Picker.Item label="ATM Card" value="key1" />
-                                <Picker.Item label="Debit Card" value="key2" />
-                                <Picker.Item label="Credit Card" value="key3" />
-                                <Picker.Item label="Net Banking" value="key4" />
+                                <Picker.Item label="Towing" value="key0" />
+                                <Picker.Item label="Engine Failure" value="key1" />
+                                <Picker.Item label="Flat Tire" value="key2" />
+                                <Picker.Item label="Empty Gas" value="key3" />
+                                <Picker.Item label="Overheating" value="key4" />
                             </Picker>
                         </Item>
                     </Form>
-                    <Button block style={{ margin: 15, marginTop: 50 }}>
-                        <Text>Submit Request</Text>
-                    </Button>
-                    <Button block danger style={{ margin: 15, marginTop: 10 }}>
-                        <Text>Clear</Text>
-                    </Button>
+                    {/*<Button block style={{ margin: 15, marginTop: 50 }}>*/}
+                        {/*<Text>Submit Request</Text>*/}
+                    {/*</Button>*/}
+                    {/*<Button block danger style={{ margin: 15, marginTop: 10 }}>*/}
+                        {/*<Text>Clear</Text>*/}
+                    {/*</Button>*/}
                 </Content>
 
                 <Footer>
                     <FooterTab>
                         <Button>
                             <Icon name="call" style={{color:'green'}}/>
-                            <Text>Call BKB</Text>
+                            <Text>Submit Request</Text>
                         </Button>
                     </FooterTab>
                 </Footer>

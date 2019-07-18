@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
+    "android": "react-native run-android",
     "test": "jest"
   },
   "dependencies": {
@@ -20,6 +21,7 @@
     "prop-types": "^15.7.2",
     "rc-form": "^2.4.5",
     "react": "16.8.3",
+    "react-addons-update": "^15.6.2",
     "react-dom": "^16.8.6",
     "react-native": "0.59.10",
     "react-native-action-button": "git+https://github.com/kn4rfy/react-native-action-button.git",
@@ -43,14 +45,11 @@
   },
   "devDependencies": {
     "@babel/core": "^7.4.5",
-    "@babel/runtime": "^7.4.5",
-    "babel-jest": "^24.8.0",
-    "jest": "^24.8.0",
-    "metro-react-native-babel-preset": "^0.54.1",
-    "react-test-renderer": "16.8.3",
     "@babel/plugin-proposal-decorators": "^7.4.4",
+    "@babel/runtime": "^7.4.5",
     "@react-native-community/eslint-config": "^0.0.5",
     "babel-eslint": "^10.0.1",
+    "babel-jest": "^24.8.0",
     "babel-plugin-import": "^1.11.0",
     "eslint": "^5.16.0",
     "eslint-config-airbnb": "^17.1.0",
@@ -60,7 +59,10 @@
     "eslint-plugin-prettier": "^3.1.0",
     "eslint-plugin-react": "^7.13.0",
     "husky": "^2.3.0",
-    "prettier": "^1.17.1"
+    "jest": "^24.8.0",
+    "metro-react-native-babel-preset": "^0.54.1",
+    "prettier": "^1.17.1",
+    "react-test-renderer": "16.8.3"
   },
   "jest": {
     "preset": "react-native"

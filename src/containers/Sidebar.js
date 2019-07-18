@@ -29,32 +29,26 @@ class SideBar extends Component {
         datas : [
             {
                 name: "Service Request",
-                route: "Services",
-                icon: "phone-portrait",
+                route: "TestMap",
+                icon: "navigate",
                 bg: "#C5F442"
             },
             {
                 name: "SR List",
                 route: "SRList",
-                icon: "phone-portrait",
-                bg: "#C5F442"
-            },
-            {
-                name: "Map",
-                route: "TestMap",
-                icon: "phone-portrait",
+                icon: "paper",
                 bg: "#C5F442"
             },
             {
                 name: "Settings",
                 route: "Login",
-                icon: "phone-portrait",
+                icon: "settings",
                 bg: "#C5F442"
             },
             {
                 name: "Logout",
                 route: "Login",
-                icon: "phone-portrait",
+                icon: "settings",
                 bg: "#C5F442"
             },
 

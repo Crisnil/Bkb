@@ -92,7 +92,7 @@ class Registration extends Component {
 
                 <Footer>
                     <FooterTab>
-                        <Button >
+                        <Button     onPress={() => this.props.navigation.navigate("TestMap")}>
                             <Icon type="MaterialIcons" name="check" />
                             <Text>Submit</Text>
                         </Button>

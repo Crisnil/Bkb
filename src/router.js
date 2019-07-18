@@ -1,12 +1,12 @@
 import React, { PureComponent } from 'react'
-import { BackHandler, Linking, Platform,Easing,Animated } from 'react-native'
+import { BackHandler, Linking, Platform,Easing,Animated,PermissionsAndroid,Alert } from 'react-native'
 import {
     createAppContainer,
     createBottomTabNavigator,
     createStackNavigator,
-    createDrawerNavigator,
+    createDrawerNavigator, createSwitchNavigator,
 } from 'react-navigation'
-import { Root } from "native-base";
+import { Root,Toast } from "native-base";
 import AsyncStorage from '@react-native-community/async-storage'
 import ExitApp from 'react-native-exit-app'
 import { connect } from 'react-redux'
@@ -25,119 +25,114 @@ import SrList from "./containers/SrList";
 import Registration from "./containers/Registration";
 import SrInformation from "./containers/SrInformation";
 import TestMap from "./containers/TestMap";
+import Terms from "./containers/Terms";
 
 
+export async function request_location_runtime_permission() {
 
+    try {
+        const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+            {
+                'title': 'ReactNativeCode Location Permission',
+                'message': 'ReactNativeCode App needs access to your location '
+            }
+        )
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
 
-// const HomeNavigator = createBottomTabNavigator({
-//
-//     Home: { screen: Home },
-//     Account: { screen: Account },
-// })
-//
-// HomeNavigator.navigationOptions = ({ navigation }) => {
-//     const { routeName } = navigation.state.routes[navigation.state.index]
-//
-//     return {
-//         headerTitle: routeName,
-//     }
-// }
-//
-//
-// const MainNavigator = createStackNavigator(
-//     {
-//         HomeNavigator: {
-//             screen: HomeNavigator,
-//             navigationOptions: {
-//                 header: <CustomTitleBar title={'Dashboard'} showBackButton={false}/>,
-//                 gesturesEnabled: false,
-//             },
-//         },
-//         Detail: { screen: Detail },
-//     }
-//
-// )
-//
-// const ModalNavigator = createStackNavigator(
-//     {
-//
-//         Main: { screen: MainNavigator },
-//         Login: { screen: Login },
-//
-//     },
-//     {
-//         headerMode: 'none',
-//         mode: 'modal',
-//         navigationOptions: {
-//             gesturesEnabled: false,
-//         },
-//         transitionConfig: () => ({
-//             transitionSpec: {
-//                 duration: 300,
-//                 easing: Easing.out(Easing.poly(4)),
-//                 timing: Animated.timing,
-//             },
-//             screenInterpolator: sceneProps => {
-//                 const { layout, position, scene } = sceneProps
-//                 const { index } = scene
-//
-//                 const height = layout.initHeight
-//                 const translateY = position.interpolate({
-//                     inputRange: [index - 1, index, index + 1],
-//                     outputRange: [height, 0, 0],
-//                 })
-//
-//                 const opacity = position.interpolate({
-//                     inputRange: [index - 1, index - 0.99, index],
-//                     outputRange: [0, 1, 1],
-//                 })
-//
-//                 return { opacity, transform: [{ translateY }] }
-//             },
-//         }),
-//     }
-// )
-//
-// const Navigator = createAppContainer(ModalNavigator)
+            Toast.show({
+                text: "Location Granted!",
+                buttonText: "Okay",
+                duration: 3000,
+                type:'danger'});
+        }
+        else {
+
+            Toast.show({
+                text: "Needs Permission",
+                buttonText: "Okay",
+                duration: 3000,
+                type:'danger'});
+
+        }
+    } catch (err) {
+        console.warn(err)
+    }
+}
+
 
 const Drawer = createDrawerNavigator(
-  {
-    Home: { screen: Home },
-    Login:{screen: Login},
-    SRList:{screen: SrList} ,
-    Services:{screen: ServiceRequest},
-    Registration:{screen: Registration},
-    SrInformation:{screen: SrInformation},
-    TestMap:{screen:TestMap}
-  },
-  {
-    initialRouteName: "Home",
-    contentOptions: {
-      activeTintColor: "#e91e63"
+    {
+        SRList:{screen: SrList} ,
+        Services:{screen: ServiceRequest},
+        SrInformation:{screen: SrInformation},
+        TestMap:{screen:TestMap},
+        TermsAndPrivacy: { screen: Terms }
     },
-    contentComponent: props => <SideBar {...props} />
-  }
+    {
+        contentOptions: {
+            activeTintColor: "#e91e63"
+        },
+        contentComponent: props => <SideBar {...props} />
+    }
+
 );
+const OnboardingNavigator = createSwitchNavigator(
+    {
+        Logged: createStackNavigator({
+            Drawer: { screen:Drawer},
+            TermsAndPrivacy: { screen: Terms }
+        },{headerMode:'none'}),
 
-
+        Unlogged: createStackNavigator(
+            {
+                Home: {screen:Home},
+                Login: {screen:Login},
+                Register: {screen:Registration},
+            }, {
+                headerMode: 'none',
+                initialRouteName: 'Home' // First screen the user is redirected to
+            }
+        )
+    }, {
+        initialRouteName: 'Unlogged',
+    }
+);
 
 const AppNavigator = createStackNavigator(
-  {
-    Drawer: { screen: Drawer },
-    Home: { screen: Home},
-    Detail: { screen: Detail },
-    SRList:{screen: SrList} ,
-    Login: { screen: Login },
-    Register:{screen: Registration},
-    SrInformation:{screen: SrInformation}
-  },
-  {
-    initialRouteName: "Drawer",
-    headerMode: "none"
-  }
+    {
+        Drawer: { screen: Drawer },
+        Detail: { screen: Detail },
+        SRList:{screen: SrList} ,
+
+        SrInformation:{screen: SrInformation},
+        TestMap:{screen:TestMap}
+    },
+    {
+        headerMode: 'none',
+        initialRouteName: "Drawer",
+    }
 );
 
-const AppContainer = createAppContainer(AppNavigator);
+const RootNavigator = createSwitchNavigator(
+    {
+        Onboarding: {
+            screen: OnboardingNavigator,
+        },
+        Main: {
+            screen: AppNavigator,
+        },
+    },
+    {
+        headerMode: 'none'
+    }
+    //{} Here we can define navigation options, we'll have a look later.
+);
+
+
+
+
+const AppContainer = createAppContainer(RootNavigator);
 
 function getActiveRouteName(navigationState) {
     if (!navigationState) {
@@ -152,6 +147,11 @@ function getActiveRouteName(navigationState) {
 // @connect(({ app }) => ({ app }))
 export default class Router extends PureComponent {
 
+    async componentDidMount() {
+
+        await request_location_runtime_permission()
+
+    }
 
     componentWillMount() {
         BackHandler.addEventListener('hardwareBackPress', this.backHandle)

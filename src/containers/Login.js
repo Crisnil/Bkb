@@ -16,7 +16,7 @@ import {
     Form,
     Label,
     Input,
-    Item
+    Item, View
 } from "native-base";
 class Login extends Component {
 
@@ -38,38 +38,36 @@ class Login extends Component {
                             <Text>Login</Text>
                         </Button>
                     </Left>
-                    <Body>
+                    <Body style={{alignContent:'center'}}>
                     <Title>Login</Title>
                     </Body>
-                    <Right>
-                        <Button
-                            transparent
-                            onPress={() => this.props.navigation.openDrawer()}
-                        >
-                            <Icon name="ios-menu" />
-                        </Button>
-                    </Right>
+                    <Right/>
+
                 </Header>
 
                 <Content>
-                    <Form>
-                        <Item floatingLabel>
-                            <Label>Username</Label>
-                            <Input />
-                        </Item>
-                        <Item floatingLabel last>
-                            <Label>Password</Label>
-                            <Input secureTextEntry />
-                        </Item>
-                    </Form>
-                    <Button block style={{ margin: 15, marginTop: 50 }}>
-                        <Text>Sign In</Text>
-                    </Button>
-                    <Button block info style={{ margin: 15, marginTop: 10 }}
-                            onPress={() => this.props.navigation.navigate("Register")}
-                    >
-                        <Text>Register</Text>
-                    </Button>
+                    <View>
+                        <Form>
+                            <Item floatingLabel>
+                                <Label>Username</Label>
+                                <Input />
+                            </Item>
+                            <Item floatingLabel last>
+                                <Label>Password</Label>
+                                <Input secureTextEntry />
+                            </Item>
+                        </Form>
+                        <Button block style={{ margin: 15, marginTop: 50 }}
+                                onPress={() => this.props.navigation.navigate("TermsAndPrivacy")}
+                        >
+                            <Text>Sign In</Text>
+                        </Button>
+                        <Button block info style={{ margin: 15, marginTop: 10 }}
+                                onPress={() => this.props.navigation.navigate("Register")}
+                        >
+                            <Text>Register</Text>
+                        </Button>
+                    </View>
                 </Content>
 
                 <Footer>
