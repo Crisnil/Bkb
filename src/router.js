@@ -8,7 +8,6 @@ import {
 } from 'react-navigation'
 import { Root,Toast } from "native-base";
 import AsyncStorage from '@react-native-community/async-storage'
-import ExitApp from 'react-native-exit-app'
 import { connect } from 'react-redux'
 import * as Config from './config/Config'
 
@@ -43,7 +42,7 @@ export async function request_location_runtime_permission() {
             Toast.show({
                 text: "Location Granted!",
                 buttonText: "Okay",
-                duration: 3000,
+                duration: 1000,
                 type:'danger'});
         }
         else {

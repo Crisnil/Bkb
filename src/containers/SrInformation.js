@@ -13,13 +13,24 @@ import {
     Thumbnail,
     Left,
     Right,
-    Body, Fab, IconNB, H3, Footer, FooterTab
+    Body, Fab, IconNB, H3, Footer, FooterTab,ActionSheet
 } from "native-base";
 import styles from "./styles";
 
 const deviceWidth = Dimensions.get("window").width;
 const logo = require("../assets/logo.png");
 const cardImage = require("../assets/drawer-cover.png");
+
+const rate = [
+    { text: "Excellent", icon: "american-football", iconColor: "#2c8ef4" },
+    { text: "Very Good", icon: "analytics", iconColor: "#f42ced" },
+    { text: "Good", icon: "aperture", iconColor: "#ea943b" },
+    { text: "Fair", icon: "trash", iconColor: "#fa213b" },
+    { text: "Poor", icon: "close", iconColor: "#25de5b" }
+]
+
+const DESTRUCTIVE_INDEX = 3;
+const CANCEL_INDEX = 4;
 
 class SrInformation extends Component {
     constructor(props) {
@@ -92,6 +103,24 @@ class SrInformation extends Component {
                                     <Text>4,923 stars</Text>
                                 </Button>
                             </Left>
+                            <Right>
+                                <Button
+                                    onPress={() =>
+                                        ActionSheet.show(
+                                            {
+                                                options: rate,
+                                                cancelButtonIndex: CANCEL_INDEX,
+                                                destructiveButtonIndex: DESTRUCTIVE_INDEX,
+                                                title: "Rate Service"
+                                            },
+                                            buttonIndex => {
+                                                this.setState({ clicked: rate[buttonIndex] });
+                                            }
+                                        )}
+                                >
+                                    <Text>Rate</Text>
+                                </Button>
+                            </Right>
                         </CardItem>
                     </Card>
                 </Content>

@@ -1,12 +1,13 @@
 import React, { Component } from "react";
-import {Image, ImageBackground, StatusBar, StyleSheet} from "react-native";
+import {Image,ImageBackground, StatusBar, StyleSheet} from "react-native";
 import {Container, Button, H3, Text, Content,View} from "native-base";
-
+import Logo from '../assets/bkblogo.svg';
 import styles from "./styles";
+import * as DeviceRatio from "../layout/DeviceRatio";
 
 const launchscreenBg = require("../assets/launchscreen-bg.png");
 const launchscreenLogo = require("../assets/logo-kitchen-sink.png");
-const redlogo = require("../assets/redmarker.png");
+const redlogo = require("../assets/BKB-Logo.png");
 
 class Home extends Component {
     render() {
@@ -20,10 +21,12 @@ class Home extends Component {
                                 <Image
                                     style={{
                                         flex: 1,
+                                        width: DeviceRatio.computeWidthRatio(1000),
                                         resizeMode,
                                     }}
                                     source={redlogo}
                                 />
+
                             </View>
                             <View
                                 style={{

@@ -17,7 +17,7 @@ import styles from "./sidebar_style";
 
 const drawerCover = require("../assets/drawer-cover.png");
 const drawerImage = require("../assets/logo-kitchen-sink.png");
-const pratik = require("../assets/contacts/pratik.png");
+const pratik = require("../assets/images/male.png");
 
 
 class SideBar extends Component {

@@ -41,14 +41,7 @@ class Registration extends Component {
                     <Body>
                         <Title>Register</Title>
                     </Body>
-                    <Right>
-                        <Button
-                            transparent
-                            onPress={() => this.props.navigation.openDrawer()}
-                        >
-                            <Icon name="ios-menu" />
-                        </Button>
-                    </Right>
+                    <Right/>
                 </Header>
 
                 <Content padder>

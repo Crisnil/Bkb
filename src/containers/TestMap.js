@@ -41,7 +41,6 @@ function randomColor() {
 class TestMap extends React.Component {
     constructor(props) {
         super(props);
-
         this.state = {
             initialLocation:null,
             dest:null,
@@ -63,8 +62,10 @@ class TestMap extends React.Component {
     }
 
     componentDidMount(){
+        console.log("didmount");
         if(Platform.OS === 'android'){
-            this.requestLocationPermission()
+            console.log("android");
+           this.requestLocationPermission()
         }else{
             this._getCurrentLocation()
         }
@@ -79,7 +80,6 @@ class TestMap extends React.Component {
                     'message': 'ReactNativeCode App needs access to your location '
                 }
             )
-
             if (granted === PermissionsAndroid.RESULTS.GRANTED) {
                 this._getCurrentLocation()
                 console.log("Location permission granted")
@@ -101,7 +101,8 @@ class TestMap extends React.Component {
                     latitudeDelta,
                     longitudeDelta,
                 };
-                this.setState({initialLocation:region},()=>{
+                //this.onRegionChangeComplete(region);
+                this.setState({region:region},()=>{
                     console.log("state",this.state)
                     this.onRegionChangeComplete(region);
                 })
@@ -109,7 +110,7 @@ class TestMap extends React.Component {
             },
             (error) => {
                 this.setState({ error: error.message })},
-            { enableHighAccuracy: true, timeout: 200000, maximumAge: 1000 },
+            { enableHighAccuracy: true, timeout: 200000, maximumAge: 2000 },
         );
     }
 
@@ -120,7 +121,7 @@ class TestMap extends React.Component {
         };
 
         this.setState({
-            region:region
+            newState
         });
     };
 
@@ -188,7 +189,7 @@ class TestMap extends React.Component {
         let coordinates = _.clone(e.nativeEvent.coordinate);
         switch(this.state.selected){
             case "pickup":
-                this.setState({initialLocation :coordinates},()=>{
+                this.setState({pickupLoc :coordinates},()=>{
                     this.onMapPress(coordinates ,'pickup')
                 })
             break;
@@ -228,9 +229,9 @@ class TestMap extends React.Component {
     }
 
     render() {
-        const {initialLocation ,pickupLoc,dest,region} = this.state
+        const {pickupLoc,dest,region} = this.state
 
-        let initial = !_.isNull(pickupLoc)? pickupLoc : initialLocation;
+        let initial = !_.isNull(pickupLoc)? pickupLoc : region;
 
         const {height: screenHeight} = Dimensions.get('window');
 
@@ -257,7 +258,6 @@ class TestMap extends React.Component {
                     <Content>
 
                             <View style={{flex: 1, height: screenHeight}}>
-
                                 <MapView
                                     provider={PROVIDER_GOOGLE}
                                     initialRegion={region}
@@ -279,7 +279,6 @@ class TestMap extends React.Component {
                                         />
                                     ))}
                                 </MapView>
-
                                 <View>
                                     <Card style={{backgroundColor: "#FFF"}}>
                                         <Item success={this.state['pickup']? true : false}>
@@ -310,7 +309,7 @@ class TestMap extends React.Component {
                                         mode="dropdown"
                                         iosIcon={<Icon name="arrow-down" />}
                                         style={{ width: undefined }}
-                                        placeholder="Select your SIM"
+                                        placeholder="Problem"
                                         placeholderStyle={{ color: "#bfc6ea" }}
                                         placeholderIconColor="#007aff"
                                         selectedValue={this.state.selected2}
