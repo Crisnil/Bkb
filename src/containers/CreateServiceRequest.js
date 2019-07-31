@@ -108,7 +108,6 @@ class CreateServiceRequest extends  Component {
 
     getNearestAddress =(coord)=>{
             getReverseGeocoding(coord).then(data => {
-                console.log("daa", data);
                 if (data.status === "OK") {
                     if (!_.isEmpty(data.results)) {
                         let address = _.clone(data.results[0]);
@@ -118,21 +117,6 @@ class CreateServiceRequest extends  Component {
                     }
                 }
             })
-    }
-
-
-    getDestinationAddress=(coord)=> {
-        getReverseGeocoding(coord).then(data => {
-            console.log("daa", data);
-            if (data.status === "OK") {
-                if (!_.isEmpty(data.results)) {
-                    let address = _.clone(data.results[0]);
-                    this.setState({
-                        destinationdAddress: address.formatted_address
-                    })
-                }
-            }
-        })
     }
 
     onPanDrag = () => {
@@ -162,7 +146,6 @@ class CreateServiceRequest extends  Component {
 
         let coordinates = _.clone(e.nativeEvent.coordinate);
         getReverseGeocoding(coordinates).then(data => {
-            console.log("selected", data);
             if (data.status === "OK") {
                 if (!_.isEmpty(data.results)) {
 
