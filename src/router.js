@@ -25,6 +25,11 @@ import Registration from "./containers/Registration";
 import SrInformation from "./containers/SrInformation";
 import TestMap from "./containers/TestMap";
 import Terms from "./containers/Terms";
+import MapContainer from "./containers/map-container";
+import Dashboard from "./containers/Dashboard";
+import VehicleRegistration from "./containers/VehicleRegistration";
+import AddUserDriver from "./containers/AddUserDriver";
+import CreateServiceRequest from "./containers/CreateServiceRequest";
 
 
 export async function request_location_runtime_permission() {
@@ -40,7 +45,7 @@ export async function request_location_runtime_permission() {
         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
 
             Toast.show({
-                text: "Location Granted!",
+                text: "Device Location Granted!",
                 buttonText: "Okay",
                 duration: 1000,
                 type:'danger'});
@@ -62,11 +67,14 @@ export async function request_location_runtime_permission() {
 
 const Drawer = createDrawerNavigator(
     {
+        Dashboard:{screen:Dashboard},
         SRList:{screen: SrList} ,
         Services:{screen: ServiceRequest},
         SrInformation:{screen: SrInformation},
         TestMap:{screen:TestMap},
-        TermsAndPrivacy: { screen: Terms }
+        MapContainer:{screen:MapContainer},
+        TermsAndPrivacy: { screen: Terms },
+        CreateSr:{screen:CreateServiceRequest}
     },
     {
         contentOptions: {
@@ -80,7 +88,6 @@ const OnboardingNavigator = createSwitchNavigator(
     {
         Logged: createStackNavigator({
             Drawer: { screen:Drawer},
-            TermsAndPrivacy: { screen: Terms }
         },{headerMode:'none'}),
 
         Unlogged: createStackNavigator(
@@ -92,24 +99,46 @@ const OnboardingNavigator = createSwitchNavigator(
                 headerMode: 'none',
                 initialRouteName: 'Home' // First screen the user is redirected to
             }
+
         )
     }, {
         initialRouteName: 'Unlogged',
     }
 );
 
+const afterRegister = createStackNavigator(
+
+    {
+        VehicleRegistration:{screen:VehicleRegistration},
+        AddUserDriver:{screen:AddUserDriver}
+    },
+    {
+        headerMode: 'none',
+        initialRouteName:'VehicleRegistration',
+        mode:'modal',
+        navigationOptions: {
+            gesturesEnabled: false,
+        },
+    }
+)
+
 const AppNavigator = createStackNavigator(
     {
         Drawer: { screen: Drawer },
+        Dashboard:{screen:Dashboard},
         Detail: { screen: Detail },
         SRList:{screen: SrList} ,
-
         SrInformation:{screen: SrInformation},
-        TestMap:{screen:TestMap}
+        TestMap:{screen:TestMap},
+        MapContainer:{screen:MapContainer},
+        OnRegisterSuccess:{screen:afterRegister},
+        CreateSr:{screen:CreateServiceRequest}
+
     },
     {
         headerMode: 'none',
         initialRouteName: "Drawer",
+
     }
 );
 
@@ -158,11 +187,12 @@ export default class Router extends PureComponent {
 
     componentWillUnmount() {
         BackHandler.removeEventListener('hardwareBackPress', this.backHandle)
+    }forceUpdate(callBack: () => void): void {
     }
 
     backHandle = () => {
         const currentScreen = getActiveRouteName(this.props.router)
-        if (currentScreen === 'Login') {
+        if (currentScreen === 'Dashboard' || currentScreen === 'Login') {
             return true
         }
         if (currentScreen !== 'Home') {

@@ -28,8 +28,20 @@ class SideBar extends Component {
       shadowRadius: 4,
         datas : [
             {
+                name: "Dashboard",
+                route: "Dashboard",
+                icon: "pie",
+                bg: "#C5F442"
+            },
+            {
                 name: "Service Request",
                 route: "TestMap",
+                icon: "navigate",
+                bg: "#C5F442"
+            },
+            {
+                name: "Create SR",
+                route: "CreateSr",
                 icon: "navigate",
                 bg: "#C5F442"
             },

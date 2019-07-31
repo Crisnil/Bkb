@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { BackHandler, Animated, Easing,StyleSheet } from 'react-native'
+import { BackHandler, Animated, Easing,StyleSheet,Modal} from 'react-native'
 import {
     Container,
     Header,
@@ -16,9 +16,19 @@ import {
     Form,
     Label,
     Input,
-    Item, View
+    Item, View,CheckBox,ListItem
 } from "native-base";
+import {dial} from "../utils/CallDialer";
+import TermsOfService from "../components/Terms";
+
+
 class Login extends Component {
+    constructor(props){
+        super(props);
+        this.state={
+            modalVisible:false
+        }
+    }
 
     // componentWillMount() {
     //     BackHandler.addEventListener('hardwareBackPress', this.backHandle)
@@ -27,6 +37,13 @@ class Login extends Component {
     // componentWillUnmount() {
     //     BackHandler.removeEventListener('hardwareBackPress', this.backHandle)
     // }
+
+
+
+    setModalVisible=(visible)=> {
+        this.setState({modalVisible: visible});
+    }
+
 
     render() {
         return (
@@ -56,9 +73,20 @@ class Login extends Component {
                                 <Label>Password</Label>
                                 <Input secureTextEntry />
                             </Item>
+                            <ListItem style={{marginTop:10}}>
+                                <CheckBox />
+                                    <Body>
+                                        <Text>I agree to the
+                                                 <Text
+                                                onPress={() =>{this.setModalVisible(true)}}>
+                                                    Terms of Service
+                                                </Text>
+                                        </Text>
+                                    </Body>
+                            </ListItem>
                         </Form>
                         <Button block style={{ margin: 15, marginTop: 50 }}
-                                onPress={() => this.props.navigation.navigate("TermsAndPrivacy")}
+                                onPress={() => this.props.navigation.navigate("Dashboard")}
                         >
                             <Text>Sign In</Text>
                         </Button>
@@ -68,6 +96,17 @@ class Login extends Component {
                             <Text>Register</Text>
                         </Button>
                     </View>
+                    <View>
+                        <Modal
+                            animationType="slide"
+                            transparent={false}
+                            visible={this.state.modalVisible}
+                            onRequestClose={() => {
+                               this.setModalVisible(false)
+                            }}>
+                            <TermsOfService/>
+                        </Modal>
+                    </View>
                 </Content>
 
                 <Footer>
@@ -76,7 +115,7 @@ class Login extends Component {
                             <Icon name="person" />
                             <Text>Forgot Password</Text>
                         </Button>
-                        <Button vertical>
+                        <Button vertical onPress={()=>dial('09209502976')}>
                             <Icon name="call" />
                             <Text>Call BKB</Text>
                         </Button>

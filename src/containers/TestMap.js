@@ -3,7 +3,7 @@ import {
     StyleSheet,
     Dimensions,
     TouchableOpacity,
-    Platform, Modal, TouchableHighlight,PermissionsAndroid,Alert
+    Platform, Modal, TouchableHighlight,PermissionsAndroid,Alert,Image
 } from 'react-native';
 import MapView, {
     ProviderPropType,
@@ -18,19 +18,19 @@ import {
     Text,
     Title, View,Spinner
 } from "native-base";
-import _ , { debounce }from 'lodash'
+import _ , { debounce }from 'lodash';
 
 
-const screen = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
-const ASPECT_RATIO = screen.width / screen.height;
+const ASPECT_RATIO = width / height;
 const LATITUDE = 37.78825;
 const LONGITUDE = -122.4324;
-const LATITUDE_DELTA = 0.0522;
-const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
-
-const latitudeDelta = 0.025;
-const longitudeDelta = 0.025;
+const latitudeDelta = 0.0092;
+const longitudeDelta = latitudeDelta * ASPECT_RATIO;
+const apiKey ='AIzaSyDAMt8MF8rgeK3FbWsq8MCWL0NHsDy6Oys';
+const locate_icon = require("../assets/icons/ic_locate.png");
+const budget_active =require("../assets/icons/ic_budget_active.png");
 
 function randomColor() {
     return `#${Math.floor(Math.random() * 16777215)
@@ -62,9 +62,7 @@ class TestMap extends React.Component {
     }
 
     componentDidMount(){
-        console.log("didmount");
         if(Platform.OS === 'android'){
-            console.log("android");
            this.requestLocationPermission()
         }else{
             this._getCurrentLocation()
@@ -153,7 +151,7 @@ class TestMap extends React.Component {
                 return it.key == key
             })
             if (itemIdx > -1) {
-                console.log( "match",marked[itemIdx]);
+               // console.log( "match",marked[itemIdx]);
                 marked[itemIdx] = update(marked[itemIdx], {
                     $set: {
                         coordinate: e,
@@ -204,6 +202,20 @@ class TestMap extends React.Component {
 
     }
 
+    onUserPinDragEnd =(e)=>{
+            this.addMarker(e);
+            this.onMapClick(e);
+    }
+
+    onMapClick=(e)=>{
+        let coordinates = _.clone(e.nativeEvent.coordinate);
+        fetch('https://maps.googleapis.com/maps/api/geocode/json?address=' + coordinates.latitude+","+coordinates.longitude + '&key=' + apiKey)
+            .then((response) => response.json())
+            .then((responseJson) => {
+                console.log('ADDRESS GEOCODE is BACK!! => ',responseJson);
+            })
+    }
+
     onFocus =(selected)=> {
         console.log("active",selected);
         this.setState({
@@ -246,9 +258,9 @@ class TestMap extends React.Component {
                             <Icon name="ios-menu" />
                         </Button>
                     </Left>
-                    <Body style={{alignItems:'center'}}>
-                        <Title>SR REQUEST</Title>
-                    </Body>
+                        <Body style={{alignItems:'center'}}>
+                            <Title>SR REQUEST</Title>
+                        </Body>
                     <Right>
                         <Button transparent onPress={() => this.props.navigation.goBack()}>
                             <Icon name="arrow-back" />
@@ -256,7 +268,51 @@ class TestMap extends React.Component {
                     </Right>
                 </Header>
                     <Content>
-
+                            <View>
+                                <Card style={{backgroundColor: "#FFF"}}>
+                                    <Item success={this.state['pickup']? true : false}>
+                                        <Icon name="home" />
+                                        <Input placeholder="Pick up Location"
+                                               value={!_.isNull(initial)? `${Math.round((initial.longitude + 0.00001) * 100) / 100},${Math.round((initial.latitude + 0.00001) * 100) / 100}`:""}
+                                               onFocus={ () => this.onFocus('pickup')}
+                                               onBlur={()=>this.onBlur('pickup')}
+                                        />
+                                        <Icon name='checkmark-circle' />
+                                        <Button transparent onPress={()=>this.setModalVisible(true)}>
+                                            <Icon  ios='ios-menu' android="md-menu" />
+                                        </Button>
+                                    </Item>
+                                    <Item  success={this.state['destination']? true : false} last>
+                                        <Icon name="navigate" />
+                                        <Input placeholder="Destination(e.g. long,lat)"
+                                               value={!_.isNull(dest)? `${Math.round((dest.longitude + 0.00001) * 100) / 100},${Math.round((dest.latitude + 0.00001) * 100) / 100}`:""}
+                                               onFocus={ () => this.onFocus('destination')}
+                                               onBlur={()=>this.onBlur('destination')}/>
+                                        <Icon name='checkmark-circle' />
+                                        <Button transparent>
+                                            <Icon  ios='ios-menu' android="md-menu" />
+                                        </Button>
+                                    </Item>
+                                    <Item picker>
+                                        <Picker
+                                            mode="dropdown"
+                                            iosIcon={<Icon name="arrow-down" />}
+                                            style={{ width: undefined }}
+                                            placeholder="Problem"
+                                            placeholderStyle={{ color: "#bfc6ea" }}
+                                            placeholderIconColor="#007aff"
+                                            selectedValue={this.state.selected2}
+                                            onValueChange={this.onValueChange2.bind(this)}
+                                        >
+                                            <Picker.Item label="Towing" value="key0" disabled/>
+                                            <Picker.Item label="Engine Failure" value="key1" />
+                                            <Picker.Item label="Flat Tire" value="key2" />
+                                            <Picker.Item label="Empty Gas" value="key3" />
+                                            <Picker.Item label="Overheating" value="key4" />
+                                        </Picker>
+                                    </Item>
+                                </Card>
+                             </View>
                             <View style={{flex: 1, height: screenHeight}}>
                                 <MapView
                                     provider={PROVIDER_GOOGLE}
@@ -271,60 +327,76 @@ class TestMap extends React.Component {
                                     onPress={e =>this.addMarker(e)}
                                 >
                                     {this.state.markers.map(marker => (
-                                        <Marker
+                                        <MapView.Marker
                                             key={marker.key}
+                                            draggable
                                             coordinate={marker.coordinate}
                                             pinColor={marker.color}
                                             title={marker.key}
+                                            onDragEnd={e =>this.onUserPinDragEnd(e)}
                                         />
                                     ))}
                                 </MapView>
-                                <View>
-                                    <Card style={{backgroundColor: "#FFF"}}>
-                                        <Item success={this.state['pickup']? true : false}>
-                                            <Icon name="home" />
-                                            <Input placeholder="Pick up Location"
-                                                   value={!_.isNull(initial)? `${Math.round((initial.longitude + 0.00001) * 100) / 100},${Math.round((initial.latitude + 0.00001) * 100) / 100}`:""}
-                                                   onFocus={ () => this.onFocus('pickup')}
-                                                   onBlur={()=>this.onBlur('pickup')}
-                                            />
-                                            <Icon name='checkmark-circle' />
-                                            <Button transparent onPress={()=>this.setModalVisible(true)}>
-                                                <Icon  ios='ios-menu' android="md-menu" />
-                                            </Button>
-                                        </Item>
-                                        <Item  success={this.state['destination']? true : false} last>
-                                            <Icon name="navigate" />
-                                            <Input placeholder="Destination(e.g. long,lat)"
-                                                   value={!_.isNull(dest)? `${Math.round((dest.longitude + 0.00001) * 100) / 100},${Math.round((dest.latitude + 0.00001) * 100) / 100}`:""}
-                                                   onFocus={ () => this.onFocus('destination')}
-                                                   onBlur={()=>this.onBlur('destination')}/>
-                                            <Icon name='checkmark-circle' />
-                                        <Button transparent>
-                                        <Icon  ios='ios-menu' android="md-menu" />
-                                        </Button>
-                                        </Item>
-                                        <Item picker>
-                                        <Picker
-                                        mode="dropdown"
-                                        iosIcon={<Icon name="arrow-down" />}
-                                        style={{ width: undefined }}
-                                        placeholder="Problem"
-                                        placeholderStyle={{ color: "#bfc6ea" }}
-                                        placeholderIconColor="#007aff"
-                                        selectedValue={this.state.selected2}
-                                        onValueChange={this.onValueChange2.bind(this)}
-                                        >
-                                        <Picker.Item label="Towing" value="key0" disabled/>
-                                        <Picker.Item label="Engine Failure" value="key1" />
-                                        <Picker.Item label="Flat Tire" value="key2" />
-                                        <Picker.Item label="Empty Gas" value="key3" />
-                                        <Picker.Item label="Overheating" value="key4" />
-                                        </Picker>
-                                        </Item>
-                                    </Card>
+
+                            </View>
+                        <View>
+                            <Image style={{zIndex:2, height:38, width:38, resizeMode: 'contain',marginRight:12, marginBottom: 24, alignSelf:"flex-end"}}
+                                   source={locate_icon}/>
+                            <View style={styles.mobilPilihanContainer}>
+                                <View style={styles.mobilTop}>
+                                    <View
+                                        style={{
+                                            flex:1,
+                                        }}
+                                    >
+                                        <View style={{alignSelf: 'center',marginTop:5,height:3,width:29,borderRadius:2,backgroundColor:'#CCD6DD'}}/>
+
+                                    </View>
+
+                                    <View
+                                        style={{
+                                            flex:10,
+                                            alignItems: 'center',
+                                            flexDirection:'row',
+                                            paddingLeft:23,
+                                            paddingRight:23,
+                                        }}
+                                    >
+                                        <View style={{
+                                            flex:2
+                                        }}>
+                                            <Image style={{zIndex:2, height:22, width:27, resizeMode: 'contain'}}
+                                                   source={budget_active}/>
+                                        </View>
+
+                                        <View style={{
+                                            flex:8
+                                        }}>
+                                            <Text style={{color:"#313541", fontSize:15,
+                                            }}>GrabCar</Text>
+                                        </View>
+
+                                        <View style={{
+                                            flex:2,
+
+                                        }}>
+                                            <Text style={{alignSelf:"flex-end"}}>2 Min</Text>
+                                        </View>
+
+
+                                    </View>
+                                </View>
+                                <View style={styles.mobilEffect}>
+
                                 </View>
                             </View>
+                            <View style={styles.dropOffButton}>
+                                <Text style={{
+                                    color:'#fff',
+                                    fontWeight:'400'
+                                }}>CHOOSE YOUR DROP-OFF</Text>
+                            </View>
+                        </View>
                         <View>
                             <Modal
                                 animationType="slide"
@@ -401,6 +473,90 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: 'bold',
 
+    },
+    bottomContainer:{
+        flex:1,
+        zIndex:2,
+
+        position: 'absolute',
+        ...Platform.select({
+            ios: {
+                bottom:8,
+            },
+            android: {
+                bottom:30,
+            },
+        }),
+    },
+    dropOffButton:{
+        marginLeft:12,
+        marginRight:12,
+        borderRadius:2,
+        backgroundColor: '#008D33',
+        height:56,
+        width:width-24,
+        zIndex:2,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    iosOnlyTopBar:{
+        backgroundColor: '#00B140',
+        zIndex:2,
+        ...Platform.select({
+            ios: {
+                height: 20,
+            },
+            android: {
+                height: 0,
+            },
+        }),
+    },
+    topBarContainer:{
+        backgroundColor: '#00B140',
+        zIndex:2,
+        height: 59,
+        flexDirection:'row',
+        alignItems: 'center',
+
+
+    },
+    homePickerContainer: {
+        zIndex:2,
+        marginTop:10,
+        marginLeft:6,
+        marginRight:6,
+        borderRadius:4,
+        backgroundColor: '#fff',
+        flexDirection:'row',
+        paddingTop:24,
+        paddingBottom:24,
+
+    },
+    mobilPilihanContainer: {
+        marginLeft:12,
+        marginRight:12,
+        borderRadius:4,
+        marginBottom:17,
+        zIndex:2,
+
+    },
+
+    mobilTop: {
+        borderRadius:5,
+        backgroundColor: '#fff',
+        height:72,
+        flexDirection:'column',
+        zIndex:3,
+
+    },
+    mobilEffect: {
+        height:19,
+        marginLeft:14,
+        marginRight:14,
+        marginTop:-7,
+        borderRadius:5,
+        backgroundColor: '#F4F6F8',
+        zIndex:2,
     },
 });
 export default TestMap;

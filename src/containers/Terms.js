@@ -38,19 +38,11 @@ class Terms extends Component {
         console.log("props",this.props)
         return (
             <Container style={styles.container}>
-                <Header>
-                    <Left>
-                        <Button
-                            transparent
-                            onPress={() => this.props.navigation.openDrawer()}
-                        >
-                            <Icon name="ios-menu" />
-                        </Button>
-                    </Left>
+                <Header style={{textAlign:'center'}}>
+                    <Left/>
                     <Body>
                     <Title>Terms and Condition</Title>
                     </Body>
-                    <Right />
                 </Header>
 
                 <Content padder>
@@ -59,7 +51,7 @@ class Terms extends Component {
 
                 <Footer>
                     <FooterTab>
-                        <Button active full onPress={() => this.props.navigation.navigate("SRList")}>
+                        <Button active full onPress={() => this.props.navigation.navigate("Login")}>
                             <Text>Accept</Text>
                         </Button>
                     </FooterTab>
