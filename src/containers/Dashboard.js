@@ -1,31 +1,38 @@
-import React, { Component } from "react";
-import {Image,ImageBackground, StatusBar, StyleSheet} from "react-native";
-import {Container,
-    Header,
-    Title,
-    Content,
-    Button,
-    Left,
-    Right,
+import React, {Component} from "react";
+import {Image, ImageBackground, StatusBar, StyleSheet} from "react-native";
+import {
     Body,
+    Button,
+    Card,
+    CardItem,
+    Container,
+    Content,
+    Fab,
+    Header,
+    Icon,
+    IconNB,
+    Left,
+    ListItem,
+    Right,
+    Switch,
+    Tab,
+    TabHeading,
+    Tabs,
     Text,
     Thumbnail,
-    Fab,
-    IconNB,
-    Icon,
-    View,Card,CardItem,Tab, Tabs, TabHeading,ListItem,Switch
-   } from "native-base";
-import styles from "./styles";
-import * as DeviceRatio from "../layout/DeviceRatio";
-import CustomCard from "../layout/CustomCard";
-import CustomDivider from "../layout/CustomDivider";
-import SrList from "./SrList";
+    Title,
+    View
+} from "native-base";
 import Srlisting from "../components/SrListing";
+import {dial} from "../utils/CallDialer";
+import { connect } from 'react-redux'
+
 const pratik = require("../assets/images/male.png");
 const camera = require("../assets/camera.png");
 
 
 
+@connect(({ service }) => ({ service }))
 class Dashboard extends Component {
     constructor(props){
         super(props);
@@ -34,14 +41,32 @@ class Dashboard extends Component {
         }
     }
 
+    componentDidMount () {
+        this.fetchProblemCategory();
+        this.fetchSrHistory();
+    }
+
     componentWillUnmount() {
         this.setState({active:false})
     }
 
+    fetchProblemCategory =()=>{
+        const {dispatch} = this.props;
+        dispatch({
+            type:'service/requestCategory',
+            payload:{}
+        })
+    }
+
+    fetchSrHistory =()=>{
+        const {dispatch} = this.props;
+        dispatch({
+            type:'service/serviceRequest',
+            payload:{}
+        })
+    }
     render() {
     const {navigation} = this.props;
-
-
         return (
           <Container>
                 <Header hasTabs>
@@ -50,7 +75,7 @@ class Dashboard extends Component {
                             transparent
                             onPress={() => navigation.openDrawer()}
                         >
-                            <Icon name="ios-menu" />
+                            <Icon name="menu" />
                         </Button>
                     </Left>
                     <Body style={{alignContent:'center'}}>
@@ -123,19 +148,16 @@ class Dashboard extends Component {
                       active={this.state.active}
                       direction="up"
                       containerStyle={{}}
-                      style={{ backgroundColor: "#5067FF" }}
+                      style={{ backgroundColor: "#D44638" }}
                       position="bottomRight"
                       onPress={() => this.setState({ active: !this.state.active })}
                   >
-                      <IconNB name="md-share" />
-                      <Button style={{ backgroundColor: "#34A34F" }} onPress={()=>this.props.navigation.navigate("CreateSr")}>
-                          <IconNB name="logo-whatsapp" />
+                      <IconNB name="add" />
+                      <Button style={{ backgroundColor: "#34A34F" }} onPress={()=>dial('09209502976',false)}>
+                         <IconNB name="call" />
                       </Button>
-                      <Button style={{ backgroundColor: "#3B5998" }}>
-                          <IconNB name="logo-facebook" />
-                      </Button>
-                      <Button disabled style={{ backgroundColor: "#DD5144" }}>
-                          <IconNB name="ios-mail" />
+                      <Button style={{ backgroundColor: "#3B5998" }} onPress={()=>navigation.navigate("CreateSr")}>
+                          <IconNB name="build" />
                       </Button>
                   </Fab>
               </View>

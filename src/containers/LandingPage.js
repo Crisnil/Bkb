@@ -25,7 +25,7 @@ export default class LandingPage extends Component {
         super(props);
     }
 
-    componentDidMount() {
+    componentDidMount(){
         const {dispatch} = this.props;
             dispatch({
             type: 'auth/checkAuth',
@@ -33,8 +33,16 @@ export default class LandingPage extends Component {
         })
     }
 
+    onIconPress =(route)=>{
+        const {auth,navigation} = this.props;
+        return()=>{
+            auth.isAuthenticated? navigation.navigate(route) : navigation.navigate("Login")
+        }
+    }
+
     render() {
-        console.log("",this.props)
+        console.log("",this.props);
+
         return (
             <Container styel={{ backgroundColor: 'b3c7f9'}}>
                 <Header>
@@ -47,8 +55,9 @@ export default class LandingPage extends Component {
                         </Button>
                     </Left>
                     <Right>
+
                         <MaterialCommunityIcons name="account-outline" style={{marginRight:10,color:'#fff',fontSize:27}}
-                                                onPress={() => this.props.navigation.navigate("Dashboard")}
+                                                onPress={this.onIconPress("Dashboard")}
                         />
                         <MaterialCommunityIcons name="power"  style={{color:'#fff',fontSize:27}}
                             onPress={()=>BackHandler.exitApp()}
@@ -68,7 +77,7 @@ export default class LandingPage extends Component {
                             source={redlogo}
                         />
                     </View>
-                <LandingComponents {...this.props}/>
+                <LandingComponents {...this.props} onIconPress={this.onIconPress}/>
             </Container>
         );
     }

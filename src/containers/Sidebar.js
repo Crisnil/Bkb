@@ -169,7 +169,7 @@ class SideBar extends Component {
                     </Body>
                     <Right>
                         <Button transparent onPress={() => this.props.navigation.closeDrawer()}>
-                            <Icon name="arrow-back" />
+                            <Icon name="clear-all" />
                         </Button>
                     </Right>
                 </ListItem>
