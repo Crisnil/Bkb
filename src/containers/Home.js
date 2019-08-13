@@ -20,7 +20,7 @@ class Home extends Component {
                                 <Image
                                     style={{
                                         flex: 1,
-                                        width: DeviceRatio.computeWidthRatio(1000),
+                                        width: DeviceRatio.computeWidthRatio(800),
                                         resizeMode,
                                     }}
                                     source={redlogo}

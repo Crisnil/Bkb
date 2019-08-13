@@ -14,78 +14,77 @@ import {
     Button, Thumbnail, Body,
 } from "native-base";
 import styles from "./sidebar_style";
+import { connect } from 'react-redux';
+import _ from 'lodash';
 
 const drawerCover = require("../assets/drawer-cover.png");
 const drawerImage = require("../assets/logo-kitchen-sink.png");
-const pratik = require("../assets/images/male.png");
+const pratik = require("../assets/person.png");
 
 
+
+@connect(({ auth }) => ({ auth }))
 class SideBar extends Component {
   constructor(props) {
     super(props);
     this.state = {
       shadowOffsetWidth: 1,
       shadowRadius: 4,
-        datas : [
-            {
-                name: "Dashboard",
-                route: "Dashboard",
-                icon: "pie",
-                bg: "#C5F442"
-            },
-            {
-                name: "Service Request",
-                route: "TestMap",
-                icon: "navigate",
-                bg: "#C5F442"
-            },
-            {
-                name: "Create SR",
-                route: "CreateSr",
-                icon: "navigate",
-                bg: "#C5F442"
-            },
-            {
-                name: "SR List",
-                route: "SRList",
-                icon: "paper",
-                bg: "#C5F442"
-            },
-            {
-                name: "Settings",
-                route: "Login",
-                icon: "settings",
-                bg: "#C5F442"
-            },
-            {
-                name: "Logout",
-                route: "Login",
-                icon: "settings",
-                bg: "#C5F442"
-            },
-
-        ],
-        stickyHeaderIndices: []
+      stickyHeaderIndices: [],
+      isLogged:false
     };
   }
-    componentWillMount() {
-        var arr = [];
-        this.state.datas.map(obj => {
-            if (obj.header) {
-                arr.push(this.state.datas.indexOf(obj));
-            }
-        });
-        arr.push(0);
-        this.setState({
-            stickyHeaderIndices: arr
-        });
+
+    componentDidMount() {
+        // const { dispatch } = this.props;
+        // dispatch({
+        //     type: 'auth/checkAuth',
+        //     payload:{}
+        // })
     }
+
+    componentWillMount() {
+    //     var arr = [];
+    //     this.state.datas.map(obj => {
+    //         if (obj.header) {
+    //             arr.push(this.state.datas.indexOf(obj));
+    //         }
+    //     });
+    //     arr.push(0);
+    //     this.setState({
+    //         stickyHeaderIndices: arr
+    //     });
+    }
+
+    onClickRoute =(item)=>{
+      return()=>{
+          const { dispatch, navigation } = this.props;
+          switch (item.name) {
+             case 'Logout' :
+                 dispatch({
+                     type: 'auth/logout',
+                     payload:{
+                         callback:(result,error)=>{
+                                 if(result){
+                                     navigation.navigate(item.route);
+                                 }
+                            }
+                     }
+                 })
+             break;
+              default:
+                  navigation.navigate(item.route);
+          }
+      }
+
+    }
+
   renderItem = ({item}) => {
       return(
           <ListItem
               button
               noBorder
-              onPress={() => this.props.navigation.navigate(item.route)}
+              onPress={this.onClickRoute(item)}
           >
             <Left>
                  <Icon active name={item.icon}
@@ -109,6 +108,41 @@ class SideBar extends Component {
 
 
   render() {
+      const{auth} =this.props;
+      const{account}= auth;
+      const notAuthenticatedMenu =[
+
+          {
+              name: "Login",
+              route: "Login",
+              icon: "input",
+              bg: "#C5F442"
+          },
+
+      ];
+
+      const  authenticatedMenu = [
+          {
+              name: "Dashboard",
+              route: "Dashboard",
+              icon: "dashboard",
+              bg: "#C5F442"
+          },
+          {
+              name: "Create SR",
+              route: "CreateSr",
+              icon: "build",
+              bg: "#C5F442"
+          },
+          {
+              name: "Logout",
+              route: "Login",
+              icon: "eject",
+              bg: "#C5F442"
+          },
+
+      ];
+
     return (
       <Container>
           {/*<Header>*/}
@@ -130,8 +164,8 @@ class SideBar extends Component {
                         <Thumbnail source={pratik} />
                     </Left>
                     <Body style={{color:"#fff"}}>
-                    <Text>Kumar Pratik</Text>
-                    <Text note>Doing what you like will always keep you happy . .</Text>
+                    <Text>{!_.isEmpty(account)? account.customername :''}</Text>
+                    <Text note>{!_.isEmpty(account)? account.email : ""}</Text>
                     </Body>
                     <Right>
                         <Button transparent onPress={() => this.props.navigation.closeDrawer()}>
@@ -140,7 +174,7 @@ class SideBar extends Component {
                     </Right>
                 </ListItem>
           <FlatList
-            data={this.state.datas}
+            data={auth.isAuthenticated? authenticatedMenu : notAuthenticatedMenu}
             keyExtractor={item => item.name}
             renderItem={this.renderItem}
             stickyHeaderIndices={this.state.stickyHeaderIndices}

@@ -13,6 +13,7 @@ export default class CustomActivityIndicator extends PureComponent {
 			<View
 				style={{
 					flex: 1,
+					flexDirection: 'row',
 					position: 'absolute',
 					top: 0,
 					right: 0,

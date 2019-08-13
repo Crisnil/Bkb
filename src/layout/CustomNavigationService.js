@@ -1,5 +1,8 @@
 import { DrawerActions, NavigationActions, StackActions } from 'react-navigation'
 import * as CustomAlert from './CustomAlert'
+import React, {
+	BackHandler,
+} from 'react-native';
 
 let navigator
 
@@ -28,24 +31,23 @@ const navigate = (routeName, params = {}) => {
 }
 
 const back = () => () => {
+
 	const currentScreen = getCurrentScreen(navigator.state.nav)
 
 	switch (currentScreen) {
-		case 'Auth':
+		case 'Register':
 			break
 		case 'Dashboard':
 			break
-		case 'DoctorsProgressNotesForm':
-		case 'DoctorsOrdersForm':
-		case 'DischargeSummary':
+		case 'Home' || 'LandingPages':
 			CustomAlert.alert(
 				`Warning!`,
-				`Are you sure you want to leave? Any changes you've made will be deleted.`,
+				`Are you sure you want to leave?`,
 				[
 					{
 						text: 'Leave',
 						onPress: () => {
-							navigator.dispatch(NavigationActions.back())
+							BackHandler.exitApp()
 						},
 					},
 					{

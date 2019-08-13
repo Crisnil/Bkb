@@ -16,7 +16,7 @@ import {
     PermissionsAndroid,
 
     } from "react-native";
-import {Spinner,Button,Body, Container, Header, Left, Right, Title,Icon} from "native-base";
+import {Spinner,Button,Body, Container, Header, Left, Right, Title,Icon,Picker,Footer,FooterTab} from "native-base";
 import React,{Component} from "react";
 import MapView from 'react-native-maps';
 import _ , { debounce }from 'lodash';
@@ -27,6 +27,7 @@ import {
     NavigationActions
 } from 'react-navigation';
 import { getLocation,getReverseGeocoding } from '../services/location-service';
+
 
 
 let { height, width } = Dimensions.get("window");
@@ -207,6 +208,11 @@ class CreateServiceRequest extends  Component {
     }
 
 
+    onValueChange2 =(value: string)=> {
+        this.setState({
+            selected2: value
+        });
+    }
     render() {
 
         const pratik = require("../assets/images/male.png");
@@ -215,6 +221,7 @@ class CreateServiceRequest extends  Component {
         const grabcar_premium =require ("../assets/icons/ic_grabcar_premium.png");
         const grabcar = require('../assets/icons/ic_grabcar.png')
         return (
+           
             <View style={styles.container}>
 
                 <View style={styles.homePickerContainer}>
@@ -329,39 +336,55 @@ class CreateServiceRequest extends  Component {
                                 <View style={{alignSelf: 'center',marginTop:5,height:3,width:29,borderRadius:2,backgroundColor:'#CCD6DD'}}/>
 
                             </View>
-
-                            <View
-                                style={{
-                                    flex:10,
-                                    alignItems: 'center',
-                                    flexDirection:'row',
-                                    paddingLeft:23,
-                                    paddingRight:23,
-                                }}
+                            <Picker
+                                mode="dropdown"
+                                iosIcon={<Icon name="arrow-down" />}
+                                style={{ width: undefined }}
+                                placeholder="Problem"
+                                placeholderStyle={{ color: "#bfc6ea" }}
+                                placeholderIconColor="#007aff"
+                                selectedValue={this.state.selected2}
+                                onValueChange={this.onValueChange2.bind(this)}
                             >
-                                <View style={{
-                                    flex:2
-                                }}>
-                                    <Image style={{zIndex:2, height:22, width:27, resizeMode: 'contain'}}
-                                           source={require('../assets/icons/ic_budget_active.png')}/>
-                                </View>
+                                <Picker.Item label="Towing" value="key0" disabled/>
+                                <Picker.Item label="Flat Battery" value="key1" />
+                                <Picker.Item label="Flat Tire" value="key2" />
+                                <Picker.Item label="Emergency Fuel" value="key3" />
+                                <Picker.Item label="Alternative Tranport" value="key4" />
+                                <Picker.Item label="Key Finder" value="key5" />
+                            </Picker>
+                            {/*<View*/}
+                                {/*style={{*/}
+                                    {/*flex:10,*/}
+                                    {/*alignItems: 'center',*/}
+                                    {/*flexDirection:'row',*/}
+                                    {/*paddingLeft:23,*/}
+                                    {/*paddingRight:23,*/}
+                                {/*}}*/}
+                            {/*>*/}
+                                {/*<View style={{*/}
+                                    {/*flex:2*/}
+                                {/*}}>*/}
+                                    {/*<Image style={{zIndex:2, height:22, width:27, resizeMode: 'contain'}}*/}
+                                           {/*source={require('../assets/icons/ic_budget_active.png')}/>*/}
+                                {/*</View>*/}
 
-                                <View style={{
-                                    flex:8
-                                }}>
-                                    <Text style={{color:"#313541", fontSize:15,
-                                    }}>GrabCar</Text>
-                                </View>
+                                {/*<View style={{*/}
+                                    {/*flex:8*/}
+                                {/*}}>*/}
+                                    {/*<Text style={{color:"#313541", fontSize:15,*/}
+                                    {/*}}>GrabCar</Text>*/}
+                                {/*</View>*/}
 
-                                <View style={{
-                                    flex:2,
+                                {/*<View style={{*/}
+                                    {/*flex:2,*/}
 
-                                }}>
-                                    <Text style={{alignSelf:"flex-end"}}>2 Min</Text>
-                                </View>
+                                {/*}}>*/}
+                                    {/*<Text style={{alignSelf:"flex-end"}}>2 Min</Text>*/}
+                                {/*</View>*/}
 
 
-                            </View>
+                            {/*</View>*/}
                         </View>
                         {/*<View style={styles.mobilEffect}>*/}
 
@@ -380,6 +403,7 @@ class CreateServiceRequest extends  Component {
                 </View>
 
             </View>
+
         );
     }
 }

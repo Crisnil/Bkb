@@ -8,21 +8,13 @@ export default {
     state: {
         account: {},
         isAuthenticated: false,
-        serverVersion: '0.0.0',
         loading: false,
     },
     reducers: {
         accountReceived(state, { payload }) {
             return {
                 ...state,
-                ...payload,
-                isAuthenticated: true,
-            }
-        },
-        serverVersionReceived(state, { payload }) {
-            return {
-                ...state,
-                ...payload,
+                ...payload
             }
         },
         loadStart(state, { payload }) {
@@ -33,47 +25,26 @@ export default {
         },
     },
     effects: {
-        getServerVersion: [
-            function*({ payload }, { put }) {
-                try {
-                    const serverVersion = yield RestClient.getWithoutAuth(
-                        `${Config.getHost()}/api/public/version`,
-                        {
-                            timeout: 5000,
-                        }
-                    )
 
-                    yield put({
-                        type: 'serverVersionReceived',
-                        payload: { serverVersion: serverVersion.data },
-                    })
-
-                    payload.callback(false)
-                } catch (error) {
-                    const parsedError = JSON.parse(JSON.stringify(error))
-
-                    console.log('error getServerVersion', error)
-                    console.log('error getServerVersion', parsedError)
-
-                    if (_.get(parsedError, 'response.data')) {
-                        payload.callback(true, parsedError.response.data.message)
-                    } else {
-                        payload.callback(true, null)
-                    }
-                }
-            },
-            { type: 'takeLatest' },
-        ],
         login: [
             function*({ payload }, { put }) {
-                yield put({ type: 'loadStart' })
+
+                yield put({ type: 'loadStart' });
 
                 try {
-                    yield RestClient.get(`${Config.getHost()}/api/authentication`, {
-                        timeout: 5000,
-                    })
+                   const responseLongin =  yield RestClient.postWithoutAuth(
+                            `${Config.DEFAULT_URL}/api/auth/login/`,
+                       {username:payload.username,
+                               password:payload.password }
+                        )
+                    console.log(responseLongin.data);
 
-                    yield put({ type: 'loginSuccess', payload })
+                    let token = _.clone(responseLongin.data.token);
+
+                    yield AsyncStorage.setItem('token', token);
+
+                    yield put({ type: 'loginSuccess', payload});
+
                 } catch (error) {
                     const parsedError = JSON.parse(JSON.stringify(error))
 
@@ -86,55 +57,27 @@ export default {
                     }
                 }
 
-                yield put({ type: 'loadEnd' })
+
             },
             { type: 'takeLatest' },
         ],
-        signature: [
-            function*({ payload, origin, callback }, { put }) {
-                yield put({ type: 'loadStart' })
 
+        *loginSuccess({ payload }, { put }) {
                 try {
-                    yield RestClient.postWithoutAuth(
-                        `${origin}/api/public/uploadsignaturedata`,
-                        payload
-                    )
 
-                    callback()
-                } catch (error) {
-                    const parsedError = JSON.parse(JSON.stringify(error))
-                    console.log(error)
-                    console.log('error signature', parsedError)
-                }
-
-                yield put({ type: 'loadEnd' })
-            },
-            { type: 'takeLatest' },
-        ],
-        loginSuccess: [
-            function*({ payload }, { put }) {
-                try {
-                    const account = yield RestClient.get(`${Config.getHost()}/api/account`)
+                    const account = yield RestClient.get(`${Config.DEFAULT_URL}/api/auth/checkauth/`)
 
                     yield put({
                         type: 'accountReceived',
-                        payload: { account: account.data },
+                        payload: { account: account.data,isAuthenticated:true },
                     })
 
-                    yield AsyncStorage.setItem('login', account.data.login).then(() => {
-                        if (!account.data.active) {
-                            payload.callback(
-                                false,
-                                'Account is inactive. Please login to HISD3 site with your temporary password to activate.'
-                            )
-                        } else {
-                            payload.callback(true)
-                        }
-                    })
+                    if ( payload.callback)  payload.callback(true)
+
                 } catch (error) {
                     const parsedError = JSON.parse(JSON.stringify(error))
 
-                    yield AsyncStorage.removeItem('login').then(() => {
+                    yield AsyncStorage.removeItem('token').then(() => {
                         if (_.get(parsedError, 'response.data')) {
                             payload.callback(false, parsedError.response.data.message)
                         } else {
@@ -142,22 +85,57 @@ export default {
                         }
                     })
                 }
+                 yield put({ type: 'loadEnd' });
             },
-            { type: 'takeLatest' },
-        ],
+
         logout: [
             function*({ payload }, { put }) {
+                console.log("loging out");
+
                 yield put({ type: 'loadStart' })
 
-                yield RestClient.get(`${Config.getHost()}/api/logout`)
+                yield RestClient.post(`${Config.DEFAULT_URL}/api/auth/logout`)
 
-                yield AsyncStorage.removeItem('Authorization').then(() => {
-                    AsyncStorage.removeItem('login')
-                })
+                yield AsyncStorage.removeItem('token');
 
-                yield put({ type: 'loadEnd', payload: { account: payload } })
+                yield put({ type: 'loadEnd', payload: { account: {} ,isAuthenticated:false}})
             },
             { type: 'takeLatest' },
         ],
+
+        checkAuth:[
+        function*({ payload }, { put }) {
+
+            yield put({type: 'loadStart'});
+
+            try {
+                let dataResult = {}
+                const res = yield RestClient.get(`${Config.DEFAULT_URL}/api/auth/checkauth/`)
+                console.log("aftercheck",res);
+                    if(res.data.err){
+                        dataResult.account = res.data;
+                        dataResult.isAuthenticated =false;
+                    }else{
+
+                        dataResult.account = res.data;
+                        dataResult.isAuthenticated =true;
+                    }
+
+                yield put({
+                    type: 'accountReceived',
+                    payload: dataResult,
+                })
+
+                if (payload.callback) payload.callback(true)
+
+            } catch (error) {
+                const parsedError = JSON.parse(JSON.stringify(error));
+
+                yield put({type: 'loadEnd', payload: {account: {}, isAuthenticated: false}})
+            }
+            yield put({type: 'loadEnd'});
+        },
+            { type: 'takeLatest' },
+        ]
     },
 }

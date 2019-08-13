@@ -15,9 +15,10 @@ import {
     Right, FooterTab, Footer
 } from "native-base";
 
-import {FlatList, StyleSheet} from "react-native";
+import {FlatList, StyleSheet,Modal} from "react-native";
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import SrDetailsView from "../components/SrDetailsView";
-
+import CustomActivityIndicator from "../layout/CustomActivityIndicator";
 
 const datas = [
     {
@@ -65,18 +66,37 @@ const styles = StyleSheet.create({
     }
 })
 
-class SrList extends Component {
+
+export default  class Srlisting extends Component {
     constructor(props) {
         super(props);
-        this.state={modalVisible:false}
+        this.state= {
+            modalVisible:false,
+            fetching:false,
+            activity:true
+        }
     }
+
+    onClickDetails =()=>{
+        this.setState({ fetching: true,activity:true });
+        setTimeout(() => {
+            this.setState({modalVisible:true,
+                fetching: false,activity:false
+            })
+        }, 500);
+    }
+
+    onClose = ()=>{
+        this.setState({modalVisible:!this.state.modalVisible})
+    }
+
 
     renderItems =({item})=>{
 
         return(
             <ListItem thumbnail>
                 <Left>
-                    <Icon name='checkmark-circle' style={{fontSize:50}}/>
+                    <MaterialCommunityIcons name='calendar-clock' style={{fontSize:35,color:'#45D56E'}}/>
                 </Left>
                 <Body>
                 <Text>
@@ -88,7 +108,7 @@ class SrList extends Component {
                 </Body>
                 <Right>
                     <Button transparent
-                            onPress={() => this.onClickDetails}
+                            onPress={this.onClickDetails}
                     >
                         <Text>View</Text>
                     </Button>
@@ -96,38 +116,26 @@ class SrList extends Component {
             </ListItem>
         )
     }
-
-    onClickDetails =()=>{
-        setTimeout(() => {
-            this.setState({modalVisilbe:true})
-        }, 500);
-    }
-    onClose = ()=>{
-        this.setState({modalVisible:!this.state.modalVisible})
-    }
-
     render() {
         return (
             <Container style={styles.container}>
-                <Header>
-                    <Button
-                        transparent
-                        onPress={() => this.props.navigation.openDrawer()}
-                    >
-                        <Icon name="ios-menu" />
-                    </Button>
-                    <Body>
-                    <Title>SR History </Title>
-                    </Body>
-                    <Right />
-                </Header>
 
                 <Content padder>
-                    <FlatList
-                        data={datas}
-                        keyExtractor={item => item.text}
-                        renderItem={this.renderItems}
-                    />
+                    {this.state.fetching ?
+                        <CustomActivityIndicator
+                            animating={true}
+                            text="Loggin in..."
+                            color="#D44638"
+                        />
+                        : null
+                    }
+                        <FlatList
+                            data={datas}
+                            keyExtractor={item => item.text}
+                            renderItem={this.renderItems}
+                        />
+
+
                     {this.state.modalVisible?
                         <SrDetailsView
                             modalVisible={this.state.modalVisible}
@@ -136,21 +144,7 @@ class SrList extends Component {
                         null
                     }
                 </Content>
-                <Footer>
-                    <FooterTab>
-                        <Button >
-                            <Icon type="MaterialIcons" name="check" />
-                            <Text>Active</Text>
-                        </Button>
-                        <Button vertical>
-                            <Icon name="close" />
-                            <Text>Archive</Text>
-                        </Button>
-                    </FooterTab>
-                </Footer>
             </Container>
         );
     }
 }
-
-export default SrList;

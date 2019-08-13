@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { BackHandler, Linking, Platform,Easing,Animated,PermissionsAndroid,Alert } from 'react-native'
+import { BackHandler, Linking, Platform,Easing,Animated,PermissionsAndroid,Alert,BackAndroid } from 'react-native'
 import {
     createAppContainer,
     createBottomTabNavigator,
@@ -30,6 +30,7 @@ import Dashboard from "./containers/Dashboard";
 import VehicleRegistration from "./containers/VehicleRegistration";
 import AddUserDriver from "./containers/AddUserDriver";
 import CreateServiceRequest from "./containers/CreateServiceRequest";
+import LandingPage from "./containers/LandingPage";
 
 
 export async function request_location_runtime_permission() {
@@ -67,6 +68,7 @@ export async function request_location_runtime_permission() {
 
 const Drawer = createDrawerNavigator(
     {
+        Home:{screen:LandingPage},
         Dashboard:{screen:Dashboard},
         SRList:{screen: SrList} ,
         Services:{screen: ServiceRequest},
@@ -74,7 +76,9 @@ const Drawer = createDrawerNavigator(
         TestMap:{screen:TestMap},
         MapContainer:{screen:MapContainer},
         TermsAndPrivacy: { screen: Terms },
-        CreateSr:{screen:CreateServiceRequest}
+        CreateSr:{screen:CreateServiceRequest},
+        Login: {screen:Login},
+        Register: {screen:Registration},
     },
     {
         contentOptions: {
@@ -92,14 +96,13 @@ const OnboardingNavigator = createSwitchNavigator(
 
         Unlogged: createStackNavigator(
             {
-                Home: {screen:Home},
+                Home: {screen:LandingPage},
                 Login: {screen:Login},
                 Register: {screen:Registration},
             }, {
                 headerMode: 'none',
                 initialRouteName: 'Home' // First screen the user is redirected to
             }
-
         )
     }, {
         initialRouteName: 'Unlogged',
@@ -125,6 +128,7 @@ const afterRegister = createStackNavigator(
 const AppNavigator = createStackNavigator(
     {
         Drawer: { screen: Drawer },
+        Home:{screen:LandingPage},
         Dashboard:{screen:Dashboard},
         Detail: { screen: Detail },
         SRList:{screen: SrList} ,
@@ -132,7 +136,9 @@ const AppNavigator = createStackNavigator(
         TestMap:{screen:TestMap},
         MapContainer:{screen:MapContainer},
         OnRegisterSuccess:{screen:afterRegister},
-        CreateSr:{screen:CreateServiceRequest}
+        CreateSr:{screen:CreateServiceRequest},
+        Login: {screen:Login},
+        Register: {screen:Registration},
 
     },
     {
@@ -160,7 +166,7 @@ const RootNavigator = createSwitchNavigator(
 
 
 
-const AppContainer = createAppContainer(RootNavigator);
+const AppContainer = createAppContainer(AppNavigator);
 
 function getActiveRouteName(navigationState) {
     if (!navigationState) {
@@ -172,12 +178,13 @@ function getActiveRouteName(navigationState) {
     }
     return route.routeName
 }
-// @connect(({ app }) => ({ app }))
+
+@connect(({ auth }) => ({ auth }))
 export default class Router extends PureComponent {
 
     async componentDidMount() {
 
-        await request_location_runtime_permission()
+        await request_location_runtime_permission();
 
     }
 
@@ -191,15 +198,20 @@ export default class Router extends PureComponent {
     }
 
     backHandle = () => {
-        const currentScreen = getActiveRouteName(this.props.router)
-        if (currentScreen === 'Dashboard' || currentScreen === 'Login') {
-            return true
-        }
-        if (currentScreen !== 'Home') {
-            this.props.dispatch(NavigationActions.back())
-            return true
-        }
-        return false
+        console.log(this.props);
+        // console.log("backactions",this.props);
+        // const currentScreen = getActiveRouteName(this.props.router)
+        //
+        // if (currentScreen === 'Dashboard' || currentScreen === 'Login') {
+        //     return true
+        // }
+        // if (currentScreen !== 'Home') {
+        //     this.props.dispatch(NavigationActions.back())
+        //     return true
+        // }
+        // return false
+        CustomNavigationService.back()()
+        return true
     }
 
     render() {
@@ -210,7 +222,11 @@ export default class Router extends PureComponent {
             //     }}
             // />
             <Root>
-              <AppContainer />
+              <AppContainer
+                  ref={navigatorRef => {
+                      CustomNavigationService.setTopLevelNavigator(navigatorRef)
+                  }}
+              />
             </Root>
         )
     }

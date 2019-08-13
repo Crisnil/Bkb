@@ -4,10 +4,11 @@ import AsyncStorage from '@react-native-community/async-storage'
 import base64 from 'base-64'
 
 async function getAuthorization() {
-	const value = await AsyncStorage.getItem('Authorization')
+	const value = await AsyncStorage.getItem('token')
 	let response
 	if (value !== null) {
-		response = JSON.parse(value)
+		//response = JSON.parse(value)
+		response = value
 	}
 
 	return response
@@ -16,13 +17,12 @@ async function getAuthorization() {
 export const get = (path, config = {}) =>
 	new Promise((resolve, reject) => {
 		getAuthorization()
-			.then(Authorization => {
+			.then(Token => {
+				console.log("tokem",Token);
 				const payload = Object.assign(config, {
 					headers: {
 						'Content-Type': 'application/json;charset=UTF-8',
-						Authorization: `Basic ${base64.encode(
-							`${Authorization.username}:${Authorization.password}`
-						)}`,
+						 'Authorization': 'Bearer ' + `${Token}`,
 					},
 				})
 
@@ -42,14 +42,14 @@ export const get = (path, config = {}) =>
 
 export const getWithoutAuth = (path, config = {}) =>
 	new Promise((resolve, reject) => {
-		const payload = Object.assign(config, {
-			headers: {
-				'Content-Type': 'application/json;charset=UTF-8',
-			},
-		})
+		// const payload = Object.assign(config, {
+		// 	headers: {
+		// 		'Content-Type': 'application/json;charset=UTF-8',
+		// 	},
+		// })
 
 		axios
-			.get(path, payload)
+			.get(path, config)
 			.then(response => {
 				resolve(response)
 			})
@@ -79,15 +79,13 @@ export const postWithoutAuth = (path, body, config = {}) =>
 export const post = (path, body, config = {}) =>
 	new Promise((resolve, reject) => {
 		getAuthorization()
-			.then(Authorization => {
-				const payload = Object.assign(config, {
-					headers: {
-						'Content-Type': 'application/json;charset=UTF-8',
-						Authorization: `Basic ${base64.encode(
-							`${Authorization.username}:${Authorization.password}`
-						)}`,
-					},
-				})
+			.then(Token => {
+                const payload = Object.assign(config, {
+                    headers: {
+                        'Content-Type': 'application/json;charset=UTF-8',
+                        'Authorization': 'Bearer ' + `${Token}`,
+                    },
+                })
 
 				axios
 					.post(path, body || {}, payload)
