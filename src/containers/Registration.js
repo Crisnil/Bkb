@@ -18,6 +18,7 @@ import {
     Input,
     Item, Separator, H3
 } from "native-base";
+import RegisterComponenets from "../components/RegisterComponents";
 class Registration extends Component {
 
     // componentWillMount() {
@@ -46,55 +47,14 @@ class Registration extends Component {
 
                 <Content padder>
                     <Form>
-                        <H3 style={{textAlign:'center'}}>Registration Form </H3>
-                        <Item regular>
-                            <Label>Login Name</Label>
-                            <Input />
-                        </Item>
-                        <Item regular >
-                            <Label>Password</Label>
-                            <Input secureTextEntry />
-                        </Item>
-                        <Item regular >
-                            <Label>Confirm Password</Label>
-                            <Input secureTextEntry />
-                        </Item>
-                        <Item regular >
-                            <Label>Phone number</Label>
-                            <Input  />
-                        </Item>
-                        <Item regular >
-                            <Label>Email</Label>
-                            <Input  />
-                        </Item>
-                        <Item regular >
-                            <Label>IC Number</Label>
-                            <Input  />
-                        </Item>
-                        <Item regular >
-                            <Label>Insurance</Label>
-                            <Input  />
-                        </Item>
-                        <Item regular last>
-                            <Label>Vehicle Reg. No.</Label>
-                            <Input  />
-                        </Item>
+                        <RegisterComponenets {...this.props}/>
                     </Form>
 
                 </Content>
 
-                <Footer>
-                    <FooterTab>
-                        <Button     onPress={() => this.props.navigation.navigate("OnRegisterSuccess")}>
-                            <Icon type="MaterialIcons" name="check" />
-                            <Text>Submit</Text>
-                        </Button>
-                        <Button vertical>
-                            <Icon name="close" />
-                            <Text>Reset</Text>
-                        </Button>
-                    </FooterTab>
-                </Footer>
+                {/*<Footer>*/}
+
+                {/*</Footer>*/}
             </Container>
         );
     }

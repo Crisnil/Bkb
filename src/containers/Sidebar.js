@@ -66,7 +66,7 @@ class SideBar extends Component {
                      payload:{
                          callback:(result,error)=>{
                                  if(result){
-                                     navigation.navigate(item.route);
+                                     navigation.navigate("Login");
                                  }
                             }
                      }
@@ -108,6 +108,7 @@ class SideBar extends Component {
 
 
   render() {
+      console.log(this.props.auth.account);
       const{auth} =this.props;
       const{account}= auth;
       const notAuthenticatedMenu =[
@@ -164,8 +165,8 @@ class SideBar extends Component {
                         <Thumbnail source={pratik} />
                     </Left>
                     <Body style={{color:"#fff"}}>
-                    <Text>{!_.isEmpty(account)? account.customername :''}</Text>
-                    <Text note>{!_.isEmpty(account)? account.email : ""}</Text>
+                    <Text>{!_.isEmpty(account)? account.data.customername :''}</Text>
+                    <Text note>{!_.isEmpty(account)? account.data.email : ""}</Text>
                     </Body>
                     <Right>
                         <Button transparent onPress={() => this.props.navigation.closeDrawer()}>

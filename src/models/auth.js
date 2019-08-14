@@ -25,6 +25,115 @@ export default {
         },
     },
     effects: {
+        verify: [
+            function*({ payload }, { put }) {
+
+                yield put({ type: 'loadStart' });
+
+                try {
+                    const responseVerify =  yield RestClient.postWithoutAuth(
+                        `${Config.DEFAULT_URL}/api/auth/verify_user/`,
+                        payload
+                    )
+                    console.log(responseVerify.data);
+
+                    payload.customerid = responseVerify.data.data[0].customerid
+
+                     yield put({ type: 'verifySuccess', payload});
+
+                } catch (error) {
+
+                    yield put({ type: 'loadEnd' });
+
+                    const parsedError = JSON.parse(JSON.stringify(error))
+
+                    console.log(parsedError)
+
+                    if (_.get(parsedError, 'response.data')) {
+                        payload.callback(false, parsedError.response.data.message)
+                    } else {
+                        payload.callback(false, null)
+                    }
+                }
+
+
+            },
+            { type: 'takeLatest' },
+        ],
+        verifySuccess: [
+            function*({ payload }, { put }) {
+
+                yield put({ type: 'loadStart' });
+
+                try {
+                    const responseSuccess =  yield RestClient.postWithoutAuth(
+                        `${Config.DEFAULT_URL}/api/auth/register`,
+                        payload
+                    )
+                    console.log("reg",responseSuccess.data);
+
+                    yield put({ type: 'loadEnd' });
+
+                    payload.callback(true, null)
+
+                } catch (error) {
+
+                    yield put({ type: 'loadEnd' });
+
+                    const parsedError = JSON.parse(JSON.stringify(error))
+
+                    console.log(parsedError)
+
+                    if (_.get(parsedError, 'response.data')) {
+                        payload.callback(false, parsedError.response.data.message)
+                    } else {
+                        payload.callback(false, null)
+                    }
+                }
+
+
+            },
+            { type: 'takeLatest' },
+        ],
+
+        registerSuccess: [
+            function*({ payload }, { put }) {
+
+                yield put({ type: 'loadStart' });
+
+                try {
+                    const responseVerify =  yield RestClient.postWithoutAuth(
+                        `${Config.DEFAULT_URL}/api/auth/auth/verify_user/`,
+                        {payload }
+                    )
+                    console.log(responseVerify.data);
+
+                    const responseRegister =  yield RestClient.postWithoutAuth(
+                        `${Config.DEFAULT_URL}/api/auth/auth/register/`,
+                        {payload }
+                    )
+
+                    // yield put({ type: 'loginSuccess', payload});
+
+                } catch (error) {
+                    yield put({ type: 'loadEnd' });
+
+                    const parsedError = JSON.parse(JSON.stringify(error))
+
+                    console.log(parsedError)
+
+                    if (_.get(parsedError, 'response.data')) {
+                        payload.callback(false, parsedError.response.data.message)
+                    } else {
+                        payload.callback(false, null)
+                    }
+                }
+
+                yield put({ type: 'loadEnd' });
+
+            },
+            { type: 'takeLatest' },
+        ],
 
         login: [
             function*({ payload }, { put }) {
@@ -46,6 +155,7 @@ export default {
                     yield put({ type: 'loginSuccess', payload});
 
                 } catch (error) {
+                    yield put({ type: 'loadEnd' });
                     const parsedError = JSON.parse(JSON.stringify(error))
 
                     console.log(parsedError)
@@ -57,12 +167,11 @@ export default {
                     }
                 }
 
-
             },
             { type: 'takeLatest' },
         ],
-
-        *loginSuccess({ payload }, { put }) {
+        loginSuccess:[
+            function*({ payload }, { put }) {
                 try {
 
                     const account = yield RestClient.get(`${Config.DEFAULT_URL}/api/auth/checkauth/`)
@@ -87,6 +196,8 @@ export default {
                 }
                  yield put({ type: 'loadEnd' });
             },
+            { type: 'takeLatest' },
+        ],
 
         logout: [
             function*({ payload }, { put }) {
@@ -113,10 +224,9 @@ export default {
                 const res = yield RestClient.get(`${Config.DEFAULT_URL}/api/auth/checkauth/`)
                 console.log("aftercheck",res);
                     if(res.data.err){
-                        dataResult.account = res.data;
+                        dataResult.account = {};
                         dataResult.isAuthenticated =false;
                     }else{
-
                         dataResult.account = res.data;
                         dataResult.isAuthenticated =true;
                     }

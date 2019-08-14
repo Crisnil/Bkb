@@ -55,18 +55,18 @@ class Login extends Component {
     render() {
         return (
             <Container style={styles.container}>
-                {/*<Header>*/}
-                    {/*<Left>*/}
-                        {/*<Button transparent onPress={() => this.props.navigation.goBack()}>*/}
-                            {/*<Icon name="arrow-back" />*/}
-                            {/*<Text>Login</Text>*/}
-                        {/*</Button>*/}
-                    {/*</Left>*/}
-                    {/*<Body style={{alignContent:'center'}}>*/}
-                    {/*<Title>Login</Title>*/}
-                    {/*</Body>*/}
-                    {/*<Right/>*/}
-                {/*</Header>*/}
+                <Header>
+                    <Left>
+                        <Button transparent onPress={() => this.props.navigation.goBack()}>
+                            <Icon name="arrow-back" />
+                            <Text>Login</Text>
+                        </Button>
+                    </Left>
+                    <Body style={{alignContent:'center'}}>
+                    <Title>Login</Title>
+                    </Body>
+                    <Right/>
+                </Header>
                     <Content>
                         <LoginForm {...this.props} />
                     </Content>
