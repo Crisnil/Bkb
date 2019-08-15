@@ -42,13 +42,6 @@ class RegisterComponenets extends Component {
         }
     }
 
-    // componentWillMount() {
-    //     BackHandler.addEventListener('hardwareBackPress', this.backHandle)
-    // }
-    //
-    // componentWillUnmount() {
-    //     BackHandler.removeEventListener('hardwareBackPress', this.backHandle)
-    // }
 
     handleVerify = () => {
 

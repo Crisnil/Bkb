@@ -91,22 +91,23 @@ export default  class Srlisting extends Component {
     }
 
 
-    renderItems =({item})=>{
-
+    renderItems =(item,x)=>{
+            console.log(item);
         return(
-            <ListItem thumbnail>
+            <ListItem thumbnail key={x}>
                 <Left>
                     <MaterialCommunityIcons name='calendar-clock' style={{fontSize:35,color:'#45D56E'}}/>
                 </Left>
                 <Body>
                 <Text>
-                    {item.text}
+                    {item.item.srid}
                 </Text>
                 <Text numberOfLines={1} note>
-                    {item.note}
+                    {item.item.acceptedby ||''}
                 </Text>
                 </Body>
                 <Right>
+                    <Text>{item.item.servicerequeststatus.description}</Text>
                     <Button transparent
                             onPress={this.onClickDetails}
                     >
@@ -117,6 +118,7 @@ export default  class Srlisting extends Component {
         )
     }
     render() {
+        const{srs}=this.props.service;
         return (
             <Container style={styles.container}>
 
@@ -130,8 +132,8 @@ export default  class Srlisting extends Component {
                         : null
                     }
                         <FlatList
-                            data={datas}
-                            keyExtractor={item => item.text}
+                            data={srs}
+                            keyExtractor={(item,x) => x.toString()}
                             renderItem={this.renderItems}
                         />
 

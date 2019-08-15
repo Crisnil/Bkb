@@ -39,6 +39,9 @@ const back = () => () => {
 			break
 		case 'Dashboard':
 			break
+		case 'CreateSr':
+			resetNavigate("LandingPages")
+			break
 		case 'Home' || 'LandingPages':
 			CustomAlert.alert(
 				`Warning!`,
@@ -85,7 +88,7 @@ const resetNavigate = routeName => {
 	navigator.dispatch(
 		StackActions.reset({
 			index: 0,
-			actions: [NavigationActions.navigate({ routeName: 'Main' })],
+			actions: [NavigationActions.navigate({ routeName: 'LandingPages' })],
 			key: null,
 		})
 	)

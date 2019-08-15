@@ -27,7 +27,7 @@ import {
     NavigationActions
 } from 'react-navigation';
 import { getLocation,getReverseGeocoding } from '../services/location-service';
-
+import { connect } from 'react-redux';
 
 
 let { height, width } = Dimensions.get("window");
@@ -41,7 +41,7 @@ function randomColor() {
         .padStart(6, 0)}`;
 }
 
-
+@connect(({ service }) => ({ service }))
 class CreateServiceRequest extends  Component {
 
     constructor(props) {
@@ -66,6 +66,7 @@ class CreateServiceRequest extends  Component {
     }
 
     componentDidMount() {
+        console.log(this.props);
         this.requestLocationPermission();
 
     }
@@ -213,13 +214,44 @@ class CreateServiceRequest extends  Component {
             selected2: value
         });
     }
-    render() {
 
+    submitSr =()=>{
+        const{dispatch,navigation} = this.props;
+
+        dispatch({
+            type: 'service/submitRequest',
+            payload: {
+                pickuplong :this.state.region.longitude,
+                pickuplat :this.state.region.latitude,
+                pickup_location :this.state.formattedAddress,
+                pickupremarks :"",
+                destination_long:!_.isEmpty(this.state.markers)? this.state.markers[0].coordinate.longitude : '',
+                destination_lat :!_.isEmpty(this.state.markers)? this.state.markers[0].coordinate.latitude : '',
+                destination_remarks:'',
+                destination:!_.isEmpty(this.state.markers)? this.state.markers[0].destination : '',
+                problem:this.props.navigation.getParam('problem', 'no specified') || this.state.selected2 ,
+                callback: (result, error) => {
+                    if (result) {
+                        alert("success")
+                        this.setState({selected2:''})
+                        navigation.navigate("Dashboard");
+                    }
+                }
+            },
+        })
+
+    }
+    render() {
+        console.log( this.props.navigation.getParam('noSelection', false));
+        const initialProb = this.props.navigation.getParam('noSelection', false)
+        const problem = this.props.navigation.getParam('problem', 'Not Specified')
         const pratik = require("../assets/images/male.png");
         const camera = require("../assets/camera.png");
         const ic_pickup = require("../assets/icons/ic_pickup.png");
         const grabcar_premium =require ("../assets/icons/ic_grabcar_premium.png");
         const grabcar = require('../assets/icons/ic_grabcar.png')
+
+
         return (
            
             <View style={styles.container}>
@@ -328,31 +360,38 @@ class CreateServiceRequest extends  Component {
 
                     <View style={styles.mobilPilihanContainer}>
                         <View style={styles.mobilTop}>
-                            <View
-                                style={{
-                                    flex:1,
-                                }}
-                            >
-                                <View style={{alignSelf: 'center',marginTop:5,height:3,width:29,borderRadius:2,backgroundColor:'#CCD6DD'}}/>
+                            { initialProb == true ?
+                                <View style={{zIndex:4,backgroundColor:'#fff',alignItems:'center'}}>
+                                    <Text style={{
+                                        color:"#464646",fontSize:20,zIndex:5
+                                    }}>
+                                        {problem}
+                                    </Text>
+                                </View>
+                                :
+                                <Picker
+                                    mode="dropdown"
+                                    iosIcon={<Icon name="arrow-down" />}
+                                    style={{ width: undefined }}
+                                    placeholder="Problem"
+                                    placeholderStyle={{ color: "#bfc6ea" }}
+                                    placeholderIconColor="#007aff"
+                                    selectedValue={this.state.selected2}
+                                    onValueChange={this.onValueChange2.bind(this)}
+                                >
+                                    <Picker.Item label="Towing" value="key0"/>
+                                    <Picker.Item label="Flat Battery" value="key1" />
+                                    <Picker.Item label="Flat Tire" value="key2" />
+                                    <Picker.Item label="Emergency Fuel" value="key3" />
+                                    <Picker.Item label="Alternative Tranport" value="key4" />
+                                    <Picker.Item label="Key Finder" value="key5" />
+                                </Picker>
+                            }
+                            {/*<View   style={{ flex:1, }} >*/}
+                               {/*/!*<View style={{alignSelf: 'center',marginTop:5,height:3,width:29,borderRadius:2,backgroundColor:'#CCD6DD'}}/>*!/*/}
+                                {/**/}
+                            {/*</View>*/}
 
-                            </View>
-                            <Picker
-                                mode="dropdown"
-                                iosIcon={<Icon name="arrow-down" />}
-                                style={{ width: undefined }}
-                                placeholder="Problem"
-                                placeholderStyle={{ color: "#bfc6ea" }}
-                                placeholderIconColor="#007aff"
-                                selectedValue={this.state.selected2}
-                                onValueChange={this.onValueChange2.bind(this)}
-                            >
-                                <Picker.Item label="Towing" value="key0" disabled/>
-                                <Picker.Item label="Flat Battery" value="key1" />
-                                <Picker.Item label="Flat Tire" value="key2" />
-                                <Picker.Item label="Emergency Fuel" value="key3" />
-                                <Picker.Item label="Alternative Tranport" value="key4" />
-                                <Picker.Item label="Key Finder" value="key5" />
-                            </Picker>
                             {/*<View*/}
                                 {/*style={{*/}
                                     {/*flex:10,*/}
@@ -385,13 +424,15 @@ class CreateServiceRequest extends  Component {
 
 
                             {/*</View>*/}
-                        </View>
+                        {/*</View>*/}
+
+
                         {/*<View style={styles.mobilEffect}>*/}
 
-                        {/*</View>*/}
+                        </View>
                     </View>
                     <View style={styles.dropOffButton}>
-                        <Button block>
+                        <Button block onPress={this.submitSr}>
                             <Text style={{color:'#fff'}}>SUBMIT SERVICE REQUEST</Text>
                         </Button>
                         {/*<Text style={{*/}

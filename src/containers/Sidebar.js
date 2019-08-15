@@ -73,7 +73,7 @@ class SideBar extends Component {
                  })
              break;
               default:
-                  navigation.navigate(item.route);
+                  navigation.navigate(item.route,{noSelection:false});
           }
       }
 
@@ -108,7 +108,6 @@ class SideBar extends Component {
 
 
   render() {
-      console.log(this.props.auth.account);
       const{auth} =this.props;
       const{account}= auth;
       const notAuthenticatedMenu =[

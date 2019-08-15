@@ -61,11 +61,12 @@ class Dashboard extends Component {
     fetchSrHistory =()=>{
         const {dispatch} = this.props;
         dispatch({
-            type:'service/serviceRequest',
+            type:'service/serviceRequestList',
             payload:{}
         })
     }
     render() {
+    console.log(this.props.service);
     const {navigation} = this.props;
         return (
           <Container>
@@ -84,9 +85,6 @@ class Dashboard extends Component {
                     <Right/>
                 </Header>
               <Tabs>
-                  <Tab heading={ <TabHeading><Icon name="camera" /><Text>Vehicles</Text></TabHeading>}>
-                     <Text>Tab1</Text>
-                  </Tab>
                   <Tab heading={ <TabHeading><Text>SR</Text></TabHeading>}>
                       <Srlisting {...this.props}/>
                   </Tab>
@@ -100,7 +98,6 @@ class Dashboard extends Component {
                               <ListItem icon>
                                   <Left>
                                       <Button style={{ backgroundColor: "#FF9501" }}>
-                                          <Icon active name="airplane" />
                                       </Button>
                                   </Left>
                                   <Body>

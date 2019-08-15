@@ -41,8 +41,6 @@ export default class LandingPage extends Component {
     }
 
     render() {
-        console.log("",this.props);
-
         return (
             <Container styel={{ backgroundColor: 'b3c7f9'}}>
                 <Header>
@@ -72,12 +70,11 @@ export default class LandingPage extends Component {
                                 flex: 1,
                                 width: DeviceRatio.computeWidthRatio(800),
                                 resizeMode,
-
                             }}
                             source={redlogo}
                         />
                     </View>
-                <LandingComponents {...this.props} onIconPress={this.onIconPress}/>
+                <LandingComponents {...this.props}/>
             </Container>
         );
     }

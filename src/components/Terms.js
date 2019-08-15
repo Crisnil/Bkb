@@ -19,7 +19,7 @@ import {
 } from "native-base";
 
 import { StyleSheet} from 'react-native'
-const TermsOfService = () => {
+const TermsOfService = (props) => {
     return (
         <Container style={styles.container}>
             <Header style={{textAlign:'center'}}>
@@ -30,6 +30,17 @@ const TermsOfService = () => {
             </Header>
             <Content padder>
                 <Text>Content goes here (internal)</Text>
+
+                <Button block style={{ margin: 15, marginTop: 50 }}
+                        onPress={props.onAccept}
+                >
+                    <Text>Accept</Text>
+                </Button>
+                <Button block style={{ margin: 15, marginTop: 50,backgroundColor: '#808080' }}
+                        onPress={props.onDecline}
+                >
+                    <Text>Decline</Text>
+                </Button>
             </Content>
         </Container>
     );

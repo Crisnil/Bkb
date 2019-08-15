@@ -35,7 +35,7 @@ export default {
                         `${Config.DEFAULT_URL}/api/auth/verify_user/`,
                         payload
                     )
-                    console.log(responseVerify.data);
+                    //console.log(responseVerify.data);
 
                     payload.customerid = responseVerify.data.data[0].customerid
 
@@ -70,7 +70,7 @@ export default {
                         `${Config.DEFAULT_URL}/api/auth/register`,
                         payload
                     )
-                    console.log("reg",responseSuccess.data);
+                    //console.log("reg",responseSuccess.data);
 
                     yield put({ type: 'loadEnd' });
 
@@ -106,7 +106,7 @@ export default {
                         `${Config.DEFAULT_URL}/api/auth/auth/verify_user/`,
                         {payload }
                     )
-                    console.log(responseVerify.data);
+                    //console.log(responseVerify.data);
 
                     const responseRegister =  yield RestClient.postWithoutAuth(
                         `${Config.DEFAULT_URL}/api/auth/auth/register/`,
@@ -201,7 +201,7 @@ export default {
 
         logout: [
             function*({ payload }, { put }) {
-                console.log("loging out");
+               //console.log("loging out");
 
                 yield put({ type: 'loadStart' })
 
@@ -222,7 +222,7 @@ export default {
             try {
                 let dataResult = {}
                 const res = yield RestClient.get(`${Config.DEFAULT_URL}/api/auth/checkauth/`)
-                console.log("aftercheck",res);
+                //console.log("aftercheck",res);
                     if(res.data.err){
                         dataResult.account = {};
                         dataResult.isAuthenticated =false;

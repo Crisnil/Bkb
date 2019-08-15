@@ -35,11 +35,9 @@ export default {
                         `${Config.DEFAULT_URL}/service_request_problem/`,
                         {timeout:5000}
                     )
-                    console.log("responseproblem",responseproblem);
+                   // console.log("responseproblem",responseproblem);
 
-
-                    //
-                    // yield put({ type: 'loginSuccess', payload});
+                    yield put({ type: 'srsReceived', payload:{srCategory:responseproblem.data}});
 
                 } catch (error) {
                     const parsedError = JSON.parse(JSON.stringify(error))
@@ -57,7 +55,7 @@ export default {
             },
             { type: 'takeLatest' },
         ],
-        serviceRequest: [
+        serviceRequestList: [
             function*({ payload }, { put }) {
 
                 yield put({ type: 'loadStart' });
@@ -68,10 +66,10 @@ export default {
                         {filterBy:'all',
                              }
                     )
-                    console.log("responseSr",responseSr);
+                   // console.log("responseSr",responseSr);
 
 
-                    //yield put({ type: 'loginSuccess', payload});
+                    yield put({ type: 'srsReceived', payload:{srs:responseSr.data}});
 
                 } catch (error) {
                     const parsedError = JSON.parse(JSON.stringify(error))
@@ -91,14 +89,17 @@ export default {
         ],
 
         *serviceRequestSuccess({ payload }, { put }) {
+            console.log("on sr",payload);
             try {
 
-                const serviceRequest = yield RestClient.get(`${Config.DEFAULT_URL}/api/auth/checkauth/`)
+                const serviceRequest = yield RestClient.get(`${Config.DEFAULT_URL}/sr_request/`)
 
-                yield put({
-                    type: 'accountReceived',
-                    payload: { account: account.data,isAuthenticated:true },
-                })
+                console.log("after sr",serviceRequest);
+
+                // yield put({
+                //     type: 'accountReceived',
+                //     payload: { account: account.data,isAuthenticated:true },
+                // })
 
                 if ( payload.callback)  payload.callback(true)
 
@@ -109,17 +110,18 @@ export default {
             yield put({ type: 'loadEnd' });
         },
 
-        logout: [
+        submitRequest: [
             function*({ payload }, { put }) {
-                console.log("loging out");
+                console.log("on sr",payload);
 
                 yield put({ type: 'loadStart' })
 
-                yield RestClient.post(`${Config.DEFAULT_URL}/api/auth/logout`)
+                //const serviceRequest =  yield RestClient.post(`${Config.DEFAULT_URL}/sr_request`,payload)
 
-                yield AsyncStorage.removeItem('token');
+                //console.log("after sr",serviceRequest);
+                yield put({ type: 'loadEnd'})
 
-                yield put({ type: 'loadEnd', payload: { account: {} ,isAuthenticated:false}})
+                if ( payload.callback)  payload.callback(true);
             },
             { type: 'takeLatest' },
         ],
@@ -132,7 +134,7 @@ export default {
                 try {
                     let dataResult = {}
                     const res = yield RestClient.get(`${Config.DEFAULT_URL}/api/auth/checkauth/`)
-                    console.log("aftercheck",res);
+                    //console.log("aftercheck",res);
                     if(res.data.err){
                         dataResult.account = res.data;
                         dataResult.isAuthenticated =false;

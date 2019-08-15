@@ -78,18 +78,18 @@ class SrDetailsView extends Component {
                             <Text note>Remarks : Pending</Text>
                             <H3 style={{marginTop:5}}>Problem</H3>
                             <Text note>
-                                NativeBase is a free and source framework that enable
-                                developers to build high-quality mobile apps using React
-                                Native iOS and Android apps with a fusion of ES6. NativeBase
-                                builds a layer on top of React Native that provides you with
-                                basic set of components for mobile application development.
+                                Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                                Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+                                when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+                                It has survived not only five centuries, but also the leap into electronic typesetting,
+                                remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
                             </Text>
                             </Body>
                         </CardItem>
                         <CardItem style={{ paddingVertical: 0 }}>
                             <Left>
                                 <Button transparent>
-                                    <Icon name="logo-github" />
+                                    {/*<Icon name="logo-github" />*/}
                                     <Text>4,923 stars</Text>
                                 </Button>
                             </Left>
