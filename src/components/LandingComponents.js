@@ -1,19 +1,19 @@
-import React, { Component } from 'react';
-import { Container, Header, Content, Card, CardItem, Text, Icon, Right,Body,Left,Button } from 'native-base';
-import {View,Image,TouchableHighlight,StyleSheet,Modal} from 'react-native';
+import React, {Component} from 'react';
+import {Body, Button, Card, CardItem, Container, Content, Header, Icon, Left, Right, Text} from 'native-base';
+import {Image, Modal, StyleSheet, TouchableHighlight, View, FlatList} from 'react-native';
 import * as DeviceRatio from "../layout/DeviceRatio";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { connect } from 'react-redux'
+import {connect} from 'react-redux'
 import {dial} from "../utils/CallDialer";
-import {getLocation, getReverseGeocoding} from "../services/location-service";
-
+import _ from "lodash";
 import TermsOfService from "../components/Terms";
+import CustomActivityIndicator from "../layout/CustomActivityIndicator";
 
 const redlogo = require("../assets/bkblogo.png");
 const resizeMode = 'center';
 
 
-@connect(({ auth }) => ({ auth }))
+@connect(({ auth,service }) => ({ auth,service }))
 export default class LandingComponents extends Component {
     constructor(props){
         super(props)
@@ -23,7 +23,17 @@ export default class LandingComponents extends Component {
             modalVisible:false
         }
     }
+    componentDidMount(){
+        this.fetchProblemCategory();
+    }
 
+    fetchProblemCategory =()=>{
+        const {dispatch} = this.props;
+        dispatch({
+            type:'service/requestCategory',
+            payload:{}
+        })
+    }
     setModalVisible=(visible,problem)=> {
         if(this.props.auth.isAuthenticated) {
             this.setState({
@@ -48,7 +58,60 @@ export default class LandingComponents extends Component {
             problem:''
         });
     }
+
+
     render() {
+        const staticServices = [
+            {
+                problemid:100,
+                description:"Flat Tire",
+                staticService: true ,
+                icon:"alert-circle"
+            },
+            {
+                problemid:101,
+                description:"Emergency Fuel",
+                staticService: true,
+                icon:"fuel"
+            },
+            {
+                problemid:102,
+                description:"Flat Battery",
+                staticService: true,
+                icon:"car-battery"
+            },
+            {
+                problemid:103,
+                description:"Towing",
+                staticService: true,
+                icon:"towing"
+            },
+            {
+                problemid:104,
+                description:"Key Finder",
+                staticService: true,
+                icon:"key-remove"
+            },
+            {
+                problemid:105,
+                description:"Alternative Transport",
+                staticService: true,
+                icon:"car-pickup"
+            },
+
+        ];
+        const {srCategory} = this.props.service;
+
+        const renderproblems = _.map(staticServices, (item, x) => {
+            return(
+                <TouchableHighlight key={item.problemid} onPress={() => this.setModalVisible(true,"")}underlayColor="white">
+                    <View style={styles.button}>
+                        <MaterialCommunityIcons style={{fontSize:60 , color:'#ED1727',padding: 10}} name={item.icon}/>
+                        <Text style={styles.buttonText}>{item.description}</Text>
+                    </View>
+                </TouchableHighlight>
+            )
+        })
                return (
 
                 <Content padder >
@@ -57,43 +120,16 @@ export default class LandingComponents extends Component {
                         justifyContent: 'space-around',
                         flexWrap:'wrap',
                     }}>
-
-                        <TouchableHighlight  onPress={() => this.setModalVisible(true,"Flat Tire")}underlayColor="white">
-                            <View style={styles.button}>
-                                <MaterialCommunityIcons style={{fontSize:60 , color:'#ED1727',padding: 10}} name='car-battery'/>
-                                <Text style={styles.buttonText}>Flat Battery</Text>
-                            </View>
-                        </TouchableHighlight>
-                        <TouchableHighlight   onPress={() => this.setModalVisible(true,"Emergency Fuel")} underlayColor="white">
-                            <View style={styles.button}>
-                                <MaterialCommunityIcons name='fuel'  style={{fontSize:60 , color:'#ED1727',padding: 10}}/>
-                                <Text style={styles.buttonText}>Emergency Fuel</Text>
-                            </View>
-                        </TouchableHighlight>
-                        <TouchableHighlight   onPress={() => this.setModalVisible(true,"Flat Tire")}underlayColor="white">
-                            <View style={styles.button}>
-                                <MaterialCommunityIcons name='alert-circle'  style={{fontSize:60 , color:'#ED1727',padding: 10}}/>
-                                <Text style={styles.buttonText}>Flat Tire</Text>
-                            </View>
-                        </TouchableHighlight>
-                        <TouchableHighlight   onPress={() => this.setModalVisible(true,"Towing")} underlayColor="white">
-                            <View style={styles.button}>
-                                <MaterialCommunityIcons name='towing'  style={{fontSize:60 , color:'#ED1727',padding: 10}}/>
-                                <Text style={styles.buttonText}>Towing</Text>
-                            </View>
-                        </TouchableHighlight>
-                        <TouchableHighlight   onPress={() => this.setModalVisible(true,"Key Finder")}underlayColor="white">
-                            <View style={styles.button}>
-                                <MaterialCommunityIcons name='key-remove'  style={{fontSize:60 , color:'#ED1727',padding: 10}}/>
-                                <Text style={styles.buttonText}>Key Finder</Text>
-                            </View>
-                        </TouchableHighlight>
-                        <TouchableHighlight   onPress={() => this.setModalVisible(true,"Alternative Transport")}underlayColor="white">
-                            <View style={styles.button}>
-                                <MaterialCommunityIcons name='car-pickup'  style={{fontSize:60 , color:'#ED1727',padding: 10}}/>
-                                <Text style={styles.buttonText}>Alternative Transport</Text>
-                            </View>
-                        </TouchableHighlight>
+                        {this.props.service.loading?
+                            <CustomActivityIndicator
+                                animating = {true}
+                                text="Please Wait..."
+                                color="#D44638"
+                            />:null
+                        }
+                        {
+                           renderproblems
+                        }
                         <TouchableHighlight   onPress={()=>dial('09209502976',false)} underlayColor="white">
                             <View style={styles.button}>
                                 <MaterialCommunityIcons name='phone'  style={{fontSize:60 , color:'#ED1727',padding: 10}}/>
@@ -135,6 +171,8 @@ const styles = StyleSheet.create({
     buttonText: {
         padding: 5,
         color: '#000',
-        marginBottom: 10
+        marginBottom: 10,
+        alignItems:'center',
+        alignContent:'center'
     }
 });

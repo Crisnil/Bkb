@@ -16,6 +16,7 @@ import {
 import styles from "./sidebar_style";
 import { connect } from 'react-redux';
 import _ from 'lodash';
+import {reset, resetNavigate} from "../layout/CustomNavigationService";
 
 const drawerCover = require("../assets/drawer-cover.png");
 const drawerImage = require("../assets/logo-kitchen-sink.png");
@@ -66,14 +67,19 @@ class SideBar extends Component {
                      payload:{
                          callback:(result,error)=>{
                                  if(result){
-                                     navigation.navigate("Login");
+                                     reset('Drawer');
                                  }
                             }
                      }
                  })
              break;
+              case 'CreateSr' :
+                  navigation.navigate('CreateSr',{
+                      problem: null,
+                      noSelection:false});
+             break;
               default:
-                  navigation.navigate(item.route,{noSelection:false});
+                  navigation.navigate(item.route);
           }
       }
 

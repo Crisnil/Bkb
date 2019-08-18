@@ -92,7 +92,6 @@ export default  class Srlisting extends Component {
 
 
     renderItems =(item,x)=>{
-            console.log(item);
         return(
             <ListItem thumbnail key={x}>
                 <Left>

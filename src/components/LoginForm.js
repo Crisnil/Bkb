@@ -25,6 +25,7 @@ import CustomActivityIndicator from "../layout/CustomActivityIndicator";
 import CustomInput from "../layout/CustomInput";
 import CustomButton from "../layout/CustomButton";
 import * as DeviceRatio from "../layout/DeviceRatio";
+import {CustomAlert} from "../layout";
 
 
 @connect(({ auth }) => ({ auth }))
@@ -59,9 +60,13 @@ class LoginForm extends Component {
                 username: j_username,
                 password:j_password,
                 callback: (result, error) => {
+                    //console.log("res login",result,error);
                     if (result) {
+                        // CustomAlert.success("Welcome");
                         navigation.navigate("Home")
 
+                    }else{
+                        CustomAlert.fail(error)
                     }
                 }
             },

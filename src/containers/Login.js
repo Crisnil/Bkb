@@ -70,18 +70,18 @@ class Login extends Component {
                     <Content>
                         <LoginForm {...this.props} />
                     </Content>
-                <Footer>
-                    <FooterTab>
-                        <Button >
-                            <Icon name="person" />
-                            <Text>Forgot Password</Text>
-                        </Button>
-                        <Button vertical onPress={()=>dial(Config.CALLBKB)}>
-                            <Icon name="call" />
-                            <Text>Call BKB</Text>
-                        </Button>
-                    </FooterTab>
-                </Footer>
+                {/*<Footer>*/}
+                    {/*<FooterTab>*/}
+                        {/*<Button >*/}
+                            {/*<Icon name="person" />*/}
+                            {/*<Text>Forgot Password</Text>*/}
+                        {/*</Button>*/}
+                        {/*<Button vertical onPress={()=>dial(Config.CALLBKB)}>*/}
+                            {/*<Icon name="call" />*/}
+                            {/*<Text>Call BKB</Text>*/}
+                        {/*</Button>*/}
+                    {/*</FooterTab>*/}
+                {/*</Footer>*/}
             </Container>
         );
     }

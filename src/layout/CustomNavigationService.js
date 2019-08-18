@@ -31,18 +31,19 @@ const navigate = (routeName, params = {}) => {
 }
 
 const back = () => () => {
-
+	console.log("back servie");
 	const currentScreen = getCurrentScreen(navigator.state.nav)
 
 	switch (currentScreen) {
 		case 'Register':
 			break
 		case 'Dashboard':
+			reset('Drawer')
 			break
 		case 'CreateSr':
-			resetNavigate("LandingPages")
+			reset('Drawer')
 			break
-		case 'Home' || 'LandingPages':
+		case 'Home':
 			CustomAlert.alert(
 				`Warning!`,
 				`Are you sure you want to leave?`,
@@ -73,11 +74,10 @@ const backAfterSave = () => () => {
 const reset = routeName => {
 	navigator.dispatch(
 		StackActions.reset({
-			index: 0,
+			index: 1,
 			actions: [
-				NavigationActions.navigate({
-					routeName,
-				}),
+				NavigationActions.navigate({ routeName: 'Home' }),
+				NavigationActions.navigate({ routeName: routeName }),
 			],
 			key: null,
 		})
@@ -87,8 +87,8 @@ const reset = routeName => {
 const resetNavigate = routeName => {
 	navigator.dispatch(
 		StackActions.reset({
-			index: 0,
-			actions: [NavigationActions.navigate({ routeName: 'LandingPages' })],
+			index: 1,
+			actions: [NavigationActions.navigate({ routeName: 'Home' })],
 			key: null,
 		})
 	)
@@ -99,8 +99,8 @@ const resetNavigate = routeName => {
 const replace = routeName => {
 	navigator.dispatch(
 		StackActions.replace({
-			key: navigator.state.key,
-			routeName: 'Main',
+			key: null,
+			routeName: 'Home',
 			action: NavigationActions.navigate({ routeName }),
 		})
 	)

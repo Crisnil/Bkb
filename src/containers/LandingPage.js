@@ -19,13 +19,14 @@ const openSideMenu =(action)=>{
 
 }
 
-@connect(({ auth }) => ({ auth }))
+@connect(({ auth,services }) => ({ auth,services }))
 export default class LandingPage extends Component {
     constructor(props){
         super(props);
     }
 
     componentDidMount(){
+
         const {dispatch} = this.props;
             dispatch({
             type: 'auth/checkAuth',
@@ -33,10 +34,12 @@ export default class LandingPage extends Component {
         })
     }
 
+
+
     onIconPress =(route)=>{
         const {auth,navigation} = this.props;
         return()=>{
-            auth.isAuthenticated? navigation.navigate(route) : navigation.navigate("Login")
+            navigation.navigate(route)
         }
     }
 
@@ -49,15 +52,15 @@ export default class LandingPage extends Component {
                             transparent
                             onPress={CustomNavigationService.openDrawer()}
                         >
-                            <MaterialCommunityIcons name="menu" style={{marginRight:10,color:'#fff',fontSize:27}}/>
+                            <Icon name="menu" style={{marginRight:10,color:'#fff',fontSize:27}}/>
                         </Button>
                     </Left>
                     <Right>
 
-                        <MaterialCommunityIcons name="account-outline" style={{marginRight:10,color:'#fff',fontSize:27}}
+                        <Icon name="account-circle" style={{marginRight:10,color:'#fff',fontSize:27}}
                                                 onPress={this.onIconPress("Dashboard")}
                         />
-                        <MaterialCommunityIcons name="power"  style={{color:'#fff',fontSize:27}}
+                        <Icon name="exit-to-app"  style={{color:'#fff',fontSize:27}}
                             onPress={()=>BackHandler.exitApp()}
                         />
                     </Right>

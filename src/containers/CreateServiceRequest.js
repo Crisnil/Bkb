@@ -1,33 +1,46 @@
-
 import {
+    Animated,
     AppRegistry,
+    Dimensions,
+    Easing,
+    Image,
+    Modal,
+    PermissionsAndroid,
+    Platform,
+    ScrollView,
+    StatusBar,
     StyleSheet,
     Text,
-    View,
-    StatusBar,
-    Image,
-    Dimensions,
     TextInput,
-    Animated,
-    Easing,
-    ScrollView,
     TouchableOpacity,
-    Platform,
-    PermissionsAndroid,
-
-    } from "react-native";
-import {Spinner,Button,Body, Container, Header, Left, Right, Title,Icon,Picker,Footer,FooterTab} from "native-base";
-import React,{Component} from "react";
+    View,
+    BackHandler
+} from "react-native";
+import {
+    Body,
+    Button,
+    Container,
+    Footer,
+    FooterTab,
+    Header,
+    Icon,
+    Left,
+    Picker,
+    Right,
+    Spinner,
+    Title
+} from "native-base";
+import React, {Component} from "react";
 import MapView from 'react-native-maps';
-import _ , { debounce }from 'lodash';
+import _, {debounce} from 'lodash';
 //import Icon from 'react-native-vector-icons/Entypo';
 import update from 'react-addons-update'
-import {
-    StackNavigator,
-    NavigationActions
-} from 'react-navigation';
-import { getLocation,getReverseGeocoding } from '../services/location-service';
-import { connect } from 'react-redux';
+import {NavigationActions, StackNavigator} from 'react-navigation';
+import {getLocation, getReverseGeocoding} from '../services/location-service';
+import {connect} from 'react-redux';
+import CustomActivityIndicator from "../layout/CustomActivityIndicator";
+import {reset, resetNavigate} from "../layout/CustomNavigationService";
+import {CustomNavigationService} from "../layout";
 
 
 let { height, width } = Dimensions.get("window");
@@ -66,17 +79,26 @@ class CreateServiceRequest extends  Component {
     }
 
     componentDidMount() {
-        console.log(this.props);
-        this.requestLocationPermission();
-
+       this.fetchProblemCategory();
+            this.requestLocationPermission();
     }
+
     componentWillMount() {
-        console.disableYellowBox = true;
-
+        BackHandler.addEventListener('hardwareBackPress', this.backHandle)
     }
 
+    componentWillUnmount() {
+        BackHandler.removeEventListener('hardwareBackPress', this.backHandle)
+    }forceUpdate(callBack: () => void): void {
+    }
+    backHandle = () => {
+        console.log(this.props);
+        CustomNavigationService.back()()
+        return true
+    }
 
     async requestLocationPermission() {
+
         try {
             const granted = await PermissionsAndroid.request(
                 PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
@@ -91,6 +113,7 @@ class CreateServiceRequest extends  Component {
             } else {
                 console.log("Location permission denied")
             }
+
         } catch (err) {
             console.warn(err)
         }
@@ -168,7 +191,6 @@ class CreateServiceRequest extends  Component {
     }
 
     onMapPress =(e,key,address)=> {
-        console.log("placer",address);
         let marked = _.clone(this.state.markers);
 
         let itemIdx = _.findIndex(marked, (it) => {
@@ -215,6 +237,14 @@ class CreateServiceRequest extends  Component {
         });
     }
 
+    fetchProblemCategory =()=>{
+        const {dispatch} = this.props;
+        dispatch({
+            type:'service/requestCategory',
+            payload:{}
+        })
+    }
+
     submitSr =()=>{
         const{dispatch,navigation} = this.props;
 
@@ -232,9 +262,15 @@ class CreateServiceRequest extends  Component {
                 problem:this.props.navigation.getParam('problem', 'no specified') || this.state.selected2 ,
                 callback: (result, error) => {
                     if (result) {
-                        alert("success")
-                        this.setState({selected2:''})
-                        navigation.navigate("Dashboard");
+                        this.setState({selected2:'',
+                            markers:[],
+                            region:{}
+                        },() =>{
+                            alert(error);
+                            console.log(this.props);
+                            reset('Drawer');
+                        })
+
                     }
                 }
             },
@@ -242,7 +278,7 @@ class CreateServiceRequest extends  Component {
 
     }
     render() {
-        console.log( this.props.navigation.getParam('noSelection', false));
+       const {srCategory}=this.props.service
         const initialProb = this.props.navigation.getParam('noSelection', false)
         const problem = this.props.navigation.getParam('problem', 'Not Specified')
         const pratik = require("../assets/images/male.png");
@@ -250,12 +286,16 @@ class CreateServiceRequest extends  Component {
         const ic_pickup = require("../assets/icons/ic_pickup.png");
         const grabcar_premium =require ("../assets/icons/ic_grabcar_premium.png");
         const grabcar = require('../assets/icons/ic_grabcar.png')
+        const {service} =this.props;
 
-
+        let pickerOption = _.map(srCategory,(item,x)=>{
+            return (
+                <Picker.Item key={x} label={item.description} value={item.description}/>
+            )
+        })
         return (
            
             <View style={styles.container}>
-
                 <View style={styles.homePickerContainer}>
                     <View style={{
                         flex:1.5,
@@ -296,7 +336,7 @@ class CreateServiceRequest extends  Component {
                             <Text style={{
                                 color:"#464646",
                             }}>
-                                {!_.isEmpty(this.state.markers)? this.state.destination :"Where Are You Going ? (optional)"}
+                                {!_.isEmpty(this.state.markers)? this.state.destination :"Where Are You Going ? (press on the map)"}
                             </Text>
                         </View>
 
@@ -345,13 +385,19 @@ class CreateServiceRequest extends  Component {
                             onDragEnd={e =>this.onUserPinDragEnd(e)}
                         />
                     ))}
-                </MapView> : null}
+                </MapView> :
+                        <CustomActivityIndicator
+                            animating = {true}
+                            text="Please Wait..."
+                            color="#D44638"
+                        />
+                }
                 {/*<View style={styles.iosOnlyTopBar}/>*/}
 
 
 
                 <View style={styles.bottomContainer}>
-                    <TouchableOpacity  onPress={() => this.getInitialState()}>
+                    <TouchableOpacity onPress={() => this.getInitialState()}>
 
                         <Image style={{zIndex:2, height:38, width:38, resizeMode: 'contain',marginRight:12, marginBottom: 24, alignSelf:"flex-end"}}
                                source={require('../assets/icons/ic_locate.png')}
@@ -379,12 +425,13 @@ class CreateServiceRequest extends  Component {
                                     selectedValue={this.state.selected2}
                                     onValueChange={this.onValueChange2.bind(this)}
                                 >
-                                    <Picker.Item label="Towing" value="key0"/>
-                                    <Picker.Item label="Flat Battery" value="key1" />
-                                    <Picker.Item label="Flat Tire" value="key2" />
-                                    <Picker.Item label="Emergency Fuel" value="key3" />
-                                    <Picker.Item label="Alternative Tranport" value="key4" />
-                                    <Picker.Item label="Key Finder" value="key5" />
+                                    {/*<Picker.Item label="Towing" value="key0"/>*/}
+                                    {/*<Picker.Item label="Flat Battery" value="key1" />*/}
+                                    {/*<Picker.Item label="Flat Tire" value="key2" />*/}
+                                    {/*<Picker.Item label="Emergency Fuel" value="key3" />*/}
+                                    {/*<Picker.Item label="Alternative Tranport" value="key4" />*/}
+                                    {/*<Picker.Item label="Key Finder" value="key5" />*/}
+                                    {pickerOption}
                                 </Picker>
                             }
                             {/*<View   style={{ flex:1, }} >*/}

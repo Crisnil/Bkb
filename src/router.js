@@ -140,6 +140,7 @@ const AppNavigator = createStackNavigator(
         Login: {screen:Login},
         Register: {screen:Registration},
 
+
     },
     {
         headerMode: 'none',

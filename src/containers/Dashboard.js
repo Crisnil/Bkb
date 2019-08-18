@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Image, ImageBackground, StatusBar, StyleSheet} from "react-native";
+import {Image, ImageBackground, StatusBar, StyleSheet,BackHandler} from "react-native";
 import {
     Body,
     Button,
@@ -26,13 +26,14 @@ import {
 import Srlisting from "../components/SrListing";
 import {dial} from "../utils/CallDialer";
 import { connect } from 'react-redux'
+import {CustomNavigationService} from "../layout";
 
 const pratik = require("../assets/images/male.png");
 const camera = require("../assets/camera.png");
 
 
 
-@connect(({ service }) => ({ service }))
+@connect(({ auth,service }) => ({auth,service }))
 class Dashboard extends Component {
     constructor(props){
         super(props);
@@ -46,8 +47,19 @@ class Dashboard extends Component {
         this.fetchSrHistory();
     }
 
+    componentWillMount() {
+        BackHandler.addEventListener('hardwareBackPress', this.backHandle)
+    }
+
     componentWillUnmount() {
-        this.setState({active:false})
+        BackHandler.removeEventListener('hardwareBackPress', this.backHandle)
+    }forceUpdate(callBack: () => void): void {
+    }
+
+    backHandle = () => {
+        console.log(this.props);
+        CustomNavigationService.back()()
+        return true
     }
 
     fetchProblemCategory =()=>{
@@ -66,7 +78,7 @@ class Dashboard extends Component {
         })
     }
     render() {
-    console.log(this.props.service);
+    // console.log("dashboardpage",this.props);
     const {navigation} = this.props;
         return (
           <Container>

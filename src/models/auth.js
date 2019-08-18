@@ -33,9 +33,9 @@ export default {
                 try {
                     const responseVerify =  yield RestClient.postWithoutAuth(
                         `${Config.DEFAULT_URL}/api/auth/verify_user/`,
-                        payload
+                        {ic_number: payload.ic_number,phone_number:payload.phone_number}
                     )
-                    //console.log(responseVerify.data);
+                        console.log("verify",responseVerify.data);
 
                     payload.customerid = responseVerify.data.data[0].customerid
 
@@ -55,7 +55,7 @@ export default {
                         payload.callback(false, null)
                     }
                 }
-
+                //yield put({ type: 'loadEnd' });
 
             },
             { type: 'takeLatest' },
@@ -70,7 +70,7 @@ export default {
                         `${Config.DEFAULT_URL}/api/auth/register`,
                         payload
                     )
-                    //console.log("reg",responseSuccess.data);
+                    console.log("reg",responseSuccess.data);
 
                     yield put({ type: 'loadEnd' });
 
@@ -84,13 +84,13 @@ export default {
 
                     console.log(parsedError)
 
-                    if (_.get(parsedError, 'response.data')) {
-                        payload.callback(false, parsedError.response.data.message)
+                    if (parsedError) {
+                        payload.callback(false, parsedError)
                     } else {
                         payload.callback(false, null)
                     }
                 }
-
+                yield put({ type: 'loadEnd' });
 
             },
             { type: 'takeLatest' },
@@ -152,16 +152,16 @@ export default {
 
                     yield AsyncStorage.setItem('token', token);
 
-                    yield put({ type: 'loginSuccess', payload});
+                    yield put({ type: 'checkAuth', payload});
 
                 } catch (error) {
                     yield put({ type: 'loadEnd' });
                     const parsedError = JSON.parse(JSON.stringify(error))
 
-                    console.log(parsedError)
+                    console.log(parsedError.message);
 
-                    if (_.get(parsedError, 'response.data')) {
-                        payload.callback(false, parsedError.response.data.message)
+                    if (parsedError) {
+                        payload.callback(false, "Login Failed")
                     } else {
                         payload.callback(false, null)
                     }
