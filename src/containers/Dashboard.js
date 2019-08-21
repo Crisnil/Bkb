@@ -26,8 +26,8 @@ import {
 import Srlisting from "../components/SrListing";
 import {dial} from "../utils/CallDialer";
 import { connect } from 'react-redux'
-import {CustomNavigationService} from "../layout";
-
+import {CustomAlert, CustomNavigationService} from "../layout";
+import _ from 'lodash';
 const pratik = require("../assets/images/male.png");
 const camera = require("../assets/camera.png");
 
@@ -66,7 +66,14 @@ class Dashboard extends Component {
         const {dispatch} = this.props;
         dispatch({
             type:'service/requestCategory',
-            payload:{}
+            payload:{
+                callback:(result,error)=>{
+                    if(result == false){
+                        CustomAlert.alert(error);
+                    }
+                }
+            },
+
         })
     }
 
@@ -74,11 +81,20 @@ class Dashboard extends Component {
         const {dispatch} = this.props;
         dispatch({
             type:'service/serviceRequestList',
-            payload:{}
+            payload:{
+                callback:(result,error)=>{
+                    if(result == false){
+                        CustomAlert.alert(error);
+                    }
+                }
+            },
+
         })
     }
     render() {
     // console.log("dashboardpage",this.props);
+        const{auth} =this.props;
+        const{account}= auth;
     const {navigation} = this.props;
         return (
           <Container>
@@ -104,50 +120,50 @@ class Dashboard extends Component {
                       <Content padder>
                           <View style={{paddingTop:10,paddingBottom:10}}>
                               <Thumbnail large  source={pratik} style={{backgroundColor:'#fff'}}/>
-                              <Text>Crisnil F. Acuyado</Text>
+                              <Text>{!_.isEmpty(account)? account.data.customername : ""}</Text>
                           </View>
-                          <View>
-                              <ListItem icon>
-                                  <Left>
-                                      <Button style={{ backgroundColor: "#FF9501" }}>
-                                      </Button>
-                                  </Left>
-                                  <Body>
-                                  <Text>Airplane Mode</Text>
-                                  </Body>
-                                  <Right>
-                                      <Switch value={false} />
-                                  </Right>
-                              </ListItem>
-                              <ListItem icon>
-                                  <Left>
-                                      <Button style={{ backgroundColor: "#007AFF" }}>
-                                          <Icon active name="wifi" />
-                                      </Button>
-                                  </Left>
-                                  <Body>
-                                  <Text>Wi-Fi</Text>
-                                  </Body>
-                                  <Right>
-                                      <Text>GeekyAnts</Text>
-                                      <Icon active name="arrow-forward" />
-                                  </Right>
-                              </ListItem>
-                              <ListItem icon>
-                                  <Left>
-                                      <Button style={{ backgroundColor: "#007AFF" }}>
-                                          <Icon active name="bluetooth" />
-                                      </Button>
-                                  </Left>
-                                  <Body>
-                                  <Text>Bluetooth</Text>
-                                  </Body>
-                                  <Right>
-                                      <Text>On</Text>
-                                      <Icon active name="arrow-forward" />
-                                  </Right>
-                              </ListItem>
-                          </View>
+                          {/*<View>*/}
+                              {/*<ListItem icon>*/}
+                                  {/*<Left>*/}
+                                      {/*<Button style={{ backgroundColor: "#FF9501" }}>*/}
+                                      {/*</Button>*/}
+                                  {/*</Left>*/}
+                                  {/*<Body>*/}
+                                  {/*<Text>Airplane Mode</Text>*/}
+                                  {/*</Body>*/}
+                                  {/*<Right>*/}
+                                      {/*<Switch value={false} />*/}
+                                  {/*</Right>*/}
+                              {/*</ListItem>*/}
+                              {/*<ListItem icon>*/}
+                                  {/*<Left>*/}
+                                      {/*<Button style={{ backgroundColor: "#007AFF" }}>*/}
+                                          {/*<Icon active name="wifi" />*/}
+                                      {/*</Button>*/}
+                                  {/*</Left>*/}
+                                  {/*<Body>*/}
+                                  {/*<Text>Wi-Fi</Text>*/}
+                                  {/*</Body>*/}
+                                  {/*<Right>*/}
+                                      {/*<Text>GeekyAnts</Text>*/}
+                                      {/*<Icon active name="arrow-forward" />*/}
+                                  {/*</Right>*/}
+                              {/*</ListItem>*/}
+                              {/*<ListItem icon>*/}
+                                  {/*<Left>*/}
+                                      {/*<Button style={{ backgroundColor: "#007AFF" }}>*/}
+                                          {/*<Icon active name="bluetooth" />*/}
+                                      {/*</Button>*/}
+                                  {/*</Left>*/}
+                                  {/*<Body>*/}
+                                  {/*<Text>Bluetooth</Text>*/}
+                                  {/*</Body>*/}
+                                  {/*<Right>*/}
+                                      {/*<Text>On</Text>*/}
+                                      {/*<Icon active name="arrow-forward" />*/}
+                                  {/*</Right>*/}
+                              {/*</ListItem>*/}
+                          {/*</View>*/}
                       </Content>
                   </Tab>
 

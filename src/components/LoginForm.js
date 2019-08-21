@@ -26,6 +26,7 @@ import CustomInput from "../layout/CustomInput";
 import CustomButton from "../layout/CustomButton";
 import * as DeviceRatio from "../layout/DeviceRatio";
 import {CustomAlert} from "../layout";
+import ForgotPassword from "./forgotPassword";
 
 
 @connect(({ auth }) => ({ auth }))
@@ -38,6 +39,8 @@ class LoginForm extends Component {
             activity:false,
             j_username: '',
             j_password: '',
+            checked:false,
+            forgotPassword:false
         }
     }
 
@@ -53,7 +56,7 @@ class LoginForm extends Component {
 
         const { dispatch,navigation } = this.props
         const { j_password, j_username } = this.state
-
+        this.state.checked ?
         dispatch({
             type: 'auth/login',
             payload: {
@@ -66,11 +69,22 @@ class LoginForm extends Component {
                         navigation.navigate("Home")
 
                     }else{
-                        CustomAlert.fail(error)
+                        if(error != null){
+                            CustomAlert.fail(error)
+                        }else{
+                            CustomAlert.fail("Registration Failed")
+                        }
+
                     }
                 }
             },
-        })
+        }):
+            CustomAlert.alert("Notification","Please accept terms and condition",)
+    }
+
+    onPressCheck =()=>{
+        console.log("press");
+        this.setState({checked:!this.state.checked})
     }
 
     onLogin = () => {
@@ -85,6 +99,9 @@ class LoginForm extends Component {
         this.setState({modalVisible: visible});
     }
 
+    setForgotForm =(visible)=> {
+        this.setState({forgotPassword: visible})
+    }
 
     render() {
         const { auth } = this.props
@@ -94,18 +111,11 @@ class LoginForm extends Component {
                 <>
                     {auth.loading?
                         (
-                            <Modal
-                                animationType="none"
-                                transparent={false}
-                                visible={auth.loading}
-                               >
                                 <CustomActivityIndicator
                                     animating = {true}
                                     text="Loggin in..."
                                     color="#D44638"
                                 />
-                            </Modal>
-
                          )
 
                      : (
@@ -137,14 +147,15 @@ class LoginForm extends Component {
                                     />
                                 </Item>
                                 <ListItem style={{marginTop:10}}>
-                                    <CheckBox />
+                                    <CheckBox checked={this.state.checked} onPress={this.onPressCheck} />
                                     <Body>
-                                    <Text>I agree to the
-                                        <Text
-                                            onPress={() =>{this.setModalVisible(!this.state.modalVisible)}}>
-                                            Terms of Service
-                                        </Text>
-                                    </Text>
+                                        <Button transparent>
+                                            <Text
+
+                                                onPress={() =>{this.setModalVisible(!this.state.modalVisible)}}>
+                                                I agree to the Terms of Service
+                                            </Text>
+                                        </Button>
                                     </Body>
                                 </ListItem>
 
@@ -202,7 +213,20 @@ class LoginForm extends Component {
                             >
                                 <Text>Register</Text>
                             </Button>
+                            <View style={{flexDirection:'row',justifyContent: 'space-between',}}>
+                                <Button transparent info style={{ margin: 15, marginTop: 10 }}
+                                        onPress={()=>this.setForgotForm(true)}
+                                >
+                                    <Text>Forgot Password</Text>
+                                </Button>
+                                <Button transparent info style={{ margin: 15, marginTop: 10 }}
+                                        onPress={()=>dial('09209502976',false)}
+                                >
+                                    <Text>Call Bkb</Text>
+                                </Button>
+                            </View>
                         </View>
+
                         )
                     }
                     <View>
@@ -214,6 +238,18 @@ class LoginForm extends Component {
                                 this.setModalVisible(false)
                             }}>
                             <TermsOfService/>
+                        </Modal>
+
+                        <Modal
+                            animationType="slide"
+                            transparent={false}
+                            visible={this.state.forgotPassword}
+                            onRequestClose={() => {
+                                this.setForgotForm(false)
+                            }}>
+                            <ForgotPassword
+                                onClose = {this.setForgotForm}
+                            />
                         </Modal>
                     </View>
                 </>

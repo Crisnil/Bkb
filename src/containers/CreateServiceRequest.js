@@ -40,7 +40,7 @@ import {getLocation, getReverseGeocoding} from '../services/location-service';
 import {connect} from 'react-redux';
 import CustomActivityIndicator from "../layout/CustomActivityIndicator";
 import {reset, resetNavigate} from "../layout/CustomNavigationService";
-import {CustomNavigationService} from "../layout";
+import {CustomAlert, CustomNavigationService} from "../layout";
 
 
 let { height, width } = Dimensions.get("window");
@@ -241,7 +241,14 @@ class CreateServiceRequest extends  Component {
         const {dispatch} = this.props;
         dispatch({
             type:'service/requestCategory',
-            payload:{}
+            payload:{
+                callback:(result,error)=>{
+                    if(result == false){
+                        CustomAlert.alert(error);
+                    }
+                }
+            },
+
         })
     }
 
@@ -278,7 +285,8 @@ class CreateServiceRequest extends  Component {
 
     }
     render() {
-       const {srCategory}=this.props.service
+        console.log("props",this.props);
+        const {srCategory}=this.props.service;
         const initialProb = this.props.navigation.getParam('noSelection', false)
         const problem = this.props.navigation.getParam('problem', 'Not Specified')
         const pratik = require("../assets/images/male.png");
@@ -290,7 +298,7 @@ class CreateServiceRequest extends  Component {
 
         let pickerOption = _.map(srCategory,(item,x)=>{
             return (
-                <Picker.Item key={x} label={item.description} value={item.description}/>
+                <Picker.Item key={x} label={item.description} value={item.description}style={{padding:10}}/>
             )
         })
         return (
@@ -409,7 +417,7 @@ class CreateServiceRequest extends  Component {
                             { initialProb == true ?
                                 <View style={{zIndex:4,backgroundColor:'#fff',alignItems:'center'}}>
                                     <Text style={{
-                                        color:"#464646",fontSize:20,zIndex:5
+                                        color:"#464646",fontSize:20,zIndex:5,padding:10
                                     }}>
                                         {problem}
                                     </Text>
@@ -425,13 +433,7 @@ class CreateServiceRequest extends  Component {
                                     selectedValue={this.state.selected2}
                                     onValueChange={this.onValueChange2.bind(this)}
                                 >
-                                    {/*<Picker.Item label="Towing" value="key0"/>*/}
-                                    {/*<Picker.Item label="Flat Battery" value="key1" />*/}
-                                    {/*<Picker.Item label="Flat Tire" value="key2" />*/}
-                                    {/*<Picker.Item label="Emergency Fuel" value="key3" />*/}
-                                    {/*<Picker.Item label="Alternative Tranport" value="key4" />*/}
-                                    {/*<Picker.Item label="Key Finder" value="key5" />*/}
-                                    {pickerOption}
+                                    { pickerOption }
                                 </Picker>
                             }
                             {/*<View   style={{ flex:1, }} >*/}

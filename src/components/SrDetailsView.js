@@ -19,14 +19,14 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 
 const deviceWidth = Dimensions.get("window").width;
 const logo = require("../assets/logo.png");
-const cardImage = require("../assets/drawer-cover.png");
+const cardImage = require("../assets/icons/ic_launcher.png");
 
 const rate = [
-    { text: "Excellent", icon: "american-football", iconColor: "#2c8ef4" },
-    { text: "Very Good", icon: "analytics", iconColor: "#f42ced" },
-    { text: "Good", icon: "aperture", iconColor: "#ea943b" },
-    { text: "Fair", icon: "trash", iconColor: "#fa213b" },
-    { text: "Poor", icon: "close", iconColor: "#25de5b" }
+    { text: "Excellent", icon: "star", iconColor: "#2c8ef4" },
+    { text: "Very Good", icon: "star", iconColor: "#f42ced" },
+    { text: "Good", icon: "star", iconColor: "#ea943b" },
+    { text: "Fair", icon: "star", iconColor: "#fa213b" },
+    { text: "Poor", icon: "star", iconColor: "#25de5b" }
 ]
 
 const DESTRUCTIVE_INDEX = 3;
@@ -41,6 +41,8 @@ class SrDetailsView extends Component {
         };
     }
     render() {
+        console.log("details",this.props)
+        const {item} = this.props.itemDetails
         return (
             <Modal
                 animationType="slide"
@@ -49,27 +51,30 @@ class SrDetailsView extends Component {
                 onRequestClose={ this.props.onClose}>
                 <Container>
                     <Header>
-                        <Right>
-                            <MaterialCommunityIcons name="account-outline" style={{marginRight:10,color:'#fff',fontSize:27}}
-                                                    onPress={this.props.onClose}
-                            />
-                        </Right>
+                        <Left/>
+                        <Body>
+                            <Title>Service Request Details</Title>
+                        </Body>
+                        {/*<Right>*/}
+                            {/*<MaterialCommunityIcons name="account-outline" style={{marginRight:10,color:'#fff',fontSize:27}}*/}
+                                                    {/*onPress={this.props.onClose}*/}
+                            {/*/>*/}
+                        {/*</Right>*/}
                     </Header>
                 <Content padder>
                     <Card>
                         <CardItem bordered>
                             <Left>
-                                <Thumbnail source={logo} />
-                                <Body>
-                                <Text>Driver Name : Mad Max</Text>
-                                <Text note>Truck Reg. # : 123456789</Text>
-                                <Text note>Phone no. +47474758</Text>
-                                <Text note>Distance : 3 Km</Text>
-                                <Text note>ETA : 1 Hr</Text>
-                                </Body>
+                                <Thumbnail source={cardImage} />
+                                <Text>
+                                    Driver : {item.driver}
+                                </Text>
+                                <Body></Body>
                             </Left>
+                            <Right>
+                                    <Text onPress={this.props.onClose}>Close</Text>
+                            </Right>
                         </CardItem>
-
                         <CardItem>
                             <Body>
                             <Text note>Pick up Location : Center City</Text>
@@ -79,10 +84,6 @@ class SrDetailsView extends Component {
                             <H3 style={{marginTop:5}}>Problem</H3>
                             <Text note>
                                 Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                                Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-                                when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-                                It has survived not only five centuries, but also the leap into electronic typesetting,
-                                remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
                             </Text>
                             </Body>
                         </CardItem>

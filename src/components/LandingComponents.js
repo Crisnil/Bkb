@@ -8,6 +8,7 @@ import {dial} from "../utils/CallDialer";
 import _ from "lodash";
 import TermsOfService from "../components/Terms";
 import CustomActivityIndicator from "../layout/CustomActivityIndicator";
+import {CustomAlert} from "../layout";
 
 const redlogo = require("../assets/bkblogo.png");
 const resizeMode = 'center';
@@ -24,15 +25,28 @@ export default class LandingComponents extends Component {
         }
     }
     componentDidMount(){
+
         this.fetchProblemCategory();
     }
 
     fetchProblemCategory =()=>{
-        const {dispatch} = this.props;
-        dispatch({
-            type:'service/requestCategory',
-            payload:{}
-        })
+
+        const {dispatch,auth} = this.props;
+        if(auth.isAuthenticated){
+            console.log("fetching")
+            dispatch({
+                type:'service/requestCategory',
+                payload:{
+                    callback:(result,error)=>{
+                        if(result == false){
+                            CustomAlert.alert(error);
+                        }
+                    }
+                },
+
+            })
+        }
+
     }
     setModalVisible=(visible,problem)=> {
         if(this.props.auth.isAuthenticated) {
@@ -104,7 +118,7 @@ export default class LandingComponents extends Component {
 
         const renderproblems = _.map(staticServices, (item, x) => {
             return(
-                <TouchableHighlight key={item.problemid} onPress={() => this.setModalVisible(true,"")}underlayColor="white">
+                <TouchableHighlight key={item.problemid} onPress={() => this.setModalVisible(true,item.description)}underlayColor="white">
                     <View style={styles.button}>
                         <MaterialCommunityIcons style={{fontSize:60 , color:'#ED1727',padding: 10}} name={item.icon}/>
                         <Text style={styles.buttonText}>{item.description}</Text>

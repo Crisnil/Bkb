@@ -49,8 +49,8 @@ export default {
 
                     console.log(parsedError)
 
-                    if (_.get(parsedError, 'response.data')) {
-                        payload.callback(false, parsedError.response.data.message)
+                    if (!_.isEmpty(parsedError)) {
+                        payload.callback(false, parsedError.message)
                     } else {
                         payload.callback(false, null)
                     }
@@ -122,8 +122,8 @@ export default {
 
                     console.log(parsedError)
 
-                    if (_.get(parsedError, 'response.data')) {
-                        payload.callback(false, parsedError.response.data.message)
+                    if (parsedError) {
+                        payload.callback(false, parsedError.message)
                     } else {
                         payload.callback(false, null)
                     }

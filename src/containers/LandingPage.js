@@ -26,7 +26,7 @@ export default class LandingPage extends Component {
     }
 
     componentDidMount(){
-
+        console.log("logging in");
         const {dispatch} = this.props;
             dispatch({
             type: 'auth/checkAuth',

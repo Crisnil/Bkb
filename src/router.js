@@ -200,17 +200,6 @@ export default class Router extends PureComponent {
 
     backHandle = () => {
         console.log(this.props);
-        // console.log("backactions",this.props);
-        // const currentScreen = getActiveRouteName(this.props.router)
-        //
-        // if (currentScreen === 'Dashboard' || currentScreen === 'Login') {
-        //     return true
-        // }
-        // if (currentScreen !== 'Home') {
-        //     this.props.dispatch(NavigationActions.back())
-        //     return true
-        // }
-        // return false
         CustomNavigationService.back()()
         return true
     }

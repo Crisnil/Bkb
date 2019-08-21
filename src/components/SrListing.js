@@ -20,39 +20,6 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import SrDetailsView from "../components/SrDetailsView";
 import CustomActivityIndicator from "../layout/CustomActivityIndicator";
 
-const datas = [
-    {
-
-        text: "Sankhadeep",
-        note: "Its time to build a difference . ."
-    },
-    {
-
-        text: "Supriya",
-        note: "One needs courage to be happy and smiling all time . . "
-    },
-    {
-
-        text: "Shivraj",
-        note: "Time changes everything . ."
-    },
-    {
-
-        text: "Shruti",
-        note: "The biggest risk is a missed opportunity !!"
-    },
-    {
-
-        text: "Himanshu",
-        note: "Live a life style that matchs your vision"
-    },
-    {
-
-        text: "Shweta",
-        note: "Failure is temporary, giving up makes it permanent"
-    }
-];
-
 const styles = StyleSheet.create({
     container: {
         backgroundColor: "#FFF"
@@ -71,49 +38,51 @@ export default  class Srlisting extends Component {
     constructor(props) {
         super(props);
         this.state= {
-            modalVisible:false,
-            fetching:false,
-            activity:true
+            modalVisible: false,
+            fetching: false,
+            activity: true,
+            item: null
         }
     }
 
-    onClickDetails =()=>{
-        this.setState({ fetching: true,activity:true });
-        setTimeout(() => {
-            this.setState({modalVisible:true,
-                fetching: false,activity:false
-            })
-        }, 500);
+    onClickDetails =(item)=>{
+        return(e)=> {
+            e.preventDefault();
+            e.stopPropagation();
+            this.setState({
+                modalVisible: true,
+                item: item
+            });
+            // setTimeout(() => {
+            //     this.setState({modalVisible:true,
+            //         fetching: false,activity:false
+            //     })
+            // }, 500);
+        }
     }
 
     onClose = ()=>{
-        this.setState({modalVisible:!this.state.modalVisible})
+        this.setState({modalVisible:false,item:null})
     }
 
 
     renderItems =(item,x)=>{
         return(
-            <ListItem thumbnail key={x}>
+            <ListItem icon key={x} onPress={this.onClickDetails(item)}>
                 <Left>
-                    <MaterialCommunityIcons name='calendar-clock' style={{fontSize:35,color:'#45D56E'}}/>
+                    <Button style={{ backgroundColor: "#007AFF" }}>
+                        <Icon active name="build" />
+                    </Button>
                 </Left>
                 <Body>
-                <Text>
-                    {item.item.srid}
-                </Text>
-                <Text numberOfLines={1} note>
-                    {item.item.acceptedby ||''}
-                </Text>
+                    <Text>{item.item.srid}</Text>
                 </Body>
                 <Right>
                     <Text>{item.item.servicerequeststatus.description}</Text>
-                    <Button transparent
-                            onPress={this.onClickDetails}
-                    >
-                        <Text>View</Text>
-                    </Button>
-                </Right>
+                    <Icon active name="update" />
+                    </Right>
             </ListItem>
+
         )
     }
     render() {
@@ -122,14 +91,14 @@ export default  class Srlisting extends Component {
             <Container style={styles.container}>
 
                 <Content padder>
-                    {this.state.fetching ?
-                        <CustomActivityIndicator
-                            animating={true}
-                            text="Loggin in..."
-                            color="#D44638"
-                        />
-                        : null
-                    }
+                    {/*{this.state.fetching ?*/}
+                        {/*<CustomActivityIndicator*/}
+                            {/*animating={true}*/}
+                            {/*text="Loggin in..."*/}
+                            {/*color="#D44638"*/}
+                        {/*/>*/}
+                        {/*: null*/}
+                    {/*}*/}
                         <FlatList
                             data={srs}
                             keyExtractor={(item,x) => x.toString()}
@@ -140,6 +109,7 @@ export default  class Srlisting extends Component {
                     {this.state.modalVisible?
                         <SrDetailsView
                             modalVisible={this.state.modalVisible}
+                            itemDetails={this.state.item}
                             onClose={this.onClose}
                         /> :
                         null

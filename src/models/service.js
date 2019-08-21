@@ -36,7 +36,7 @@ export default {
             }
         ],
         requestCategory: [
-            function*({ payload }, { put }) {
+            function*({payload}, { put }) {
 
                 yield put({ type: 'loadStart' });
 
@@ -45,20 +45,23 @@ export default {
                         `${Config.DEFAULT_URL}/service_request_problem/`,
                         {timeout:5000}
                     );
-                    // console.log("responseproblem",responseproblem);
+                    console.log("responseproblem",responseproblem);
 
                     yield put({ type: 'srsReceived', payload:{srCategory:responseproblem.data}});
 
                 } catch (error) {
                     const parsedError = JSON.parse(JSON.stringify(error))
 
-                    console.log(parsedError)
+                    console.log("error",parsedError)
 
-                    if (_.get(parsedError, 'response.data')) {
-                        payload.callback(false, parsedError.response.data.message)
-                    } else {
-                        payload.callback(false, null)
+                    if (payload.callback){
+                        if (!_.isEmpty(parsedError)) {
+                            payload.callback(false, parsedError.message)
+                        } else {
+                            payload.callback(false, null)
+                        }
                     }
+
                 }
 
                 yield put({ type: 'loadEnd' });
@@ -66,7 +69,7 @@ export default {
             { type: 'takeLatest' },
         ],
         serviceRequestList: [
-            function*({ payload }, { put }) {
+            function*({payload}, { put }) {
 
                 yield put({ type: 'loadStart' });
 
@@ -82,13 +85,16 @@ export default {
                 } catch (error) {
                     const parsedError = JSON.parse(JSON.stringify(error))
 
-                    console.log(parsedError)
+                    console.log("error", parsedError)
 
-                    if (_.get(parsedError, 'response.data')) {
-                        payload.callback(false, parsedError.response.data.message)
-                    } else {
-                        payload.callback(false, null)
+                    if (payload.callback){
+                        if (!_.isEmpty(parsedError)) {
+                            payload.callback(false, parsedError.message)
+                        } else {
+                            payload.callback(false, null)
+                        }
                     }
+
                 }
                 yield put({ type: 'loadEnd' });
 

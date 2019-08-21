@@ -25,6 +25,7 @@ import CustomActivityIndicator from "../layout/CustomActivityIndicator";
 import CustomInput from "../layout/CustomInput";
 import CustomButton from "../layout/CustomButton";
 import * as DeviceRatio from "../layout/DeviceRatio";
+import {CustomAlert} from "../layout";
 
 
 @connect(({ auth }) => ({ auth }))
@@ -78,7 +79,8 @@ class RegisterComponenets extends Component {
                 password:password,
                 callback: (result, error) => {
                     if (result) {
-                        navigation.navigate("Login")
+                        CustomAlert.success("Successful");
+                        navigation.navigate("Login");
 
                     }else{
                         alert(error)
