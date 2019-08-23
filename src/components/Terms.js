@@ -15,11 +15,13 @@ import {
     Form,
     Label,
     Input,
-    Item, View,CheckBox,ListItem
+    Item, View,CheckBox,ListItem,
+    H3
 } from "native-base";
 
-import { StyleSheet} from 'react-native'
+import { StyleSheet,BackHandler} from 'react-native'
 const TermsOfService = (props) => {
+
     return (
         <Container style={styles.container}>
             <Header style={{textAlign:'center'}}>
@@ -29,16 +31,20 @@ const TermsOfService = (props) => {
                 </Body>
             </Header>
             <Content padder>
-                <Text>Content goes here (internal)</Text>
+                <Text style={{justifyContent:'center'}}>
+                    <H3>{props.problem.description}</H3>
+                </Text>
 
-                <Button block style={{ margin: 15, marginTop: 50 }}
-                        onPress={props.onAccept}
-                >
+                <Text>Eng: </Text>
+                <Text style={{justifyContent:'space-around'}}>{props.problem.desc_content_eng}</Text>
+
+                <Text>Ind: </Text>
+                <Text style={{justifyContent:'space-around'}}>{props.problem.desc_content_indo}</Text>
+
+                <Button block style={{ margin: 15, marginTop: 50 }} onPress={props.onAccept}>
                     <Text>Accept</Text>
                 </Button>
-                <Button block style={{ margin: 15, marginTop: 50,backgroundColor: '#808080' }}
-                        onPress={props.onDecline}
-                >
+                <Button block style={{ margin: 15, marginTop: 10,backgroundColor: '#808080' }} onPress={props.onDecline}>
                     <Text>Decline</Text>
                 </Button>
             </Content>

@@ -1,13 +1,26 @@
-import React, { Component } from 'react';
-import { Container, Header, Content, Card, CardItem, Text, Icon, Right,Body,Left,Button } from 'native-base';
-import {View,Image,TouchableHighlight,StyleSheet,BackHandler} from 'react-native';
+import React, {Component} from 'react';
+import {
+    Body,
+    Button,
+    Card,
+    CardItem,
+    Container,
+    Content,
+    Footer,
+    FooterTab,
+    Header,
+    Icon,
+    Left,
+    Right,
+    Text
+} from 'native-base';
+import {BackHandler, Image, StyleSheet, TouchableHighlight, View} from 'react-native';
 import * as DeviceRatio from "../layout/DeviceRatio";
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { DrawerActions } from 'react-navigation';
-import {dial} from "../utils/CallDialer";
+import {DrawerActions} from 'react-navigation';
 import LandingComponents from "../components/LandingComponents";
-import { CustomAlert, CustomNavigationService, CustomTitleBar } from '../layout'
-import { connect } from 'react-redux'
+import {CustomNavigationService} from '../layout'
+import {connect} from 'react-redux'
+import {dial} from "../utils/CallDialer";
 
 const redlogo = require("../assets/bkblogo.png");
 const resizeMode = 'center';
@@ -26,7 +39,6 @@ export default class LandingPage extends Component {
     }
 
     componentDidMount(){
-        console.log("logging in");
         const {dispatch} = this.props;
             dispatch({
             type: 'auth/checkAuth',
@@ -78,6 +90,14 @@ export default class LandingPage extends Component {
                         />
                     </View>
                 <LandingComponents {...this.props}/>
+                <Footer>
+                    <FooterTab>
+                        <Button vertical onPress={()=>dial('09209502976',false)}>
+                            <Icon name="phone" />
+                            <Text>Special Assistance</Text>
+                        </Button>
+                    </FooterTab>
+                </Footer>
             </Container>
         );
     }

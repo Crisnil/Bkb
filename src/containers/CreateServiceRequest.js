@@ -14,7 +14,8 @@ import {
     TextInput,
     TouchableOpacity,
     View,
-    BackHandler
+    BackHandler,
+    Picker,
 } from "react-native";
 import {
     Body,
@@ -25,7 +26,7 @@ import {
     Header,
     Icon,
     Left,
-    Picker,
+
     Right,
     Spinner,
     Title
@@ -71,6 +72,7 @@ class CreateServiceRequest extends  Component {
             formattedAddress:"",
             destination:null,
             markers: [],
+            problem:""
         };
         this.onPanDrag = debounce(this.onPanDrag, 1000, {
             leading: true,
@@ -80,7 +82,9 @@ class CreateServiceRequest extends  Component {
 
     componentDidMount() {
        this.fetchProblemCategory();
-            this.requestLocationPermission();
+       this.requestLocationPermission();
+        const problem = this.props.navigation.getParam('problem', '');
+        this.setState({problem : problem})
     }
 
     componentWillMount() {
@@ -167,7 +171,6 @@ class CreateServiceRequest extends  Component {
     }
 
     addMarker=(e)=> {
-        console.log(e.nativeEvent.coordinate);
 
         let coordinates = _.clone(e.nativeEvent.coordinate);
         getReverseGeocoding(coordinates).then(data => {
@@ -266,7 +269,7 @@ class CreateServiceRequest extends  Component {
                 destination_lat :!_.isEmpty(this.state.markers)? this.state.markers[0].coordinate.latitude : '',
                 destination_remarks:'',
                 destination:!_.isEmpty(this.state.markers)? this.state.markers[0].destination : '',
-                problem:this.props.navigation.getParam('problem', 'no specified') || this.state.selected2 ,
+                problem:this.state.problem ,
                 callback: (result, error) => {
                     if (result) {
                         this.setState({selected2:'',
@@ -285,10 +288,10 @@ class CreateServiceRequest extends  Component {
 
     }
     render() {
-        console.log("props",this.props);
+        console.log("props",this.props.navigation.getParam('problem', false));
         const {srCategory}=this.props.service;
         const initialProb = this.props.navigation.getParam('noSelection', false)
-        const problem = this.props.navigation.getParam('problem', 'Not Specified')
+
         const pratik = require("../assets/images/male.png");
         const camera = require("../assets/camera.png");
         const ic_pickup = require("../assets/icons/ic_pickup.png");
@@ -414,15 +417,6 @@ class CreateServiceRequest extends  Component {
 
                     <View style={styles.mobilPilihanContainer}>
                         <View style={styles.mobilTop}>
-                            { initialProb == true ?
-                                <View style={{zIndex:4,backgroundColor:'#fff',alignItems:'center'}}>
-                                    <Text style={{
-                                        color:"#464646",fontSize:20,zIndex:5,padding:10
-                                    }}>
-                                        {problem}
-                                    </Text>
-                                </View>
-                                :
                                 <Picker
                                     mode="dropdown"
                                     iosIcon={<Icon name="arrow-down" />}
@@ -430,12 +424,11 @@ class CreateServiceRequest extends  Component {
                                     placeholder="Problem"
                                     placeholderStyle={{ color: "#bfc6ea" }}
                                     placeholderIconColor="#007aff"
-                                    selectedValue={this.state.selected2}
-                                    onValueChange={this.onValueChange2.bind(this)}
+                                    selectedValue= {this.state.problem}
+                                    onValueChange={this.onValueChange2}
                                 >
                                     { pickerOption }
                                 </Picker>
-                            }
                             {/*<View   style={{ flex:1, }} >*/}
                                {/*/!*<View style={{alignSelf: 'center',marginTop:5,height:3,width:29,borderRadius:2,backgroundColor:'#CCD6DD'}}/>*!/*/}
                                 {/**/}

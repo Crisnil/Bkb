@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Body, Button, Card, CardItem, Container, Content, Header, Icon, Left, Right, Text} from 'native-base';
-import {Image, Modal, StyleSheet, TouchableHighlight, View, FlatList} from 'react-native';
+import {Image, Modal, StyleSheet, TouchableHighlight, View, FlatList,BackHandler} from 'react-native';
 import * as DeviceRatio from "../layout/DeviceRatio";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {connect} from 'react-redux'
@@ -8,7 +8,7 @@ import {dial} from "../utils/CallDialer";
 import _ from "lodash";
 import TermsOfService from "../components/Terms";
 import CustomActivityIndicator from "../layout/CustomActivityIndicator";
-import {CustomAlert} from "../layout";
+import {CustomAlert, CustomNavigationService} from "../layout";
 
 const redlogo = require("../assets/bkblogo.png");
 const resizeMode = 'center';
@@ -19,8 +19,7 @@ export default class LandingComponents extends Component {
     constructor(props){
         super(props)
         this.state = {
-            region: {},
-            problem:'',
+            problem:{},
             modalVisible:false
         }
     }
@@ -29,11 +28,11 @@ export default class LandingComponents extends Component {
         this.fetchProblemCategory();
     }
 
+
     fetchProblemCategory =()=>{
 
         const {dispatch,auth} = this.props;
-        if(auth.isAuthenticated){
-            console.log("fetching")
+
             dispatch({
                 type:'service/requestCategory',
                 payload:{
@@ -45,82 +44,99 @@ export default class LandingComponents extends Component {
                 },
 
             })
-        }
-
     }
+
     setModalVisible=(visible,problem)=> {
-        if(this.props.auth.isAuthenticated) {
-            this.setState({
-                modalVisible: visible,
-                problem: problem,
-            });
-        }else{
-            this.props.navigation.navigate('Login');
-        }
+            if (this.props.auth.isAuthenticated) {
+                const {dispatch} = this.props;
+                dispatch({
+                    type: 'service/checkAccepted',
+                    payload: {
+                        problemid: problem.problemid,
+                        callback: (response) => {
+                            if (response) {
+                                this.props.navigation.navigate('CreateSr', {
+                                    problem: problem.description,
+                                });
+                            } else {
+                                this.setState({
+                                    modalVisible: visible,
+                                    problem: problem,
+                                });
+                            }
+                        }
+                    }
+                })
+            } else {
+                this.props.navigation.navigate('Login');
+            }
+
     }
 
     onAccept =()=>{
-        this.setState({modalVisible: false},()=>{
-            this.props.navigation.navigate('CreateSr', {
-                problem: this.state.problem,
-                noSelection:true
-            });
-        });
+        const {dispatch} = this.props;
+        dispatch({
+            type: 'service/acceptTnc',
+            payload: {
+                problemid: this.state.problem.description,
+                callback: (response) => {
+                    if(response){
+                        this.setState({modalVisible: false});
+                        this.props.navigation.navigate('CreateSr', {
+                            problem: this.state.problem.problemid,
+                            noSelection:true
+                        });
+                    }else{
+                        CustomAlert.alert("Failed","Error in Sending Service Request");
+                        this.setState({modalVisible: false,problem:{}});
+                    }
+                }
+            }
+        })
+
     }
     onDecline =()=>{
         this.setState({modalVisible: false,
-            problem:''
+            problem:{}
         });
     }
 
+    renderIco =(item)=>{
+            switch (item.description) {
+                case "Flat Tyres" :
+                     return "disc-full"
+                    break;
+                case "Flat Battery" :
+                    return "battery-alert"
+                    break;
+                case "Emergency Fuel" :
+                    return "local-gas-station"
+                    break;
+                case "Towing" :
+                    return "rv-hookup"
+                    break;
+                case "Key Finder" :
+                    return "vpn-key"
+                    break;
+                case "Alternative Transport":
+                    return "local-taxi"
+                    break;
+                default:
+                 return  "build"
+            }
+    }
 
     render() {
-        const staticServices = [
-            {
-                problemid:100,
-                description:"Flat Tire",
-                staticService: true ,
-                icon:"alert-circle"
-            },
-            {
-                problemid:101,
-                description:"Emergency Fuel",
-                staticService: true,
-                icon:"fuel"
-            },
-            {
-                problemid:102,
-                description:"Flat Battery",
-                staticService: true,
-                icon:"car-battery"
-            },
-            {
-                problemid:103,
-                description:"Towing",
-                staticService: true,
-                icon:"towing"
-            },
-            {
-                problemid:104,
-                description:"Key Finder",
-                staticService: true,
-                icon:"key-remove"
-            },
-            {
-                problemid:105,
-                description:"Alternative Transport",
-                staticService: true,
-                icon:"car-pickup"
-            },
 
-        ];
-        const {srCategory} = this.props.service;
+        const{srCategory}=this.props.service
 
-        const renderproblems = _.map(staticServices, (item, x) => {
+        const withTnc = _.filter(srCategory, 'withTnc');
+
+        const renderproblems = _.map(withTnc.slice(0,6), (item, x) => {
             return(
-                <TouchableHighlight key={item.problemid} onPress={() => this.setModalVisible(true,item.description)}underlayColor="white">
+                <TouchableHighlight key={item.problemid} onPress={()=>this.setModalVisible(true,item)}underlayColor="white">
                     <View style={styles.button}>
-                        <MaterialCommunityIcons style={{fontSize:60 , color:'#ED1727',padding: 10}} name={item.icon}/>
+                        <Icon style={{fontSize:60 , color:'#ED1727',padding: 10}} name={this.renderIco(item)}/>
                         <Text style={styles.buttonText}>{item.description}</Text>
                     </View>
                 </TouchableHighlight>
@@ -128,7 +144,6 @@ export default class LandingComponents extends Component {
         })
                return (
 
-                <Content padder >
                     <View style={{flex: 1,
                         flexDirection: 'row',
                         justifyContent: 'space-around',
@@ -139,33 +154,24 @@ export default class LandingComponents extends Component {
                                 animating = {true}
                                 text="Please Wait..."
                                 color="#D44638"
-                            />:null
+                            />
+                            :renderproblems
                         }
-                        {
-                           renderproblems
-                        }
-                        <TouchableHighlight   onPress={()=>dial('09209502976',false)} underlayColor="white">
-                            <View style={styles.button}>
-                                <MaterialCommunityIcons name='phone'  style={{fontSize:60 , color:'#ED1727',padding: 10}}/>
-                                <Text style={styles.buttonText}>Special Assistance</Text>
-                            </View>
-                        </TouchableHighlight>
 
-                    </View>
-                    <View>
                         {this.state.modalVisible?
                             <Modal
                                 animationType="slide"
                                 transparent={false}
                                 visible={this.state.modalVisible}
                                 onRequestClose={() => {
-                                    this.setModalVisible(false)
+                                   this.onDecline()
                                 }}>
-                                <TermsOfService onAccept={this.onAccept} onDecline={this.onDecline} />
+                                <TermsOfService onAccept={this.onAccept} onDecline={this.onDecline} problem={this.state.problem}
+                                />
                             </Modal> : null
                         }
                     </View>
-                </Content>
+
 
         );
     }

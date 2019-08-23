@@ -66,25 +66,31 @@ class SrDetailsView extends Component {
                         <CardItem bordered>
                             <Left>
                                 <Thumbnail source={cardImage} />
-                                <Text>
-                                    Driver : {item.driver}
-                                </Text>
-                                <Body></Body>
                             </Left>
+                            <Body></Body>
                             <Right>
                                     <Text onPress={this.props.onClose}>Close</Text>
                             </Right>
                         </CardItem>
+                         <CardItem>
+                            <Body>
+                                <Text>Driver : {item.driver}</Text>
+                                <Text>Track Reg No : {item.truck}</Text>
+                                <Text>Phone No :</Text>
+                                <Text>Distance :</Text>
+                                <Text>ETA :</Text>
+                            </Body>
+                        </CardItem>
                         <CardItem>
                             <Body>
-                            <Text note>Pick up Location : Center City</Text>
-                            <Text note>Remarks : Pending</Text>
-                            <Text note>Distination : Home</Text>
-                            <Text note>Remarks : Pending</Text>
-                            <H3 style={{marginTop:5}}>Problem</H3>
-                            <Text note>
-                                Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                            </Text>
+                                <Text note>Pick up Location :{item.pickup_location}</Text>
+                                <Text note>Pick up Remarks : {item.pickupremarks}</Text>
+                                <Text note>Destination : {item.destination}</Text>
+                                <Text note>Destination Remarks : {item.destinationremarks}</Text>
+                                <H3 style={{marginTop:5}}>Problem</H3>
+                                <Text note>
+                                    {item.problem}
+                                </Text>
                             </Body>
                         </CardItem>
                         <CardItem style={{ paddingVertical: 0 }}>

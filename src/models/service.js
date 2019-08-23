@@ -45,14 +45,13 @@ export default {
                         `${Config.DEFAULT_URL}/service_request_problem/`,
                         {timeout:5000}
                     );
-                    console.log("responseproblem",responseproblem);
 
                     yield put({ type: 'srsReceived', payload:{srCategory:responseproblem.data}});
 
                 } catch (error) {
                     const parsedError = JSON.parse(JSON.stringify(error))
 
-                    console.log("error",parsedError)
+
 
                     if (payload.callback){
                         if (!_.isEmpty(parsedError)) {
@@ -79,13 +78,13 @@ export default {
                         {filterBy:'all',
                              }
                     )
-                    console.log("responseSrlist",responseSr);
+
                     yield put({ type: 'srsReceived', payload:{srs:responseSr.data}});
 
                 } catch (error) {
                     const parsedError = JSON.parse(JSON.stringify(error))
 
-                    console.log("error", parsedError)
+
 
                     if (payload.callback){
                         if (!_.isEmpty(parsedError)) {
@@ -98,6 +97,51 @@ export default {
                 }
                 yield put({ type: 'loadEnd' });
 
+            },
+            { type: 'takeLatest' },
+        ],
+        checkAccepted: [
+            function*({ payload }, { put }) {
+                console.log(payload)
+                yield put({ type: 'loadStart' })
+                try {
+                    const checkTnc = yield RestClient.post(`${Config.DEFAULT_URL}/check_if_tnc_accepted`, {
+                        problemid:payload.problemid
+                    })
+                    console.log("check", checkTnc);
+
+                    if(checkTnc.data > 0 ){
+                        payload.callback(true);
+                    }else{
+                        payload.callback(false);
+                    }
+
+                }catch(error){
+                    console.log("checkerror", error);
+                        payload.callback(false)
+                }
+                yield put({ type: 'loadEnd' })
+            },
+            { type: 'takeLatest' },
+        ],
+        acceptTnc: [
+            function*({ payload }, { put }) {
+
+                yield put({ type: 'loadStart' })
+                try {
+                    const acceptTnc = yield RestClient.post(`${Config.DEFAULT_URL}/accept_terms_condition`, {
+                        problemid:payload.problemid
+                    })
+
+                        payload.callback(true);
+                    console.log("acceptTnc", acceptTnc);
+
+                }catch(error){
+                    console.log("accepterror", error);
+                    payload.callback(false)
+
+                }
+                yield put({ type: 'loadEnd' })
             },
             { type: 'takeLatest' },
         ],
