@@ -126,7 +126,7 @@ export default {
         ],
         acceptTnc: [
             function*({ payload }, { put }) {
-
+                console.log("acceptTnc",payload)
                 yield put({ type: 'loadStart' })
                 try {
                     const acceptTnc = yield RestClient.post(`${Config.DEFAULT_URL}/accept_terms_condition`, {

@@ -220,7 +220,7 @@ class LoginForm extends Component {
                                     <Text>Forgot Password</Text>
                                 </Button>
                                 <Button transparent info style={{ margin: 15, marginTop: 10 }}
-                                        onPress={()=>dial('09209502976',false)}
+                                        onPress={()=>dial('2444442',false)}
                                 >
                                     <Text>Call Bkb</Text>
                                 </Button>

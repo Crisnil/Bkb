@@ -16,6 +16,7 @@ import {
     Body, Fab, IconNB, H3, Footer, FooterTab,ActionSheet
 } from "native-base";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import {dial} from "../utils/CallDialer";
 
 const deviceWidth = Dimensions.get("window").width;
 const logo = require("../assets/logo.png");
@@ -93,7 +94,7 @@ class SrDetailsView extends Component {
                                 </Text>
                             </Body>
                         </CardItem>
-                        <CardItem style={{ paddingVertical: 0 }}>
+                        <CardItem style={{ paddingVertical: 0 }} bordered>
                             <Left>
                                 <Button transparent>
                                     {/*<Icon name="logo-github" />*/}
@@ -116,6 +117,26 @@ class SrDetailsView extends Component {
                                         )}
                                 >
                                     <Text>Rate</Text>
+                                </Button>
+                            </Right>
+                        </CardItem>
+                        <CardItem>
+                            <Left>
+                                <Button transparent vertical onPress={()=>dial('2444442',false)}>
+                                    <Icon name="phone" />
+                                    <Text>Call BKB</Text>
+                                </Button>
+                            </Left>
+                            <Body>
+                            <Button transparent vertical onPress={()=>dial('2444442',false)}>
+                                <Icon name="phone" />
+                                <Text>Call BKB</Text>
+                            </Button>
+                            </Body>
+                            <Right>
+                                <Button transparent vertical >
+                                    <Icon name="map" />
+                                    <Text>Map</Text>
                                 </Button>
                             </Right>
                         </CardItem>

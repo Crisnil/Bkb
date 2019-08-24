@@ -92,7 +92,7 @@ export default class LandingPage extends Component {
                 <LandingComponents {...this.props}/>
                 <Footer>
                     <FooterTab>
-                        <Button vertical onPress={()=>dial('09209502976',false)}>
+                        <Button vertical onPress={()=>dial('2444442',false)}>
                             <Icon name="phone" />
                             <Text>Special Assistance</Text>
                         </Button>

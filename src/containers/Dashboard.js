@@ -178,7 +178,7 @@ class Dashboard extends Component {
                       onPress={() => this.setState({ active: !this.state.active })}
                   >
                       <IconNB name="add" />
-                      <Button style={{ backgroundColor: "#34A34F" }} onPress={()=>dial('09209502976',false)}>
+                      <Button style={{ backgroundColor: "#34A34F" }} onPress={()=>dial('2444442',false)}>
                          <IconNB name="call" />
                       </Button>
                       <Button style={{ backgroundColor: "#3B5998" }} onPress={()=>navigation.navigate("CreateSr")}>

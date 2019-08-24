@@ -78,12 +78,12 @@ export default class LandingComponents extends Component {
         dispatch({
             type: 'service/acceptTnc',
             payload: {
-                problemid: this.state.problem.description,
+                problemid: this.state.problem.problemid,
                 callback: (response) => {
                     if(response){
                         this.setState({modalVisible: false});
                         this.props.navigation.navigate('CreateSr', {
-                            problem: this.state.problem.problemid,
+                            problem: this.state.problem.description,
                             noSelection:true
                         });
                     }else{
