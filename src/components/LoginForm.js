@@ -27,6 +27,7 @@ import CustomButton from "../layout/CustomButton";
 import * as DeviceRatio from "../layout/DeviceRatio";
 import {CustomAlert} from "../layout";
 import ForgotPassword from "./forgotPassword";
+import * as Config from "../config/Config";
 
 
 @connect(({ auth }) => ({ auth }))
@@ -39,7 +40,7 @@ class LoginForm extends Component {
             activity:false,
             j_username: '',
             j_password: '',
-            checked:false,
+            checked:true,
             forgotPassword:false
         }
     }
@@ -146,18 +147,18 @@ class LoginForm extends Component {
 
                                     />
                                 </Item>
-                                <ListItem style={{marginTop:10}}>
-                                    <CheckBox checked={this.state.checked} onPress={this.onPressCheck} />
-                                    <Body>
-                                        <Button transparent>
-                                            <Text
+                                {/*<ListItem style={{marginTop:10}}>*/}
+                                    {/*<CheckBox checked={this.state.checked} onPress={this.onPressCheck} />*/}
+                                    {/*<Body>*/}
+                                        {/*<Button transparent>*/}
+                                            {/*<Text*/}
 
-                                                onPress={() =>{this.setModalVisible(!this.state.modalVisible)}}>
-                                                I agree to the Terms of Service
-                                            </Text>
-                                        </Button>
-                                    </Body>
-                                </ListItem>
+                                                {/*onPress={() =>{this.setModalVisible(!this.state.modalVisible)}}>*/}
+                                                {/*I agree to the Terms of Service*/}
+                                            {/*</Text>*/}
+                                        {/*</Button>*/}
+                                    {/*</Body>*/}
+                                {/*</ListItem>*/}
 
                                 {/*<View style={{ marginHorizontal: DeviceRatio.computePixelRatio(32),justifyContent: 'center' }}>*/}
                                     {/*<CustomInput*/}
@@ -220,7 +221,7 @@ class LoginForm extends Component {
                                     <Text>Forgot Password</Text>
                                 </Button>
                                 <Button transparent info style={{ margin: 15, marginTop: 10 }}
-                                        onPress={()=>dial('2444442',false)}
+                                        onPress={()=>dial(`${Config.CALL_BKB}`,false)}
                                 >
                                     <Text>Call Bkb</Text>
                                 </Button>

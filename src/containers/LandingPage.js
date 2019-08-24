@@ -14,13 +14,14 @@ import {
     Right,
     Text
 } from 'native-base';
-import {BackHandler, Image, StyleSheet, TouchableHighlight, View} from 'react-native';
+import {BackHandler, Image, StyleSheet, TouchableHighlight, View,Alert,TextInput} from 'react-native';
 import * as DeviceRatio from "../layout/DeviceRatio";
 import {DrawerActions} from 'react-navigation';
 import LandingComponents from "../components/LandingComponents";
 import {CustomNavigationService} from '../layout'
 import {connect} from 'react-redux'
 import {dial} from "../utils/CallDialer";
+import * as Config from "../config/Config";
 
 const redlogo = require("../assets/bkblogo.png");
 const resizeMode = 'center';
@@ -36,6 +37,10 @@ const openSideMenu =(action)=>{
 export default class LandingPage extends Component {
     constructor(props){
         super(props);
+        this.state ={
+            pressed:0,
+            text:'Useless Placeholder',
+        }
     }
 
     componentDidMount(){
@@ -52,6 +57,26 @@ export default class LandingPage extends Component {
         const {auth,navigation} = this.props;
         return()=>{
             navigation.navigate(route)
+        }
+    }
+
+    logoPress =()=>{
+        console.log("press",this.state.pressed);
+        if(this.state.pressed < 7){
+            let newpress = this.state.pressed +1;
+            this.setState({pressed:newpress})
+        }else{
+
+            Alert.alert(
+                'API Settings',
+                "// Todo Api URL",
+                [
+                    {text: 'Ask me later', onPress: () => {this.setState({pressed:0});console.log('Ask me later Pressed')}},
+                    {text: 'Cancel', onPress: () => {this.setState({pressed:0});console.log('Cancel Pressed')}},
+                    {text: 'OK', onPress: () => {this.setState({pressed:0});console.log('Ok Pressed')}},
+                ],
+                { cancelable: false }
+            )
         }
     }
 
@@ -79,22 +104,24 @@ export default class LandingPage extends Component {
                 </Header>
                     <View style={{flex:0.3, alignItems: 'center',
                         justifyContent: 'center',}}>
-                        {/*<ImageBackground source={redlogo} style={styles.logo} resizeMode/>*/}
-                        <Image
-                            style={{
-                                flex: 1,
-                                width: DeviceRatio.computeWidthRatio(800),
-                                resizeMode,
-                            }}
-                            source={redlogo}
-                        />
+                        <TouchableHighlight underlayColor="white"  onPress={this.logoPress}>
+                            <Image
+                                style={{
+                                    flex: 1,
+                                    width: DeviceRatio.computeWidthRatio(800),
+                                    resizeMode,
+                                }}
+                                source={redlogo}
+                            />
+                        </TouchableHighlight>
                     </View>
-                <LandingComponents {...this.props}/>
+                    <Content>
+                         <LandingComponents {...this.props}/>
+                    </Content>
                 <Footer>
                     <FooterTab>
-                        <Button vertical onPress={()=>dial('2444442',false)}>
-                            <Icon name="phone" />
-                            <Text>Special Assistance</Text>
+                        <Button full>
+                             <Text>Powered by BruGPS</Text>
                         </Button>
                     </FooterTab>
                 </Footer>

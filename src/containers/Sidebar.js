@@ -17,9 +17,6 @@ import styles from "./sidebar_style";
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import {reset, resetNavigate} from "../layout/CustomNavigationService";
-
-const drawerCover = require("../assets/drawer-cover.png");
-const drawerImage = require("../assets/logo-kitchen-sink.png");
 const pratik = require("../assets/person.png");
 
 

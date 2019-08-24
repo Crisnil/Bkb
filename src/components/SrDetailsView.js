@@ -17,6 +17,7 @@ import {
 } from "native-base";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import {dial} from "../utils/CallDialer";
+import * as Config from "../config/Config";
 
 const deviceWidth = Dimensions.get("window").width;
 const logo = require("../assets/logo.png");
@@ -122,13 +123,13 @@ class SrDetailsView extends Component {
                         </CardItem>
                         <CardItem>
                             <Left>
-                                <Button transparent vertical onPress={()=>dial('2444442',false)}>
+                                <Button transparent vertical onPress={()=>dial(`${Config.CALL_BKB}`,false)}>
                                     <Icon name="phone" />
                                     <Text>Call BKB</Text>
                                 </Button>
                             </Left>
                             <Body>
-                            <Button transparent vertical onPress={()=>dial('2444442',false)}>
+                            <Button transparent vertical onPress={()=>dial(`${Config.CALL_BKB}`,false)}>
                                 <Icon name="phone" />
                                 <Text>Call BKB</Text>
                             </Button>

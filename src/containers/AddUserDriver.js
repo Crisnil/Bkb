@@ -20,8 +20,6 @@ import AddVehicle from "../components/addVehilce";
 import AddUser from "../components/addUser";
 
 const deviceWidth = Dimensions.get("window").width;
-const logo = require("../assets/logo.png");
-const cardImage = require("../assets/drawer-cover.png");
 
 const rate = [
     { text: "Excellent", icon: "american-football", iconColor: "#2c8ef4" },

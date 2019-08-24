@@ -28,8 +28,8 @@ import {dial} from "../utils/CallDialer";
 import { connect } from 'react-redux'
 import {CustomAlert, CustomNavigationService} from "../layout";
 import _ from 'lodash';
+import * as Config from "../config/Config";
 const pratik = require("../assets/images/male.png");
-const camera = require("../assets/camera.png");
 
 
 
@@ -178,7 +178,7 @@ class Dashboard extends Component {
                       onPress={() => this.setState({ active: !this.state.active })}
                   >
                       <IconNB name="add" />
-                      <Button style={{ backgroundColor: "#34A34F" }} onPress={()=>dial('2444442',false)}>
+                      <Button style={{ backgroundColor: "#34A34F" }} onPress={()=>dial(`${Config.CALL_BKB}`,false)}>
                          <IconNB name="call" />
                       </Button>
                       <Button style={{ backgroundColor: "#3B5998" }} onPress={()=>navigation.navigate("CreateSr")}>

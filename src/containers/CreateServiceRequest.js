@@ -293,7 +293,6 @@ class CreateServiceRequest extends  Component {
         const initialProb = this.props.navigation.getParam('noSelection', false)
 
         const pratik = require("../assets/images/male.png");
-        const camera = require("../assets/camera.png");
         const ic_pickup = require("../assets/icons/ic_pickup.png");
         const grabcar_premium =require ("../assets/icons/ic_grabcar_premium.png");
         const grabcar = require('../assets/icons/ic_grabcar.png')

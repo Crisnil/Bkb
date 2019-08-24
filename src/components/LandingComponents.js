@@ -9,6 +9,7 @@ import _ from "lodash";
 import TermsOfService from "../components/Terms";
 import CustomActivityIndicator from "../layout/CustomActivityIndicator";
 import {CustomAlert, CustomNavigationService} from "../layout";
+import * as Config from "../config/Config";
 
 const redlogo = require("../assets/bkblogo.png");
 const resizeMode = 'center';
@@ -103,40 +104,79 @@ export default class LandingComponents extends Component {
 
     renderIco =(item)=>{
             switch (item.description) {
-                case "Flat Tyres" :
-                     return "disc-full"
+                case "Flat tyre" :
+                     return "alert-circle"
                     break;
                 case "Flat Battery" :
-                    return "battery-alert"
+                    return "car-battery"
                     break;
-                case "Emergency Fuel" :
-                    return "local-gas-station"
-                    break;
-                case "Towing" :
-                    return "rv-hookup"
+                case "Emergency fuel":
+                    return "fuel"
                     break;
                 case "Key Finder" :
-                    return "vpn-key"
+                    return "key-remove"
                     break;
                 case "Alternative Transport":
-                    return "local-taxi"
+                    return "car-pickup"
+                    break;
+                case "Towing":
+                    return "towing"
                     break;
                 default:
-                 return  "build"
+                    return  "build"
             }
     }
 
     render() {
 
-        const{srCategory}=this.props.service
+        const staticServices = [
+            {
+                problemid:100,
+                description:"Flat Tire",
+                staticService: true ,
+                icon:"alert-circle"
+            },
+            {
+                problemid:101,
+                description:"Emergency Fuel",
+                staticService: true,
+                icon:"fuel"
+            },
+            {
+                problemid:102,
+                description:"Flat Battery",
+                staticService: true,
+                icon:"car-battery"
+            },
+            {
+                problemid:103,
+                description:"Towing",
+                staticService: true,
+                icon:"towing"
+            },
+            {
+                problemid:104,
+                description:"Key Finder",
+                staticService: true,
+                icon:"key-remove"
+            },
+            {
+                problemid:105,
+                description:"Alternative Transport",
+                staticService: true,
+                icon:"car-pickup"
+            },
+            ]
+
+        const{srCategory}=this.props.service;
 
         const withTnc = _.filter(srCategory, 'withTnc');
 
-        const renderproblems = _.map(withTnc.slice(0,6), (item, x) => {
+        const renderproblems = _.map(withTnc.slice(0,7), (item, x) => {
             return(
                 <TouchableHighlight key={item.problemid} onPress={()=>this.setModalVisible(true,item)}underlayColor="white">
                     <View style={styles.button}>
-                        <Icon style={{fontSize:60 , color:'#ED1727',padding: 10}} name={this.renderIco(item)}/>
+                        <MaterialCommunityIcons style={{fontSize:60 , color:'#ED1727',padding: 10}} name={this.renderIco(item)}/>
                         <Text style={styles.buttonText}>{item.description}</Text>
                     </View>
                 </TouchableHighlight>
@@ -155,9 +195,14 @@ export default class LandingComponents extends Component {
                                 text="Please Wait..."
                                 color="#D44638"
                             />
-                            :renderproblems
+                            : renderproblems
                         }
-
+                        {/*<TouchableHighlight underlayColor="white" onPress={()=>dial(`${Config.CALL_BKB}`,false)}>*/}
+                            {/*<View style={styles.button}>*/}
+                                {/*<Icon style={{fontSize:60 , color:'#ED1727',padding: 10}} name="phone"/>*/}
+                                {/*<Text style={styles.buttonText}>Special assistance</Text>*/}
+                            {/*</View>*/}
+                        {/*</TouchableHighlight>*/}
                         {this.state.modalVisible?
                             <Modal
                                 animationType="slide"
