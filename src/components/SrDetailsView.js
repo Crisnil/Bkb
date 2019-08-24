@@ -18,7 +18,7 @@ import {
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import {dial} from "../utils/CallDialer";
 import * as Config from "../config/Config";
-
+import _ from "lodash";
 const deviceWidth = Dimensions.get("window").width;
 const logo = require("../assets/logo.png");
 const cardImage = require("../assets/icons/ic_launcher.png");
@@ -76,9 +76,9 @@ class SrDetailsView extends Component {
                         </CardItem>
                          <CardItem>
                             <Body>
-                                <Text>Driver : {item.driver}</Text>
-                                <Text>Track Reg No : {item.truck}</Text>
-                                <Text>Phone No :</Text>
+                                <Text>Driver : {!_.isEmpty(item.driver)? item.driver.fullname : " "}</Text>
+                                <Text>Track Reg No : {!_.isEmpty(item.truck)? item.truck.truckregno : ""}</Text>
+                                <Text>Phone No : {!_.isEmpty(item.driver)? item.driver.phone1 : ""}</Text>
                                 <Text>Distance :</Text>
                                 <Text>ETA :</Text>
                             </Body>
@@ -91,7 +91,10 @@ class SrDetailsView extends Component {
                                 <Text note>Destination Remarks : {item.destinationremarks}</Text>
                                 <H3 style={{marginTop:5}}>Problem</H3>
                                 <Text note>
-                                    {item.problem}
+                                    Problem : {item.problem}
+                                </Text>
+                                <Text note>
+                                    Remarks : {item.remarks}
                                 </Text>
                             </Body>
                         </CardItem>
@@ -123,15 +126,15 @@ class SrDetailsView extends Component {
                         </CardItem>
                         <CardItem>
                             <Left>
-                                <Button transparent vertical onPress={()=>dial(`${Config.CALL_BKB}`,false)}>
+                                <Button transparent vertical onPress={()=>dial(`${!_.isEmpty(item.driver)? item.driver.phone1 : ""}`,false)}>
                                     <Icon name="phone" />
-                                    <Text>Call BKB</Text>
+                                    <Text>Call Driver</Text>
                                 </Button>
                             </Left>
                             <Body>
                             <Button transparent vertical onPress={()=>dial(`${Config.CALL_BKB}`,false)}>
                                 <Icon name="phone" />
-                                <Text>Call BKB</Text>
+                                <Text>Call to Cancel</Text>
                             </Button>
                             </Body>
                             <Right>

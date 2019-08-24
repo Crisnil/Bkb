@@ -39,7 +39,7 @@ class RegisterComponenets extends Component {
             ic_number: '',
             phone_number: '',
             email:'',
-            password:'',
+            j_password:'',
         }
     }
 
@@ -47,7 +47,7 @@ class RegisterComponenets extends Component {
     handleVerify = () => {
 
         const { dispatch,navigation } = this.props
-        const { ic_number, phone_number,email,password } = this.state
+        const { ic_number, phone_number,email,j_password } = this.state
 
         dispatch({
             type: 'auth/verify',
@@ -55,7 +55,7 @@ class RegisterComponenets extends Component {
                 ic_number: ic_number,
                 phone_number:phone_number,
                 email:email,
-                password:password,
+                password:j_password,
                 callback: (result, error) => {
                     if (!result) {
                         alert(error);
@@ -68,7 +68,7 @@ class RegisterComponenets extends Component {
     handleSubmit = () => {
 
         const { dispatch,navigation } = this.props
-        const { ic_number, phone_number,email,password } = this.state
+        const { ic_number, phone_number,email,j_password } = this.state
 
         dispatch({
             type: 'auth/verify',
@@ -76,7 +76,7 @@ class RegisterComponenets extends Component {
                 ic_number: ic_number,
                 phone_number:phone_number,
                 email:email,
-                password:password,
+                password:j_password,
                 callback: (result, error) => {
                     if (result) {
                         CustomAlert.success("Successful");
@@ -105,7 +105,7 @@ class RegisterComponenets extends Component {
 
     render() {
         const { auth } = this.props
-        const { j_password, j_username } = this.state
+        const { j_password, j_username,ic_number,phone_number,email } = this.state
 
         return (
             <>
@@ -133,7 +133,7 @@ class RegisterComponenets extends Component {
                                     <Input
                                         placeholder={'Enter IC Number'}
                                         autoCapitalize={'none'}
-                                        value={j_username}
+                                        value={ic_number}
                                         onChangeText={text => this.setState({ ic_number: text })}
                                         // onSubmitEditing={() => this.password.ref.focus()}
                                         blurOnSubmit={false}
@@ -145,7 +145,7 @@ class RegisterComponenets extends Component {
                                     <Input
                                            placeholder={'Phone Number'}
                                            autoCapitalize={'none'}
-                                           value={j_password}
+                                           value={phone_number}
                                            onChangeText={text => this.setState({ phone_number: text })}
                                            onSubmitEditing={this.handleVerify}
                                            returnKeyType={'go'}
@@ -159,7 +159,7 @@ class RegisterComponenets extends Component {
                                     <Input
                                            placeholder={'Email Address'}
                                            autoCapitalize={'none'}
-                                           value={j_password}
+                                           value={email}
                                            onChangeText={text => this.setState({ email: text })}
                                            // onSubmitEditing={this.handleVerify}
                                            returnKeyType={'next'}
@@ -174,7 +174,7 @@ class RegisterComponenets extends Component {
                                            placeholder={'Password'}
                                            autoCapitalize={'none'}
                                            value={j_password}
-                                           onChangeText={text => this.setState({ password: text })}
+                                           onChangeText={text => this.setState({ j_password: text })}
                                            onSubmitEditing={this.handleSubmit}
                                            returnKeyType={'go'}
 

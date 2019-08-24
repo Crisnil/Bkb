@@ -277,7 +277,7 @@ class CreateServiceRequest extends  Component {
                             region:{}
                         },() =>{
                             alert(error);
-                            console.log(this.props);
+                            //console.log(this.props);
                             reset('Drawer');
                         })
 
@@ -288,7 +288,6 @@ class CreateServiceRequest extends  Component {
 
     }
     render() {
-        console.log("props",this.props.navigation.getParam('problem', false));
         const {srCategory}=this.props.service;
         const initialProb = this.props.navigation.getParam('noSelection', false)
 

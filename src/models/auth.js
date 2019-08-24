@@ -49,7 +49,7 @@ export default {
 
                     console.log(parsedError)
 
-                    if (!_.isEmpty(parsedError)) {
+                    if (parsedError) {
                         payload.callback(false, parsedError.message)
                     } else {
                         payload.callback(false, null)
@@ -226,6 +226,7 @@ export default {
                     if(res.data.err){
                         dataResult.account = {};
                         dataResult.isAuthenticated =false;
+                        yield AsyncStorage.removeItem('token');
                     }else{
                         dataResult.account = res.data;
                         dataResult.isAuthenticated =true;

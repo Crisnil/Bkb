@@ -120,8 +120,14 @@ export default class LandingPage extends Component {
                     </Content>
                 <Footer>
                     <FooterTab>
-                        <Button full>
-                             <Text>Powered by BruGPS</Text>
+                        <Button vertical>
+                            <Text>Powered by BruGPS</Text>
+                        </Button>
+                    </FooterTab>
+                    <FooterTab>
+                        <Button vertical onPress={()=>dial(`${Config.CALL_BKB}`,false)}>
+                            <Icon name="phone" />
+                            <Text>Call BKB</Text>
                         </Button>
                     </FooterTab>
                 </Footer>
