@@ -19,6 +19,8 @@ import {FlatList, StyleSheet,Modal} from "react-native";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import SrDetailsView from "../components/SrDetailsView";
 import CustomActivityIndicator from "../layout/CustomActivityIndicator";
+import LazyLoadList from "../layout/LazyLoadList";
+
 
 const styles = StyleSheet.create({
     container: {
@@ -41,7 +43,8 @@ export default  class Srlisting extends Component {
             modalVisible: false,
             fetching: false,
             activity: true,
-            item: null
+            item: null,
+            isFetching:false
         }
     }
 
@@ -85,6 +88,15 @@ export default  class Srlisting extends Component {
 
         )
     }
+
+    reFreshing =()=>{
+        this.setState({ isFetching: true },()=>this.props.fetchSrHistory());
+        setTimeout(() => {
+            this.setState({ isFetching: false });
+            console.log("after refresh")
+        }, 500);
+    }
+
     render() {
         const{srs}=this.props.service;
         return (
@@ -99,11 +111,19 @@ export default  class Srlisting extends Component {
                         {/*/>*/}
                         {/*: null*/}
                     {/*}*/}
-                        <FlatList
-                            data={srs}
-                            keyExtractor={(item,x) => x.toString()}
-                            renderItem={this.renderItems}
-                        />
+
+                    <LazyLoadList
+                        data={srs}
+                        renderItem={this.renderItems}
+                        onRefresh={this.reFreshing}
+                        refreshing={this.state.isFetching}
+
+                    />
+                        {/*<FlatList*/}
+                            {/*data={srs}*/}
+                            {/*keyExtractor={(item,x) => x.toString()}*/}
+                            {/*renderItem={this.renderItems}*/}
+                        {/*/>*/}
 
 
                     {this.state.modalVisible?

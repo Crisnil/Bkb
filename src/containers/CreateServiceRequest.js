@@ -26,10 +26,11 @@ import {
     Header,
     Icon,
     Left,
-
     Right,
     Spinner,
-    Title
+    Titlem,
+    Item,
+    Input
 } from "native-base";
 import React, {Component} from "react";
 import MapView from 'react-native-maps';
@@ -42,6 +43,7 @@ import {connect} from 'react-redux';
 import CustomActivityIndicator from "../layout/CustomActivityIndicator";
 import {reset, resetNavigate} from "../layout/CustomNavigationService";
 import {CustomAlert, CustomNavigationService} from "../layout";
+import RemarksModal from "../components/RemarksModal";
 
 
 let { height, width } = Dimensions.get("window");
@@ -72,7 +74,11 @@ class CreateServiceRequest extends  Component {
             formattedAddress:"",
             destination:null,
             markers: [],
-            problem:""
+            problem:"",
+            remarksVisible:false,
+            selectedRemarks:'pickup',
+            pickupRemarks:'',
+            destinationRemarks:''
         };
         this.onPanDrag = debounce(this.onPanDrag, 1000, {
             leading: true,
@@ -95,6 +101,7 @@ class CreateServiceRequest extends  Component {
         BackHandler.removeEventListener('hardwareBackPress', this.backHandle)
     }forceUpdate(callBack: () => void): void {
     }
+
     backHandle = () => {
         console.log(this.props);
         CustomNavigationService.back()()
@@ -171,31 +178,21 @@ class CreateServiceRequest extends  Component {
     }
 
     addMarker=(e)=> {
-
         let coordinates = _.clone(e.nativeEvent.coordinate);
-        getReverseGeocoding(coordinates).then(data => {
-            if (data.status === "OK") {
-                if (!_.isEmpty(data.results)) {
-
-                    let address = _.clone(data.results[0].formatted_address);
-                    this.setState({destination:address})
-                    switch(this.state.selected){
-                        case "pickup":
-                            this.onMapPress(coordinates ,'pickup',address)
-                            break;
-                        case "destination":
-                            this.onMapPress(coordinates ,'destination',address)
-                            break;
-                        default:
-                    }
-                }
-            }
-        })
+        switch (this.state.selected) {
+            case "pickup":
+                this.onMapPress(coordinates, 'pickup')
+                break;
+            case "destination":
+                this.onMapPress(coordinates, 'destination')
+                break;
+            default:
+        }
     }
 
-    onMapPress =(e,key,address)=> {
-        let marked = _.clone(this.state.markers);
 
+    onMapPress =(e,key)=> {
+        let marked = _.clone(this.state.markers);
         let itemIdx = _.findIndex(marked, (it) => {
             return it.key == key
         })
@@ -203,14 +200,14 @@ class CreateServiceRequest extends  Component {
             // console.log( "match",marked[itemIdx]);
             marked[itemIdx] = update(marked[itemIdx], {
                 $set: {
-                    formatted_address:address,
                     coordinate: e,
                     key: key,
                     color: randomColor()
                 }
             })
-
-            this.setState({markers:marked},()=>console.log(this.state.markers))
+            this.setState({markers:marked},()=>
+                this.getFormattedAddress(key,e)
+            )
         }
         else{
 
@@ -218,16 +215,42 @@ class CreateServiceRequest extends  Component {
                 markers: [
                     ...this.state.markers,
                     {
-                        formatted_address:address,
                         coordinate:e,
                         key: key,
                         color: randomColor(),
                     },
                 ],
-            });
+            },()=> this.getFormattedAddress(key,e));
         }
 
     }
+
+    getFormattedAddress =(key,coordinates)=>{
+        getReverseGeocoding(coordinates).then(data => {
+            if (data.status === "OK") {
+                if (!_.isEmpty(data.results)) {
+                    let address = _.clone(data.results[0].formatted_address);
+                    this.setState({destination:address})
+                    let marked = _.clone(this.state.markers);
+                    let itemIdx = _.findIndex(marked, (it) => {
+                        return it.key == key
+                    })
+                    if (itemIdx > -1) {
+                        // console.log( "match",marked[itemIdx]);
+                        marked[itemIdx] = update(marked[itemIdx], {
+                            $merge: {
+                                formatted_address:address,
+                            }
+                        })
+
+                        this.setState({markers:marked},()=>console.log("markers",this.state.markers))
+                    }
+                }
+            }
+        })
+    }
+
+
 
     onUserPinDragEnd =(e)=>{
         this.addMarker(e);
@@ -236,7 +259,7 @@ class CreateServiceRequest extends  Component {
 
     onValueChange2 =(value: string)=> {
         this.setState({
-            selected2: value
+            problem: value
         });
     }
 
@@ -264,11 +287,11 @@ class CreateServiceRequest extends  Component {
                 pickuplong :this.state.region.longitude,
                 pickuplat :this.state.region.latitude,
                 pickup_location :this.state.formattedAddress,
-                pickupremarks :"",
+                pickupremarks :this.state.pickupRemarks,
                 destination_long:!_.isEmpty(this.state.markers)? this.state.markers[0].coordinate.longitude : '',
                 destination_lat :!_.isEmpty(this.state.markers)? this.state.markers[0].coordinate.latitude : '',
-                destination_remarks:'',
-                destination:!_.isEmpty(this.state.markers)? this.state.markers[0].destination : '',
+                destination_remarks:this.state.destinationRemarks,
+                destination:!_.isEmpty(this.state.markers)? this.state.markers[0].formatted_address : '',
                 problem:this.state.problem ,
                 callback: (result, error) => {
                     if (result) {
@@ -287,11 +310,41 @@ class CreateServiceRequest extends  Component {
         })
 
     }
+
+    openRemarks =(item)=>{
+        this.setState({
+            selectedRemarks:item,
+            remarksVisible:true,
+        })
+    }
+
+    onChangeText =(text)=> {
+            switch (this.state.selectedRemarks) {
+                case 'Pickup':
+                    this.setState({pickupRemarks:text})
+                    break;
+                case 'Destination':
+                    this.setState({destinationRemarks: text})
+                    break
+                default:
+                    console.log("text")
+            }
+    }
+
+    onClose =()=>{
+
+        this.setState({
+            selectedRemarks:"",
+            remarksVisible:false,
+        },()=>console.log(this.state))
+    }
+
+
+
     render() {
+
         const {srCategory}=this.props.service;
         const initialProb = this.props.navigation.getParam('noSelection', false)
-
-        const pratik = require("../assets/images/male.png");
         const ic_pickup = require("../assets/icons/ic_pickup.png");
         const grabcar_premium =require ("../assets/icons/ic_grabcar_premium.png");
         const grabcar = require('../assets/icons/ic_grabcar.png')
@@ -303,7 +356,7 @@ class CreateServiceRequest extends  Component {
             )
         })
         return (
-           
+           <>
             <View style={styles.container}>
                 <View style={styles.homePickerContainer}>
                     <View style={{
@@ -318,37 +371,14 @@ class CreateServiceRequest extends  Component {
                     <View style={{
                         flex:10.5,
                     }}>
-                        <View
-                            style={{
-                                paddingBottom:19
-                            }}
-                        >
-                            <Text style={{
-                                color:"#484848"
-                            }}>
-                                {this.state.formattedAddress}
-                            </Text>
-
-                        </View>
-
-                        <View
-                            style={{
-                                height:0.4,
-                                backgroundColor:'#CED7DE',
-                            }}
-                        />
-                        <View
-                            style={{
-                                paddingTop:19
-                            }}
-                        >
-                            <Text style={{
-                                color:"#464646",
-                            }}>
-                                {!_.isEmpty(this.state.markers)? this.state.destination :"Where Are You Going ? (press on the map)"}
-                            </Text>
-                        </View>
-
+                        <Item>
+                            <Input  disabled style={{color:"#484848"}} value={_.truncate(this.state.formattedAddress,{'length':40})}/>
+                            <Icon active name='menu' onPress={()=>this.openRemarks("Pickup")} />
+                        </Item>
+                        <Item>
+                            <Input disabled style={{color:"#484848"}} value={!_.isEmpty(this.state.markers)? _.truncate(this.state.destination,{'length':40}) :" Where Are You Going?"}/>
+                            <Icon active name='menu' onPress={()=>this.openRemarks("Destination")} />
+                        </Item>
                     </View>
 
                 </View>
@@ -401,90 +431,59 @@ class CreateServiceRequest extends  Component {
                             color="#D44638"
                         />
                 }
-                {/*<View style={styles.iosOnlyTopBar}/>*/}
-
-
-
+                <View style={styles.iosOnlyTopBar}/>
                 <View style={styles.bottomContainer}>
-                    <TouchableOpacity onPress={() => this.getInitialState()}>
-
+                    <TouchableOpacity onPress={() => this.getInitialState()} style={{ height:38, width:38, marginLeft:20}}>
                         <Image style={{zIndex:2, height:38, width:38, resizeMode: 'contain',marginRight:12, marginBottom: 24, alignSelf:"flex-end"}}
                                source={require('../assets/icons/ic_locate.png')}
                         />
                     </TouchableOpacity >
-
                     <View style={styles.mobilPilihanContainer}>
                         <View style={styles.mobilTop}>
-                                <Picker
-                                    mode="dropdown"
-                                    iosIcon={<Icon name="arrow-down" />}
-                                    style={{ width: undefined }}
-                                    placeholder="Problem"
-                                    placeholderStyle={{ color: "#bfc6ea" }}
-                                    placeholderIconColor="#007aff"
-                                    selectedValue= {this.state.problem}
-                                    onValueChange={this.onValueChange2}
-                                >
-                                    { pickerOption }
-                                </Picker>
-                            {/*<View   style={{ flex:1, }} >*/}
-                               {/*/!*<View style={{alignSelf: 'center',marginTop:5,height:3,width:29,borderRadius:2,backgroundColor:'#CCD6DD'}}/>*!/*/}
-                                {/**/}
-                            {/*</View>*/}
-
-                            {/*<View*/}
-                                {/*style={{*/}
-                                    {/*flex:10,*/}
-                                    {/*alignItems: 'center',*/}
-                                    {/*flexDirection:'row',*/}
-                                    {/*paddingLeft:23,*/}
-                                    {/*paddingRight:23,*/}
-                                {/*}}*/}
-                            {/*>*/}
-                                {/*<View style={{*/}
-                                    {/*flex:2*/}
-                                {/*}}>*/}
-                                    {/*<Image style={{zIndex:2, height:22, width:27, resizeMode: 'contain'}}*/}
-                                           {/*source={require('../assets/icons/ic_budget_active.png')}/>*/}
-                                {/*</View>*/}
-
-                                {/*<View style={{*/}
-                                    {/*flex:8*/}
-                                {/*}}>*/}
-                                    {/*<Text style={{color:"#313541", fontSize:15,*/}
-                                    {/*}}>GrabCar</Text>*/}
-                                {/*</View>*/}
-
-                                {/*<View style={{*/}
-                                    {/*flex:2,*/}
-
-                                {/*}}>*/}
-                                    {/*<Text style={{alignSelf:"flex-end"}}>2 Min</Text>*/}
-                                {/*</View>*/}
-
-
-                            {/*</View>*/}
-                        {/*</View>*/}
-
-
-                        {/*<View style={styles.mobilEffect}>*/}
-
+                                <View style={{
+                                    flex:2
+                                }}>
+                                    <Image style={{ marginLeft:10,zIndex:2, height:22, width:27, resizeMode: 'contain'}}
+                                           source={require('../assets/icons/ic_budget_active.png')}/>
+                                </View>
+                                <View style={{
+                                    flex:8
+                                }}>
+                                    <Picker
+                                        mode="dropdown"
+                                        iosIcon={<Icon name="arrow-down" />}
+                                        style={{ width: undefined }}
+                                        placeholder="Problem"
+                                        placeholderStyle={{ color: "#bfc6ea" }}
+                                        placeholderIconColor="#007aff"
+                                        selectedValue= {this.state.problem}
+                                        onValueChange={this.onValueChange2}
+                                    >
+                                        { pickerOption }
+                                    </Picker>
+                                </View>
                         </View>
+
                     </View>
                     <View style={styles.dropOffButton}>
-                        <Button block onPress={this.submitSr}>
+                        <Button block onPress={this.submitSr} disabled={this.props.service.loading}>
                             <Text style={{color:'#fff'}}>SUBMIT SERVICE REQUEST</Text>
                         </Button>
-                        {/*<Text style={{*/}
-                            {/*color:'#fff',*/}
-                            {/*fontWeight:'400'*/}
-                        {/*}}>SUBMIT SERVICE REQUEST</Text>*/}
                     </View>
 
                 </View>
 
             </View>
-
+               {this.state.remarksVisible?
+               <RemarksModal
+                   remarksVisible ={this.state.remarksVisible}
+                   onChangeText={this.onChangeText}
+                   selectedRemarks={this.state.selectedRemarks}
+                   onClose={this.onClose}
+                   pickupLoc={this.state.formatted_address}
+                   destination={this.state.destination}
+               />:null}
+            </>
         );
     }
 }
@@ -561,15 +560,16 @@ const styles = StyleSheet.create({
         borderRadius:4,
         marginBottom:17,
         zIndex:2,
-
     },
 
     mobilTop: {
         borderRadius:5,
         backgroundColor: '#fff',
         height:72,
-        flexDirection:'column',
+        flexDirection:'row',
+        alignItems:'center',
         zIndex:3,
+        flex:10,
 
     },
     mobilEffect: {

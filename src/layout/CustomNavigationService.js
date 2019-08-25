@@ -31,7 +31,6 @@ const navigate = (routeName, params = {}) => {
 }
 
 const back = () => () => {
-	console.log("back servie");
 	const currentScreen = getCurrentScreen(navigator.state.nav)
 
 	switch (currentScreen) {

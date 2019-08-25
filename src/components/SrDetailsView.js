@@ -43,7 +43,6 @@ class SrDetailsView extends Component {
         };
     }
     render() {
-        console.log("details",this.props)
         const {item} = this.props.itemDetails
         return (
             <Modal
@@ -138,10 +137,10 @@ class SrDetailsView extends Component {
                             </Button>
                             </Body>
                             <Right>
-                                <Button transparent vertical >
-                                    <Icon name="map" />
-                                    <Text>Map</Text>
-                                </Button>
+                                {/*<Button transparent vertical >*/}
+                                    {/*<Icon name="map" />*/}
+                                    {/*<Text>Map</Text>*/}
+                                {/*</Button>*/}
                             </Right>
                         </CardItem>
                     </Card>

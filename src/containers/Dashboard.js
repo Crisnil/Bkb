@@ -91,6 +91,7 @@ class Dashboard extends Component {
 
         })
     }
+
     render() {
     // console.log("dashboardpage",this.props);
         const{auth} =this.props;
@@ -114,7 +115,9 @@ class Dashboard extends Component {
                 </Header>
               <Tabs>
                   <Tab heading={ <TabHeading><Text>SR</Text></TabHeading>}>
-                      <Srlisting {...this.props}/>
+                      <Srlisting {...this.props}
+                                 fetchSrHistory={this.fetchSrHistory}
+                      />
                   </Tab>
                   <Tab heading={ <TabHeading><Text>Profile</Text></TabHeading>}>
                       <Content padder>
@@ -122,70 +125,29 @@ class Dashboard extends Component {
                               <Thumbnail large  source={pratik} style={{backgroundColor:'#fff'}}/>
                               <Text>{!_.isEmpty(account)? account.data.customername : ""}</Text>
                           </View>
-                          {/*<View>*/}
-                              {/*<ListItem icon>*/}
-                                  {/*<Left>*/}
-                                      {/*<Button style={{ backgroundColor: "#FF9501" }}>*/}
-                                      {/*</Button>*/}
-                                  {/*</Left>*/}
-                                  {/*<Body>*/}
-                                  {/*<Text>Airplane Mode</Text>*/}
-                                  {/*</Body>*/}
-                                  {/*<Right>*/}
-                                      {/*<Switch value={false} />*/}
-                                  {/*</Right>*/}
-                              {/*</ListItem>*/}
-                              {/*<ListItem icon>*/}
-                                  {/*<Left>*/}
-                                      {/*<Button style={{ backgroundColor: "#007AFF" }}>*/}
-                                          {/*<Icon active name="wifi" />*/}
-                                      {/*</Button>*/}
-                                  {/*</Left>*/}
-                                  {/*<Body>*/}
-                                  {/*<Text>Wi-Fi</Text>*/}
-                                  {/*</Body>*/}
-                                  {/*<Right>*/}
-                                      {/*<Text>GeekyAnts</Text>*/}
-                                      {/*<Icon active name="arrow-forward" />*/}
-                                  {/*</Right>*/}
-                              {/*</ListItem>*/}
-                              {/*<ListItem icon>*/}
-                                  {/*<Left>*/}
-                                      {/*<Button style={{ backgroundColor: "#007AFF" }}>*/}
-                                          {/*<Icon active name="bluetooth" />*/}
-                                      {/*</Button>*/}
-                                  {/*</Left>*/}
-                                  {/*<Body>*/}
-                                  {/*<Text>Bluetooth</Text>*/}
-                                  {/*</Body>*/}
-                                  {/*<Right>*/}
-                                      {/*<Text>On</Text>*/}
-                                      {/*<Icon active name="arrow-forward" />*/}
-                                  {/*</Right>*/}
-                              {/*</ListItem>*/}
-                          {/*</View>*/}
+
                       </Content>
                   </Tab>
 
               </Tabs>
-              <View>
-                  <Fab
-                      active={this.state.active}
-                      direction="up"
-                      containerStyle={{}}
-                      style={{ backgroundColor: "#D44638" }}
-                      position="bottomRight"
-                      onPress={() => this.setState({ active: !this.state.active })}
-                  >
-                      <IconNB name="add" />
-                      <Button style={{ backgroundColor: "#34A34F" }} onPress={()=>dial(`${Config.CALL_BKB}`,false)}>
-                         <IconNB name="call" />
-                      </Button>
-                      <Button style={{ backgroundColor: "#3B5998" }} onPress={()=>navigation.navigate("CreateSr")}>
-                          <IconNB name="build" />
-                      </Button>
-                  </Fab>
-              </View>
+              {/*<View>*/}
+                  {/*<Fab*/}
+                      {/*active={this.state.active}*/}
+                      {/*direction="up"*/}
+                      {/*containerStyle={{}}*/}
+                      {/*style={{ backgroundColor: "#D44638" }}*/}
+                      {/*position="bottomRight"*/}
+                      {/*onPress={() => this.setState({ active: !this.state.active })}*/}
+                  {/*>*/}
+                      {/*<IconNB name="add" />*/}
+                      {/*<Button style={{ backgroundColor: "#34A34F" }} onPress={()=>dial(`${Config.CALL_BKB}`,false)}>*/}
+                         {/*<IconNB name="call" />*/}
+                      {/*</Button>*/}
+                      {/*<Button style={{ backgroundColor: "#3B5998" }} onPress={()=>navigation.navigate("CreateSr")}>*/}
+                          {/*<IconNB name="build" />*/}
+                      {/*</Button>*/}
+                  {/*</Fab>*/}
+              {/*</View>*/}
           </Container>
         );
     }

@@ -1,34 +1,24 @@
-import React, { PureComponent } from 'react'
-import { BackHandler, Linking, Platform,Easing,Animated,PermissionsAndroid,Alert,BackAndroid } from 'react-native'
+import React, {PureComponent} from 'react'
+import {Alert, Animated, BackAndroid, BackHandler, Easing, Linking, PermissionsAndroid, Platform} from 'react-native'
 import {
     createAppContainer,
     createBottomTabNavigator,
+    createDrawerNavigator,
     createStackNavigator,
-    createDrawerNavigator, createSwitchNavigator,
+    createSwitchNavigator,
 } from 'react-navigation'
-import { Root,Toast } from "native-base";
-import AsyncStorage from '@react-native-community/async-storage'
-import { connect } from 'react-redux'
-import * as Config from './config/Config'
-
-
-import Loading from './containers/Loading'
+import {Root, Toast} from "native-base";
+import {connect} from 'react-redux'
 import Login from './containers/Login'
 import Home from './containers/Home'
-import Account from './containers/Account'
 import Detail from './containers/Detail'
 import SideBar from './containers/Sidebar'
-import { CustomAlert, CustomNavigationService, CustomTitleBar } from './layout'
+import {CustomNavigationService} from './layout'
 import ServiceRequest from "./containers/ServiceRequest";
-import SrList from "./containers/SrList";
 import Registration from "./containers/Registration";
 import SrInformation from "./containers/SrInformation";
-import TestMap from "./containers/TestMap";
 import Terms from "./containers/Terms";
-import MapContainer from "./containers/map-container";
 import Dashboard from "./containers/Dashboard";
-import VehicleRegistration from "./containers/VehicleRegistration";
-import AddUserDriver from "./containers/AddUserDriver";
 import CreateServiceRequest from "./containers/CreateServiceRequest";
 import LandingPage from "./containers/LandingPage";
 
@@ -70,11 +60,8 @@ const Drawer = createDrawerNavigator(
     {
         Home:{screen:LandingPage},
         Dashboard:{screen:Dashboard},
-        SRList:{screen: SrList} ,
         Services:{screen: ServiceRequest},
         SrInformation:{screen: SrInformation},
-        TestMap:{screen:TestMap},
-        MapContainer:{screen:MapContainer},
         TermsAndPrivacy: { screen: Terms },
         CreateSr:{screen:CreateServiceRequest},
         Login: {screen:Login},
@@ -109,21 +96,7 @@ const OnboardingNavigator = createSwitchNavigator(
     }
 );
 
-const afterRegister = createStackNavigator(
 
-    {
-        VehicleRegistration:{screen:VehicleRegistration},
-        AddUserDriver:{screen:AddUserDriver}
-    },
-    {
-        headerMode: 'none',
-        initialRouteName:'VehicleRegistration',
-        mode:'modal',
-        navigationOptions: {
-            gesturesEnabled: false,
-        },
-    }
-)
 
 const AppNavigator = createStackNavigator(
     {
@@ -131,11 +104,7 @@ const AppNavigator = createStackNavigator(
         Home:{screen:LandingPage},
         Dashboard:{screen:Dashboard},
         Detail: { screen: Detail },
-        SRList:{screen: SrList} ,
         SrInformation:{screen: SrInformation},
-        TestMap:{screen:TestMap},
-        MapContainer:{screen:MapContainer},
-        OnRegisterSuccess:{screen:afterRegister},
         CreateSr:{screen:CreateServiceRequest},
         Login: {screen:Login},
         Register: {screen:Registration},
@@ -199,7 +168,6 @@ export default class Router extends PureComponent {
     }
 
     backHandle = () => {
-        console.log(this.props);
         CustomNavigationService.back()()
         return true
     }

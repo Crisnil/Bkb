@@ -37,7 +37,7 @@ export default class LazyLoadList extends React.PureComponent {
 		if (typeof keyExtractor === 'function') {
 			return keyExtractor(item)
 		} else {
-			return item.id
+			return item.srid.toString()
 		}
 	}
 

@@ -147,24 +147,25 @@ export default {
         ],
         submitRequest: [
             function*({ payload }, { put }) {
-
+                console.log("service payload", payload);
                 yield put({ type: 'loadStart' })
-                try {
-                    const serviceRequest = yield RestClient.post(`${Config.DEFAULT_URL}/sr_request`, payload)
 
-                    console.log("after sr", serviceRequest);
-
-                    if (payload.callback) payload.callback(true,serviceRequest.data.res);
-
-                }catch(error){
-                    const parsedError = JSON.parse(JSON.stringify(error))
-                    if (_.get(parsedError, 'response.data')) {
-                        payload.callback(false, parsedError.response.data.message)
-                    } else {
-                        payload.callback(false, null)
-                    }
-                }
-                yield put({ type: 'loadEnd' })
+                // try {
+                //     const serviceRequest = yield RestClient.post(`${Config.DEFAULT_URL}/sr_request`, payload)
+                //
+                //     console.log("after sr", serviceRequest);
+                //
+                //     if (payload.callback) payload.callback(true,serviceRequest.data.res);
+                //
+                // }catch(error){
+                //     const parsedError = JSON.parse(JSON.stringify(error))
+                //     if (_.get(parsedError, 'response.data')) {
+                //         payload.callback(false, parsedError.response.data.message)
+                //     } else {
+                //         payload.callback(false, null)
+                //     }
+                // }
+                // yield put({ type: 'loadEnd' })
             },
             { type: 'takeLatest' },
         ],
