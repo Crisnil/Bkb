@@ -21,7 +21,9 @@ import {
     Text,
     Thumbnail,
     Title,
-    View
+    View,
+    List,
+    Separator
 } from "native-base";
 import Srlisting from "../components/SrListing";
 import {dial} from "../utils/CallDialer";
@@ -93,61 +95,70 @@ class Dashboard extends Component {
     }
 
     render() {
-    // console.log("dashboardpage",this.props);
+    console.log("dashboardpage",this.props);
         const{auth} =this.props;
         const{account}= auth;
     const {navigation} = this.props;
         return (
           <Container>
-                <Header hasTabs>
+                <Header>
                     <Left>
                         <Button
                             transparent
-                            onPress={() => navigation.openDrawer()}
+                            onPress={this.backHandle}
                         >
-                            <Icon name="menu" />
+                            <Icon name="chevron-left" />
                         </Button>
                     </Left>
-                    <Body style={{alignContent:'center'}}>
+                    <Body style={{textAlign:'center',alignItems:'center'}}>
                         <Title>Dashboard</Title>
                     </Body>
                     <Right/>
                 </Header>
-              <Tabs>
-                  <Tab heading={ <TabHeading><Text>SR</Text></TabHeading>}>
+                <View>
+                    <List >
+                        <Separator bordered>
+                            <Text>Profile</Text>
+                        </Separator>
+                        <ListItem avatar style={{paddingTop:10,paddingBottom:10}}>
+                            <Left>
+                                <Thumbnail large  source={pratik} style={{backgroundColor:'#fff'}}/>
+                            </Left>
+                            <Body>
+                            <Text>{!_.isEmpty(auth.account.data)?auth.account.data.customername : ""}</Text>
+                            <Text note>{!_.isEmpty(auth.account.data)? auth.account.data.email : ""}</Text>
+                            <Text note>{!_.isEmpty(auth.account.data)? auth.account.data.address : ""}</Text>
+                            </Body>
+                            <Right>
+                                <Text note>{!_.isEmpty(auth.account.data)? auth.account.data.customerid:""}</Text>
+                            </Right>
+                        </ListItem>
+                        <Separator bordered>
+                            <Text>Service Requests</Text>
+                        </Separator>
+                    </List>
+                </View>
                       <Srlisting {...this.props}
                                  fetchSrHistory={this.fetchSrHistory}
                       />
-                  </Tab>
-                  <Tab heading={ <TabHeading><Text>Profile</Text></TabHeading>}>
-                      <Content padder>
-                          <View style={{paddingTop:10,paddingBottom:10}}>
-                              <Thumbnail large  source={pratik} style={{backgroundColor:'#fff'}}/>
-                              <Text>{!_.isEmpty(account)? account.data.customername : ""}</Text>
-                          </View>
-
-                      </Content>
-                  </Tab>
-
-              </Tabs>
-              {/*<View>*/}
-                  {/*<Fab*/}
-                      {/*active={this.state.active}*/}
-                      {/*direction="up"*/}
-                      {/*containerStyle={{}}*/}
-                      {/*style={{ backgroundColor: "#D44638" }}*/}
-                      {/*position="bottomRight"*/}
-                      {/*onPress={() => this.setState({ active: !this.state.active })}*/}
-                  {/*>*/}
-                      {/*<IconNB name="add" />*/}
-                      {/*<Button style={{ backgroundColor: "#34A34F" }} onPress={()=>dial(`${Config.CALL_BKB}`,false)}>*/}
-                         {/*<IconNB name="call" />*/}
-                      {/*</Button>*/}
-                      {/*<Button style={{ backgroundColor: "#3B5998" }} onPress={()=>navigation.navigate("CreateSr")}>*/}
-                          {/*<IconNB name="build" />*/}
-                      {/*</Button>*/}
-                  {/*</Fab>*/}
-              {/*</View>*/}
+              <View>
+                  <Fab
+                      active={this.state.active}
+                      direction="up"
+                      containerStyle={{}}
+                      style={{ backgroundColor: "#D44638" }}
+                      position="bottomRight"
+                      onPress={() => this.setState({ active: !this.state.active })}
+                  >
+                      <IconNB name="add" />
+                      <Button style={{ backgroundColor: "#34A34F" }} onPress={()=>dial(`${Config.CALL_BKB}`,false)}>
+                         <IconNB name="call" />
+                      </Button>
+                      <Button style={{ backgroundColor: "#3B5998" }} onPress={()=>navigation.navigate("ProblemCategory")}>
+                          <IconNB name="build" />
+                      </Button>
+                  </Fab>
+              </View>
           </Container>
         );
     }

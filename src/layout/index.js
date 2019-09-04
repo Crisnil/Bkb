@@ -14,13 +14,12 @@ import CustomRadio from './CustomRadio'
 import CustomSearchBar from './CustomSearchBar'
 import CustomSearcher from './CustomSearcher'
 import CustomDivider from './CustomDivider'
-import CustomDatePicker from './CustomDatePicker'
 import Dropdown from './Dropdown/Dropdown'
 import Switch from './Switch'
 import LazyLoadList from './LazyLoadList'
 
 import * as DeviceRatio from './DeviceRatio'
-import Icon from './SvgIcon/Icon'
+import SvgIcon from './SvgIcon/SvgIcon'
 import * as OrientationHandler from './OrientationHandler'
 
 export {
@@ -37,14 +36,13 @@ export {
 	CustomTitleBar,
 	DeviceRatio,
 	Dropdown,
-	Icon,
+	SvgIcon,
 	OrientationHandler,
 	CustomInput,
 	CustomRadio,
 	CustomSearchBar,
 	CustomSearcher,
 	CustomDivider,
-	CustomDatePicker,
 	Switch,
 	LazyLoadList
 }

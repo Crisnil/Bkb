@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Image, Dimensions,Modal } from "react-native";
+import { Image, Dimensions,Modal,Linking } from "react-native";
 import {
     Container,
     Header,
@@ -42,7 +42,27 @@ class SrDetailsView extends Component {
 
         };
     }
+
+    openGps =(driver)=> {
+        return ()=> {
+            //google.navigation:q=latitude,longitude
+            var url = ("google.navigation:q="+`${driver.latitude}`+","+`${driver.longitude}` );
+            this.openExternalApp(url);
+        }
+    }
+
+    openExternalApp =(url)=> {
+        Linking.canOpenURL(url).then(supported => {
+            if (supported) {
+                Linking.openURL(url);
+            } else {
+                console.log('Don\'t know how to open URI: ' + url);
+            }
+        });
+    }
+
     render() {
+        console.log("details",this.props.itemDetails)
         const {item} = this.props.itemDetails
         return (
             <Modal
@@ -137,10 +157,14 @@ class SrDetailsView extends Component {
                             </Button>
                             </Body>
                             <Right>
-                                {/*<Button transparent vertical >*/}
-                                    {/*<Icon name="map" />*/}
-                                    {/*<Text>Map</Text>*/}
-                                {/*</Button>*/}
+                                {!_.isEmpty(item.driver)?
+                                    <Button transparent vertical onPress={this.openGps(item.driver)} >
+                                        <Icon name="map" />
+                                        <Text>Map</Text>
+                                    </Button>
+                                    :null
+                                }
+
                             </Right>
                         </CardItem>
                     </Card>

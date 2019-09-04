@@ -12,7 +12,7 @@ import {
 } from 'react-native'
 import * as DeviceRatio from '../DeviceRatio'
 import styles from './styles'
-import Icon from '../SvgIcon/Icon'
+import SvgIcon from '../SvgIcon/SvgIcon'
 
 export default class Dropdown extends PureComponent {
 	static defaultProps = {
@@ -191,7 +191,7 @@ export default class Dropdown extends PureComponent {
 							justifyContent: 'center',
 						}}
 					>
-						<Icon
+						<SvgIcon
 							name={'CaretDown'}
 							width={DeviceRatio.computePixelRatio(16)}
 							height={DeviceRatio.computePixelRatio(16)}

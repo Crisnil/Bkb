@@ -31,13 +31,13 @@ export default class LazyLoadList extends React.PureComponent {
 		}
 	}
 
-	keyExtractor = item => {
+	keyExtractor = (item,x)=> {
 		const { keyExtractor } = this.props
 
 		if (typeof keyExtractor === 'function') {
 			return keyExtractor(item)
 		} else {
-			return item.srid.toString()
+			return x.toString()
 		}
 	}
 
@@ -69,6 +69,7 @@ export default class LazyLoadList extends React.PureComponent {
 							}}
 						>
 							No Records
+
 						</Text>
 					</View>
 				}

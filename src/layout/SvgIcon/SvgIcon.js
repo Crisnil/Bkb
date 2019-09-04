@@ -4,7 +4,7 @@ import { Platform, ViewPropTypes } from 'react-native'
 import Svg from 'react-native-svg'
 import Svgs from './Svgs'
 
-export default class Icon extends React.PureComponent {
+export default class SvgIcon extends React.PureComponent {
 	render() {
 		const { fill, fillRule, height, name, stroke, strokeWidth, style, width } = this.props
 
@@ -31,10 +31,10 @@ export default class Icon extends React.PureComponent {
 	}
 }
 
-Icon.propTypes = {
+SvgIcon.propTypes = {
 	fill: PropTypes.string,
 	fillRule: PropTypes.string,
-	height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+	// height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
 	name: PropTypes.string.isRequired,
 	stroke: PropTypes.string,
 	strokeWidth: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -42,7 +42,7 @@ Icon.propTypes = {
 	width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
 }
 
-Icon.defaultProps = {
+SvgIcon.defaultProps = {
 	fill: '#2c3e50',
 	fillRule: 'evenodd',
 	stroke: '#2c3e50',

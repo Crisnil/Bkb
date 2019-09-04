@@ -12,7 +12,8 @@ import {
     Icon,
     Left,
     Right,
-    Text
+    Text,
+    Fab
 } from 'native-base';
 import {BackHandler, Image, StyleSheet, TouchableHighlight, View,Alert,TextInput} from 'react-native';
 import * as DeviceRatio from "../layout/DeviceRatio";
@@ -22,6 +23,7 @@ import {CustomNavigationService} from '../layout'
 import {connect} from 'react-redux'
 import {dial} from "../utils/CallDialer";
 import * as Config from "../config/Config";
+
 
 const redlogo = require("../assets/bkblogo.png");
 const resizeMode = 'center';
@@ -40,6 +42,7 @@ export default class LandingPage extends Component {
         this.state ={
             pressed:0,
             text:'Useless Placeholder',
+            fabActive:false
         }
     }
 
@@ -61,7 +64,7 @@ export default class LandingPage extends Component {
     }
 
     logoPress =()=>{
-        console.log("press",this.state.pressed);
+
         if(this.state.pressed < 7){
             let newpress = this.state.pressed +1;
             this.setState({pressed:newpress})
@@ -118,6 +121,21 @@ export default class LandingPage extends Component {
                     <Content>
                          <LandingComponents {...this.props}/>
                     </Content>
+                        <View>
+                            <Fab
+                                active={this.state.fabActive}
+                                direction="up"
+                                containerStyle={{}}
+                                style={{ backgroundColor: "#fff" }}
+                                position="bottomRight"
+                                onPress={() =>  this.setState({ fabActive: !this.state.fabActive })}
+                                >
+                                <Icon name="eject" style={{color:'#D44638'}}/>
+                                <Button style={{ backgroundColor: "#D44638" }} onPress={()=>dial(`${Config.CALL_BKB}`,false)}>
+                                <Icon name="call" />
+                                </Button>
+                            </Fab>
+                        </View>
                 <Footer>
                     <FooterTab>
                         <Button vertical>
@@ -125,9 +143,12 @@ export default class LandingPage extends Component {
                         </Button>
                     </FooterTab>
                     <FooterTab>
-                        <Button vertical onPress={()=>dial(`${Config.CALL_BKB}`,false)}>
-                            <Icon name="phone" />
-                            <Text>Call BKB</Text>
+                        {/*<Button vertical onPress={()=>dial(`${Config.CALL_BKB}`,false)}>*/}
+                            {/*<Icon name="phone" />*/}
+                            {/*<Text>Call BKB</Text>*/}
+                        {/*</Button>*/}
+                        <Button vertical>
+                            <Text>Authorized by TBA</Text>
                         </Button>
                     </FooterTab>
                 </Footer>

@@ -1,5 +1,6 @@
 import _ , { debounce }from 'lodash';
-const apiKey ='AIzaSyDAMt8MF8rgeK3FbWsq8MCWL0NHsDy6Oys'
+import * as Config from "../config/Config";
+
 
 export const getLocation = () => {
     return new Promise(
@@ -13,11 +14,23 @@ export const getLocation = () => {
     );
 }
 
+export const watchLocation = () => {
+    return new Promise(
+        (resolve, reject) => {
+            navigator.geolocation.watchPosition(
+                (data) =>resolve(data.coords),
+                (err) => reject(err),
+                { enableHighAccuracy: true, timeout: 2000, maximumAge: 100, distanceFilter: 10 },
+            );
+        }
+    );
+}
+
 export const getReverseGeocoding =(coordinates) =>{
 
     return new Promise(
         (resolve,reject)=>{
-            fetch('https://maps.googleapis.com/maps/api/geocode/json?address=' + coordinates.latitude+","+coordinates.longitude + '&key=' + apiKey)
+            fetch('https://maps.googleapis.com/maps/api/geocode/json?address=' + coordinates.latitude+","+coordinates.longitude + '&key=' + Config.GOOGLE_MAPS_APIKEY)
                 .then((response) => response.json())
                 .then((responseJson) => {
                     console.log('ADDRESS GEOCODE is BACK!! => ');

@@ -13,7 +13,7 @@ import {
 	CustomLayout,
 	CustomNavigationService,
 	DeviceRatio,
-	Icon,
+	SvgIcon,
 } from '../layout'
 import CustomActivityIndicator from '../layout/CustomActivityIndicator'
 
@@ -80,7 +80,7 @@ export default class Settings extends Component {
 			<CustomLayout hideStatusBar={false}>
 				<CustomFormScrollView style={{ flex: 1 }}>
 					<View style={{ justifyContent: 'center', alignItems: 'center' }}>
-						<Icon
+						<SvgIcon
 							name={'Logo'}
 							width={DeviceRatio.computePixelRatio(350)}
 							height={DeviceRatio.computePixelRatio(350)}

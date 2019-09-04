@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 import * as CustomNavigationService from './CustomNavigationService'
 import * as DeviceRatio from './DeviceRatio'
-import Icon from './SvgIcon/Icon'
+import SvgIcon from './SvgIcon/SvgIcon'
 
 @connect(({ auth }) => ({ auth }))
 export default class LogoutButton extends Component {
@@ -35,7 +35,7 @@ export default class LogoutButton extends Component {
 		return (
 			<TouchableOpacity onPress={this.onLogout}>
 				<View style={{ padding: DeviceRatio.computePixelRatio(16) }}>
-					<Icon
+					<SvgIcon
 						name={'Logout'}
 						width={DeviceRatio.computePixelRatio(22)}
 						height={DeviceRatio.computePixelRatio(22)}

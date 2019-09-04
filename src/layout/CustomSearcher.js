@@ -15,7 +15,7 @@ import { SafeAreaView } from 'react-navigation'
 import Device from 'react-native-device-detection'
 
 import * as DeviceRatio from './DeviceRatio'
-import Icon from './SvgIcon/Icon'
+import SvgIcon from './SvgIcon/SvgIcon'
 
 export default class CustomSearcher extends Component {
 	static defaultProps = {
@@ -199,7 +199,7 @@ export default class CustomSearcher extends Component {
 									justifyContent: 'center',
 								}}
 							>
-								<Icon
+								<SvgIcon
 									name={'CaretDown'}
 									width={DeviceRatio.computePixelRatio(16)}
 									height={DeviceRatio.computePixelRatio(16)}
@@ -225,7 +225,7 @@ export default class CustomSearcher extends Component {
 						<View style={{ flex: 0.2, alignItems: 'flex-start' }}>
 							<TouchableOpacity onPress={this.onClose}>
 								<View style={{ padding: DeviceRatio.computePixelRatio(16) }}>
-									<Icon
+									<SvgIcon
 										name={'Back'}
 										width={DeviceRatio.computePixelRatio(22)}
 										height={DeviceRatio.computePixelRatio(22)}
@@ -247,7 +247,7 @@ export default class CustomSearcher extends Component {
 						<View style={{ flex: 0.2, alignItems: 'flex-end' }}>
 							<TouchableOpacity>
 								<View style={{ padding: DeviceRatio.computePixelRatio(16) }}>
-									<Icon
+									<SvgIcon
 										name={''}
 										width={DeviceRatio.computePixelRatio(22)}
 										height={DeviceRatio.computePixelRatio(22)}

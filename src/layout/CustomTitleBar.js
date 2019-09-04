@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import CustomLogoutButton from './CustomLogoutButton'
 import * as CustomNavigationService from './CustomNavigationService'
 import * as DeviceRatio from './DeviceRatio'
-import Icon from './SvgIcon/Icon'
+import SvgIcon from './SvgIcon/SvgIcon'
 
 @connect(state => ({
 	auth: state.auth,
@@ -36,7 +36,7 @@ export default class CustomTitleBar extends Component {
 					{showBackButton ? (
 						<TouchableOpacity onPress={CustomNavigationService.back()}>
 							<View style={{ padding: DeviceRatio.computePixelRatio(16) }}>
-								<Icon
+								<SvgIcon
 									name={'Back'}
 									width={DeviceRatio.computePixelRatio(22)}
 									height={DeviceRatio.computePixelRatio(22)}
@@ -46,7 +46,7 @@ export default class CustomTitleBar extends Component {
 					) : (
 						<TouchableOpacity>
 							<View style={{ padding: DeviceRatio.computePixelRatio(16) }}>
-								<Icon
+								<SvgIcon
 									name={''}
 									width={DeviceRatio.computePixelRatio(22)}
 									height={DeviceRatio.computePixelRatio(22)}

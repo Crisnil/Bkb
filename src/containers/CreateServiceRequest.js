@@ -16,6 +16,7 @@ import {
     View,
     BackHandler,
     Picker,
+    Alert
 } from "react-native";
 import {
     Body,
@@ -35,7 +36,7 @@ import {
 import React, {Component} from "react";
 import MapView from 'react-native-maps';
 import _, {debounce} from 'lodash';
-//import Icon from 'react-native-vector-icons/Entypo';
+//import SvgIcon from 'react-native-vector-icons/Entypo';
 import update from 'react-addons-update'
 import {NavigationActions, StackNavigator} from 'react-navigation';
 import {getLocation, getReverseGeocoding} from '../services/location-service';
@@ -44,6 +45,7 @@ import CustomActivityIndicator from "../layout/CustomActivityIndicator";
 import {reset, resetNavigate} from "../layout/CustomNavigationService";
 import {CustomAlert, CustomNavigationService} from "../layout";
 import RemarksModal from "../components/RemarksModal";
+import MapInput from "./MapContainer";
 
 
 let { height, width } = Dimensions.get("window");
@@ -63,7 +65,12 @@ class CreateServiceRequest extends  Component {
     constructor(props) {
         super(props);
         this.state = {
-            region: {},
+            region: {
+                latitude: 34.662496,
+                longitude: 135.503177,
+                latitudeDelta:latitudeDelta,
+                longitudeDelta: longitudeDelta,
+            },
             selected:'destination',
             initialRender: true,
             topHomePickerToggle: false,
@@ -74,11 +81,11 @@ class CreateServiceRequest extends  Component {
             formattedAddress:"",
             destination:null,
             markers: [],
-            problem:"",
+            problem:{},
             remarksVisible:false,
             selectedRemarks:'pickup',
             pickupRemarks:'',
-            destinationRemarks:''
+            destinationRemarks:'',
         };
         this.onPanDrag = debounce(this.onPanDrag, 1000, {
             leading: true,
@@ -89,8 +96,9 @@ class CreateServiceRequest extends  Component {
     componentDidMount() {
        this.fetchProblemCategory();
        this.requestLocationPermission();
-        const problem = this.props.navigation.getParam('problem', '');
-        this.setState({problem : problem})
+        this.findProblem();
+
+
     }
 
     componentWillMount() {
@@ -103,7 +111,7 @@ class CreateServiceRequest extends  Component {
     }
 
     backHandle = () => {
-        console.log(this.props);
+        // console.log(this.props);
         CustomNavigationService.back()()
         return true
     }
@@ -256,12 +264,17 @@ class CreateServiceRequest extends  Component {
         this.addMarker(e);
     }
 
-
-    onValueChange2 =(value: string)=> {
-        this.setState({
-            problem: value
-        });
+    findProblem =()=> {
+            const {selected} = this.props.service;
+            console.log("srs",selected);
+            this.onValueChange2(selected);
     }
+
+    onValueChange2 =(value)=> {
+            this.setState({
+                problem: value,
+            });
+        }
 
     fetchProblemCategory =()=>{
         const {dispatch} = this.props;
@@ -270,7 +283,7 @@ class CreateServiceRequest extends  Component {
             payload:{
                 callback:(result,error)=>{
                     if(result == false){
-                        CustomAlert.alert(error);
+                        CustomAlert.alert("Service Category",error);
                     }
                 }
             },
@@ -278,7 +291,25 @@ class CreateServiceRequest extends  Component {
         })
     }
 
-    submitSr =()=>{
+    submitSr =(tncAccepted)=>{
+            if(tncAccepted){
+                this.onSubmit();
+            }else{
+
+                Alert.alert(
+                    'Terms and Condition',
+                    `${this.state.probItem.desc_content_eng}`,
+                    [
+                        {text: 'Decline', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+                        {text: 'Accept', onPress: () => this.onSubmit},
+                    ],
+                    { cancelable: false }
+                )
+            }
+
+    }
+
+    onSubmit=()=>{
         const{dispatch,navigation} = this.props;
 
         dispatch({
@@ -299,7 +330,7 @@ class CreateServiceRequest extends  Component {
                             markers:[],
                             region:{}
                         },() =>{
-                            alert(error);
+                            CustomAlert.alert("Service Request","Your service request is being processed. Our Customer Service agent will contact you shortly. Thank you!","OK");
                             //console.log(this.props);
                             reset('Drawer');
                         })
@@ -308,7 +339,6 @@ class CreateServiceRequest extends  Component {
                 }
             },
         })
-
     }
 
     openRemarks =(item)=>{
@@ -339,49 +369,62 @@ class CreateServiceRequest extends  Component {
         },()=>console.log(this.state))
     }
 
-
+    getCoordsFromName=(loc)=>{
+        console.log("loc",loc)
+        // this.updateState({
+        //     latitude: loc.geometry.location.lat,
+        //     longitude:  loc.geometry.location.lng,
+        // });
+    }
 
     render() {
-
         const {srCategory}=this.props.service;
-        const initialProb = this.props.navigation.getParam('noSelection', false)
+        const tncAccepted = this.props.navigation.getParam('tncAccepted', false)
         const ic_pickup = require("../assets/icons/ic_pickup.png");
         const grabcar_premium =require ("../assets/icons/ic_grabcar_premium.png");
         const grabcar = require('../assets/icons/ic_grabcar.png')
         const {service} =this.props;
 
-        let pickerOption = _.map(srCategory,(item,x)=>{
+        let pickerOption = _.map(srCategory,(item)=>{
             return (
-                <Picker.Item key={x} label={item.description} value={item.description}style={{padding:10}}/>
+                <Picker.Item key={item.problemid} label={item.description} value ={item} style={{padding:10}}/>
             )
         })
         return (
            <>
             <View style={styles.container}>
                 <View style={styles.homePickerContainer}>
-                    <View style={{
-                        flex:1.5,
-                        alignItems: 'center',
-                        justifyContent:'center',
-                    }}>
-                        <Image style={{zIndex:2, height:72, width:12, resizeMode: 'contain'}}
-                               source={require('../assets/icons/hitch_pin_without_dropoff.png')}/>
+                    <View>
+                        <MapInput notifyChange={this.getCoordsFromName} />
                     </View>
-
-                    <View style={{
-                        flex:10.5,
-                    }}>
-                        <Item>
-                            <Input  disabled style={{color:"#484848"}} value={_.truncate(this.state.formattedAddress,{'length':40})}/>
-                            <Icon active name='menu' onPress={()=>this.openRemarks("Pickup")} />
-                        </Item>
-                        <Item>
-                            <Input disabled style={{color:"#484848"}} value={!_.isEmpty(this.state.markers)? _.truncate(this.state.destination,{'length':40}) :" Where Are You Going?"}/>
-                            <Icon active name='menu' onPress={()=>this.openRemarks("Destination")} />
-                        </Item>
-                    </View>
-
                 </View>
+                {/*<View style={styles.homePickerContainer}>*/}
+                    {/*<View style={{*/}
+                        {/*flex:1.5,*/}
+                        {/*alignItems: 'center',*/}
+                        {/*justifyContent:'center',*/}
+                    {/*}}>*/}
+                        {/*<Image style={{zIndex:2, height:72, width:12, resizeMode: 'contain'}}*/}
+                               {/*source={require('../assets/icons/hitch_pin_without_dropoff.png')}/>*/}
+                    {/*</View>*/}
+
+                    {/*<View style={{*/}
+                        {/*flex:10.5,*/}
+                        {/*flexDirection:'column',*/}
+                    {/*}}>*/}
+
+                        {/*/!*<Item>*!/*/}
+                            {/*/!*<Input  disabled style={{color:"#484848"}} value={_.truncate(this.state.formattedAddress,{'length':40})}/>*!/*/}
+                            {/*/!*<SvgIcon active name='menu' onPress={()=>this.openRemarks("Pickup")} />*!/*/}
+                        {/*/!*</Item>*!/*/}
+                        {/*/!*<Item>*!/*/}
+                            {/*/!*<Input disabled style={{color:"#484848"}} value={!_.isEmpty(this.state.markers)? _.truncate(this.state.destination,{'length':40}) :" Where Are You Going?"}/>*!/*/}
+                            {/*/!*<Icon active name='menu' onPress={()=>this.openRemarks("Destination")} />*!/*/}
+                        {/*/!*</Item>*!/*/}
+
+                    {/*</View>*/}
+
+                {/*</View>*/}
 
                 {this.state.region['latitude'] ?
                 <MapView
@@ -392,6 +435,11 @@ class CreateServiceRequest extends  Component {
                     initialRegion ={this.state.region}
                     onPanDrag={this.onPanDrag}
                     onPress={e =>this.addMarker(e)}
+                    mapType={"hybrid"}
+                    followsUserLocation={true}
+                    showsMyLocationButton={true}
+                    showsCompass={true}
+                    moveOnMarkerPress={true}
                 >
                     <MapView.Marker
                                     key={"pickup"}
@@ -431,6 +479,8 @@ class CreateServiceRequest extends  Component {
                             color="#D44638"
                         />
                 }
+
+
                 <View style={styles.iosOnlyTopBar}/>
                 <View style={styles.bottomContainer}>
                     <TouchableOpacity onPress={() => this.getInitialState()} style={{ height:38, width:38, marginLeft:20}}>
@@ -457,7 +507,7 @@ class CreateServiceRequest extends  Component {
                                         placeholderStyle={{ color: "#bfc6ea" }}
                                         placeholderIconColor="#007aff"
                                         selectedValue= {this.state.problem}
-                                        onValueChange={this.onValueChange2}
+                                        onValueChange={()=> this.onValueChange2}
                                     >
                                         { pickerOption }
                                     </Picker>
@@ -466,7 +516,7 @@ class CreateServiceRequest extends  Component {
 
                     </View>
                     <View style={styles.dropOffButton}>
-                        <Button block onPress={this.submitSr} disabled={this.props.service.loading}>
+                        <Button block onPress={()=>this.submitSr(tncAccepted)} disabled={this.props.service.loading}>
                             <Text style={{color:'#fff'}}>SUBMIT SERVICE REQUEST</Text>
                         </Button>
                     </View>
@@ -543,15 +593,13 @@ const styles = StyleSheet.create({
 
     },
     homePickerContainer: {
-        zIndex:2,
+        zIndex:10,
         marginTop:10,
         marginLeft:6,
         marginRight:6,
         borderRadius:4,
         backgroundColor: '#fff',
-        flexDirection:'row',
-        paddingTop:24,
-        paddingBottom:24,
+        flexDirection:'column',
 
     },
     mobilPilihanContainer: {

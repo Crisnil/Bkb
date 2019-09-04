@@ -21,7 +21,9 @@ import Terms from "./containers/Terms";
 import Dashboard from "./containers/Dashboard";
 import CreateServiceRequest from "./containers/CreateServiceRequest";
 import LandingPage from "./containers/LandingPage";
-
+import SplashScreen from 'react-native-splash-screen'
+import MapContainer from "./containers/MapContainer";
+import ProblemCategory from "./containers/problemCategory";
 
 export async function request_location_runtime_permission() {
 
@@ -66,6 +68,8 @@ const Drawer = createDrawerNavigator(
         CreateSr:{screen:CreateServiceRequest},
         Login: {screen:Login},
         Register: {screen:Registration},
+        MapContainer:{screen:MapContainer},
+        ProblemCategory:{screen:ProblemCategory}
     },
     {
         contentOptions: {
@@ -108,7 +112,8 @@ const AppNavigator = createStackNavigator(
         CreateSr:{screen:CreateServiceRequest},
         Login: {screen:Login},
         Register: {screen:Registration},
-
+        MapContainer:{screen:MapContainer},
+        ProblemCategory:{screen:ProblemCategory}
 
     },
     {
@@ -155,7 +160,7 @@ export default class Router extends PureComponent {
     async componentDidMount() {
 
         await request_location_runtime_permission();
-
+        SplashScreen.hide();
     }
 
     componentWillMount() {

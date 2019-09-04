@@ -31,9 +31,7 @@ export default class LandingComponents extends Component {
 
 
     fetchProblemCategory =()=>{
-
         const {dispatch,auth} = this.props;
-
             dispatch({
                 type:'service/requestCategory',
                 payload:{
@@ -51,19 +49,15 @@ export default class LandingComponents extends Component {
             if (this.props.auth.isAuthenticated) {
                 const {dispatch} = this.props;
                 dispatch({
-                    type: 'service/checkAccepted',
+                    type: 'service/onSelect',
                     payload: {
-                        problemid: problem.problemid,
+                        problem: problem,
                         callback: (response) => {
                             if (response) {
-                                this.props.navigation.navigate('CreateSr', {
-                                    problem: problem.description,
-                                });
-                            } else {
                                 this.setState({
                                     modalVisible: visible,
                                     problem: problem,
-                                });
+                                },()=>console.log("onselect",this.props.service));
                             }
                         }
                     }
@@ -75,31 +69,37 @@ export default class LandingComponents extends Component {
     }
 
     onAccept =()=>{
-        const {dispatch} = this.props;
-        dispatch({
-            type: 'service/acceptTnc',
-            payload: {
-                problemid: this.state.problem.problemid,
-                callback: (response) => {
-                    if(response){
+        // const {dispatch} = this.props;
+        // dispatch({
+        //     type: 'service/acceptTnc',
+        //     payload: {
+        //         problemid: this.state.problem.problemid,
+        //         callback: (response) => {
+        //             if(response){
                         this.setState({modalVisible: false});
-                        this.props.navigation.navigate('CreateSr', {
-                            problem: this.state.problem.description,
-                            noSelection:true
+                        this.props.navigation.navigate('MapContainer', {
+                            tncAccepted:true
                         });
-                    }else{
-                        CustomAlert.alert("Failed","Error in Sending Service Request");
-                        this.setState({modalVisible: false,problem:{}});
-                    }
-                }
-            }
-        })
+        //             }else{
+        //                 CustomAlert.alert("Failed","Error in Sending Service Request");
+        //                 this.setState({modalVisible: false,problem:{}});
+        //             }
+        //         }
+        //     }
+        // })
 
     }
     onDecline =()=>{
+        const {dispatch} = this.props;
+        dispatch({
+            type: 'service/onSelect',
+            payload: {
+                clearSelection: true
+            }
+        })
         this.setState({modalVisible: false,
             problem:{}
-        });
+        },()=>console.log("ondecline",this.props.service));
     }
 
     renderIco =(item)=>{
@@ -172,7 +172,7 @@ export default class LandingComponents extends Component {
 
         const withTnc = _.filter(srCategory, 'withTnc');
 
-        const renderproblems = _.map(withTnc.slice(0,7), (item, x) => {
+        const renderproblems = _.map(withTnc.slice(0,8), (item, x) => {
             return(
                 <TouchableHighlight key={item.problemid} onPress={()=>this.setModalVisible(true,item)}underlayColor="white">
                     <View style={styles.button}>

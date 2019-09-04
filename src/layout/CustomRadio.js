@@ -3,7 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import _ from 'lodash'
 
 import * as DeviceRatio from './DeviceRatio'
-import Icon from './SvgIcon/Icon'
+import SvgIcon from './SvgIcon/SvgIcon'
 
 export default class CustomRadio extends PureComponent {
 	render() {
@@ -49,7 +49,7 @@ export default class CustomRadio extends PureComponent {
 						}}
 					>
 						{value === item.value ? (
-							<Icon
+							<SvgIcon
 								name={'CheckCircle'}
 								width={DeviceRatio.computePixelRatio(20)}
 								height={DeviceRatio.computePixelRatio(20)}

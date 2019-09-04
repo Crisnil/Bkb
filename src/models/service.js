@@ -9,9 +9,16 @@ export default {
         srs:[],
         srCategory:[],
         loading: false,
+        selected:{}
     },
     reducers: {
         srsReceived(state, { payload }) {
+            return {
+                ...state,
+                ...payload
+            }
+        },
+        onSelectReceived(state, { payload }) {
             return {
                 ...state,
                 ...payload
@@ -35,6 +42,26 @@ export default {
                 yield put({ type: 'loadEnd' });
             }
         ],
+        onSelect:[
+            function*({ payload },{ put }){
+
+                yield put({ type: 'onSelectReceived', payload:{selected:payload.problem}});
+
+                if (payload.callback){
+                    payload.callback(true);
+                }
+            }
+        ],
+        clearSelection:[
+            function*({ payload },{ put }){
+                if(payload.clear) {
+                    yield put({type: 'onSelectReceived', payload: {selected:{}}});
+                }
+                if (payload.callback){
+                    payload.callback(true);
+                }
+            }
+        ],
         requestCategory: [
             function*({payload}, { put }) {
 
@@ -50,8 +77,6 @@ export default {
 
                 } catch (error) {
                     const parsedError = JSON.parse(JSON.stringify(error))
-
-
 
                     if (payload.callback){
                         if (!_.isEmpty(parsedError)) {
@@ -147,25 +172,25 @@ export default {
         ],
         submitRequest: [
             function*({ payload }, { put }) {
-                console.log("service payload", payload);
+                 console.log("service payload", payload);
                 yield put({ type: 'loadStart' })
 
-                // try {
-                //     const serviceRequest = yield RestClient.post(`${Config.DEFAULT_URL}/sr_request`, payload)
-                //
-                //     console.log("after sr", serviceRequest);
-                //
-                //     if (payload.callback) payload.callback(true,serviceRequest.data.res);
-                //
-                // }catch(error){
-                //     const parsedError = JSON.parse(JSON.stringify(error))
-                //     if (_.get(parsedError, 'response.data')) {
-                //         payload.callback(false, parsedError.response.data.message)
-                //     } else {
-                //         payload.callback(false, null)
-                //     }
-                // }
-                // yield put({ type: 'loadEnd' })
+                try {
+                    const serviceRequest = yield RestClient.post(`${Config.DEFAULT_URL}/sr_request`, payload)
+
+                    console.log("after sr", serviceRequest);
+
+                    if (payload.callback) payload.callback(true,serviceRequest.data.res);
+
+                }catch(error){
+                    const parsedError = JSON.parse(JSON.stringify(error))
+                    if (_.get(parsedError, 'response.data')) {
+                        payload.callback(false, parsedError.response.data.message)
+                    } else {
+                        payload.callback(false, null)
+                    }
+                }
+                yield put({ type: 'loadEnd' })
             },
             { type: 'takeLatest' },
         ],

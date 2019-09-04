@@ -21,7 +21,7 @@ import {
 
 import { StyleSheet,BackHandler} from 'react-native'
 const TermsOfService = (props) => {
-
+    console.log("modalprops",props);
     return (
         <Container style={styles.container}>
             <Header style={{textAlign:'center'}}>

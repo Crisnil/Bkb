@@ -28,7 +28,7 @@ class RemarksModal extends Component {
         };
     }
     render() {
-        console.log("details",this.props)
+
         return (
             <Modal
                 animationType="slide"
@@ -52,6 +52,7 @@ class RemarksModal extends Component {
                             <Text>Remarks:</Text>
                             <Textarea rowSpan={5} bordered placeholder="Describe you problem here"
                                       onChangeText={this.props.onChangeText}
+                                      value={(this.props.selectedRemarks =='Pickup')?this.props.pickupRemarks : this.props.destinationRemarks}
                             />
                             <View style={{marginTop:10}}>
                                 <Button full primary onPress={this.props.onClose}>

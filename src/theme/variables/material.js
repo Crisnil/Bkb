@@ -169,7 +169,7 @@ export default {
       .hex();
   },
 
-  // Icon
+  // SvgIcon
   iconFamily: "MaterialIcons",
   iconFontSize: 28,
   iconHeaderSize: 24,

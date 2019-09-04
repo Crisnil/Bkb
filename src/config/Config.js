@@ -6,6 +6,7 @@ const invalidHosts = ['http://undefined', 'http://null', 'https://undefined', 'h
 
 export const DEFAULT_URL = 'http://119.160.130.251/node/bkb_node_server'
 export const CALL_BKB = '2444442'
+export const GOOGLE_MAPS_APIKEY ='AIzaSyDAMt8MF8rgeK3FbWsq8MCWL0NHsDy6Oys'
 export const setTargetRoute = route => {
 	targetRoutePath = route
 }

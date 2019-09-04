@@ -70,31 +70,28 @@ export default  class Srlisting extends Component {
 
 
     renderItems =(item,x)=>{
+        console.log("item",item)
         return(
-            <ListItem icon key={x} onPress={this.onClickDetails(item)}>
+            <ListItem avatar key={x} onPress={this.onClickDetails(item)}>
                 <Left>
                     <Button style={{ backgroundColor: "#007AFF" }}>
                         <Icon active name="build" />
                     </Button>
                 </Left>
                 <Body>
-                    <Text>{item.item.srid}</Text>
+                    <Text>{item.item.problem}</Text>
+                    <Text note>{item.item.srid}</Text>
                 </Body>
                 <Right>
                     <Text>{item.item.servicerequeststatus.description}</Text>
-                    <Icon active name="update" />
-                    </Right>
+                </Right>
             </ListItem>
 
         )
     }
 
     reFreshing =()=>{
-        this.setState({ isFetching: true },()=>this.props.fetchSrHistory());
-        setTimeout(() => {
-            this.setState({ isFetching: false });
-            console.log("after refresh")
-        }, 500);
+       this.props.fetchSrHistory();
     }
 
     render() {
@@ -102,29 +99,12 @@ export default  class Srlisting extends Component {
         return (
             <Container style={styles.container}>
 
-                <Content padder>
-                    {/*{this.state.fetching ?*/}
-                        {/*<CustomActivityIndicator*/}
-                            {/*animating={true}*/}
-                            {/*text="Loggin in..."*/}
-                            {/*color="#D44638"*/}
-                        {/*/>*/}
-                        {/*: null*/}
-                    {/*}*/}
-
                     <LazyLoadList
                         data={srs}
                         renderItem={this.renderItems}
                         onRefresh={this.reFreshing}
-                        refreshing={this.state.isFetching}
-
+                        refreshing={this.props.service.loading}
                     />
-                        {/*<FlatList*/}
-                            {/*data={srs}*/}
-                            {/*keyExtractor={(item,x) => x.toString()}*/}
-                            {/*renderItem={this.renderItems}*/}
-                        {/*/>*/}
-
 
                     {this.state.modalVisible?
                         <SrDetailsView
@@ -134,7 +114,7 @@ export default  class Srlisting extends Component {
                         /> :
                         null
                     }
-                </Content>
+
             </Container>
         );
     }

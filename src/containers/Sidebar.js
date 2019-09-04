@@ -73,7 +73,7 @@ class SideBar extends Component {
               case 'CreateSr' :
                   navigation.navigate('CreateSr',{
                       problem: null,
-                      noSelection:false});
+                      tncAccepted:false});
              break;
               default:
                   navigation.navigate(item.route);
@@ -131,9 +131,15 @@ class SideBar extends Component {
               icon: "dashboard",
               bg: "#C5F442"
           },
+          // {
+          //     name: "Map",
+          //     route: "MapContainer",
+          //     icon: "dashboard",
+          //     bg: "#C5F442"
+          // },
           {
-              name: "Create SR",
-              route: "CreateSr",
+              name: "Service Request",
+              route: "ProblemCategory",
               icon: "build",
               bg: "#C5F442"
           },

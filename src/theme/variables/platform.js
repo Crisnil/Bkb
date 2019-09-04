@@ -169,7 +169,7 @@ export default {
       .hex();
   },
 
-  // Icon
+  // SvgIcon
   iconFamily: "Ionicons",
   iconFontSize: platform === "ios" ? 30 : 28,
   iconHeaderSize: platform === "ios" ? 33 : 24,
