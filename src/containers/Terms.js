@@ -35,7 +35,7 @@ class Terms extends Component {
     }
 
     render() {
-        console.log("props",this.props)
+
         return (
             <Container style={styles.container}>
                 <Header style={{textAlign:'center'}}>

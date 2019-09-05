@@ -18,7 +18,7 @@ export const get = (path, config = {}) =>
 	new Promise((resolve, reject) => {
 		getAuthorization()
 			.then(Token => {
-				console.log("tokem",Token);
+				//console.log("tokem",Token);
 				const payload = Object.assign(config, {
 					headers: {
 						'Content-Type': 'application/json;charset=UTF-8',

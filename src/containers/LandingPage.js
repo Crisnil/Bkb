@@ -25,6 +25,8 @@ import {dial} from "../utils/CallDialer";
 import * as Config from "../config/Config";
 
 
+
+
 const redlogo = require("../assets/bkblogo.png");
 const resizeMode = 'center';
 
@@ -34,6 +36,8 @@ const openSideMenu =(action)=>{
     }
 
 }
+
+
 
 @connect(({ auth,services }) => ({ auth,services }))
 export default class LandingPage extends Component {
@@ -52,8 +56,8 @@ export default class LandingPage extends Component {
             type: 'auth/checkAuth',
             payload:{}
         })
-    }
 
+    }
 
 
     onIconPress =(route)=>{

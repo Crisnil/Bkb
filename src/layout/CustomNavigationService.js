@@ -75,7 +75,7 @@ const reset = routeName => {
 		StackActions.reset({
 			index: 1,
 			actions: [
-				NavigationActions.navigate({ routeName: 'Home' }),
+				// NavigationActions.navigate({ routeName: 'Home' }),
 				NavigationActions.navigate({ routeName: routeName }),
 			],
 			key: null,

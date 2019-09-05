@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Dimensions, Image, Modal, TextInput, View} from "react-native";
+import {Dimensions, Image, Modal, TextInput, View,StyleSheet} from "react-native";
 import {
     Body,
     Button,
@@ -17,12 +17,15 @@ import {
     Textarea,
     List,
     ListItem,
+    Subtitle
 } from "native-base";
 import {CustomAlert} from "../layout";
 import {connect} from 'react-redux';
 import LazyLoadList from "../layout/LazyLoadList";
 import TermsOfService from "../components/Terms";
-
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {TouchableHighlight} from "../components/LandingComponents";
+import * as DeviceRatio from "../layout/DeviceRatio";
 
 @connect(({ auth,service }) => ({ auth,service }))
 class ProblemCategory extends Component {
@@ -54,7 +57,6 @@ class ProblemCategory extends Component {
 
     setModalVisible=(problem)=> {
         return()=> {
-            console.log("probs", problem);
             if (this.props.auth.isAuthenticated) {
                 const {dispatch} = this.props;
                 dispatch({
@@ -114,15 +116,14 @@ class ProblemCategory extends Component {
 
     renderItems =(item,x)=>{
         return(
-            <ListItem avatar key={x} onPress={this.setModalVisible(item)}>
+            <ListItem icon key={x} onPress={this.setModalVisible(item)}>
                 <Left>
-                    <Button style={{ backgroundColor: "#007AFF" }}>
-                        <Icon active name="build" />
+                    <Button style={{backgroundColor: '#fff'}}>
+                        <MaterialCommunityIcons style={{color:'#ED1727'}} active name={item.item.icon_name? item.item.icon_name : "wrench"} />
                     </Button>
                 </Left>
                 <Body>
-                <Text>{item.item.problemid}</Text>
-                <Text note>{item.item.description}</Text>
+                <Text>{item.item.description}</Text>
                 </Body>
                 <Right>
 
@@ -140,6 +141,7 @@ class ProblemCategory extends Component {
                         <Left/>
                         <Body>
                         <Title>Problem Listing</Title>
+                        <Subtitle>Please Choose</Subtitle>
                         </Body>
                         {/*<Right>*/}
                         {/*<MaterialCommunityIcons name="account-outline" style={{marginRight:10,color:'#fff',fontSize:27}}*/}
@@ -174,3 +176,23 @@ class ProblemCategory extends Component {
 }
 
 export default ProblemCategory;
+
+const styles = StyleSheet.create({
+    container: {
+        paddingTop: 60,
+        alignItems: 'center'
+    },
+    button: {
+        marginBottom: 20,
+        width: DeviceRatio.computeWidthRatio(100),
+        alignItems: 'center',
+        backgroundColor: '#fff'
+    },
+    buttonText: {
+        padding: 5,
+        color: '#000',
+        marginBottom: 10,
+        alignItems:'center',
+        alignContent:'center'
+    }
+});

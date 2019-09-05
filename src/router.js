@@ -25,6 +25,7 @@ import SplashScreen from 'react-native-splash-screen'
 import MapContainer from "./containers/MapContainer";
 import ProblemCategory from "./containers/problemCategory";
 
+
 export async function request_location_runtime_permission() {
 
     try {
@@ -105,15 +106,15 @@ const OnboardingNavigator = createSwitchNavigator(
 const AppNavigator = createStackNavigator(
     {
         Drawer: { screen: Drawer },
-        Home:{screen:LandingPage},
-        Dashboard:{screen:Dashboard},
-        Detail: { screen: Detail },
-        SrInformation:{screen: SrInformation},
-        CreateSr:{screen:CreateServiceRequest},
-        Login: {screen:Login},
-        Register: {screen:Registration},
-        MapContainer:{screen:MapContainer},
-        ProblemCategory:{screen:ProblemCategory}
+        // Home:{screen:LandingPage},
+        // Dashboard:{screen:Dashboard},
+        // Detail: { screen: Detail },
+        // SrInformation:{screen: SrInformation},
+        // CreateSr:{screen:CreateServiceRequest},
+        // Login: {screen:Login},
+        // Register: {screen:Registration},
+        // MapContainer:{screen:MapContainer},
+        // ProblemCategory:{screen:ProblemCategory}
 
     },
     {
@@ -158,7 +159,6 @@ function getActiveRouteName(navigationState) {
 export default class Router extends PureComponent {
 
     async componentDidMount() {
-
         await request_location_runtime_permission();
         SplashScreen.hide();
     }
@@ -176,6 +176,8 @@ export default class Router extends PureComponent {
         CustomNavigationService.back()()
         return true
     }
+
+
 
     render() {
         return (

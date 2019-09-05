@@ -80,9 +80,9 @@ class TestMap extends React.Component {
             )
             if (granted === PermissionsAndroid.RESULTS.GRANTED) {
                 this._getCurrentLocation()
-                console.log("Location permission granted")
+                //console.log("Location permission granted")
             } else {
-                console.log("Location permission denied")
+                //console.log("Location permission denied")
             }
         } catch (err) {
             console.warn(err)
@@ -92,7 +92,7 @@ class TestMap extends React.Component {
     _getCurrentLocation = () =>{
         navigator.geolocation.getCurrentPosition(
             (position) => {
-                console.log("pos",position);
+                //console.log("pos",position);
                 const region = {
                     latitude: position.coords.latitude,
                     longitude: position.coords.longitude,

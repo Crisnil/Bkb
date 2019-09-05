@@ -95,7 +95,7 @@ class Dashboard extends Component {
     }
 
     render() {
-    console.log("dashboardpage",this.props);
+   // console.log("dashboardpage",this.props);
         const{auth} =this.props;
         const{account}= auth;
     const {navigation} = this.props;

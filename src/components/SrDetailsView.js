@@ -62,7 +62,7 @@ class SrDetailsView extends Component {
     }
 
     render() {
-        console.log("details",this.props.itemDetails)
+       // console.log("details",this.props.itemDetails)
         const {item} = this.props.itemDetails
         return (
             <Modal

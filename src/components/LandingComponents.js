@@ -122,52 +122,15 @@ export default class LandingComponents extends Component {
                 case "Towing":
                     return "towing"
                     break;
+                case "Rapid Assistance":
+                    return "motorbike"
+                    break;
                 default:
-                    return  "build"
+                    return  "wrench"
             }
     }
 
     render() {
-
-        const staticServices = [
-            {
-                problemid:100,
-                description:"Flat Tire",
-                staticService: true ,
-                icon:"alert-circle"
-            },
-            {
-                problemid:101,
-                description:"Emergency Fuel",
-                staticService: true,
-                icon:"fuel"
-            },
-            {
-                problemid:102,
-                description:"Flat Battery",
-                staticService: true,
-                icon:"car-battery"
-            },
-            {
-                problemid:103,
-                description:"Towing",
-                staticService: true,
-                icon:"towing"
-            },
-            {
-                problemid:104,
-                description:"Key Finder",
-                staticService: true,
-                icon:"key-remove"
-            },
-            {
-                problemid:105,
-                description:"Alternative Transport",
-                staticService: true,
-                icon:"car-pickup"
-            },
-            ]
-
         const{srCategory}=this.props.service;
 
         const withTnc = _.filter(srCategory, 'withTnc');
@@ -176,7 +139,7 @@ export default class LandingComponents extends Component {
             return(
                 <TouchableHighlight key={item.problemid} onPress={()=>this.setModalVisible(true,item)}underlayColor="white">
                     <View style={styles.button}>
-                        <MaterialCommunityIcons style={{fontSize:60 , color:'#ED1727',padding: 10}} name={this.renderIco(item)}/>
+                        <MaterialCommunityIcons style={{fontSize:50 , color:'#ED1727',padding: 10}} name={item.icon_name? item.icon_name : "wrench"}/>
                         <Text style={styles.buttonText}>{item.description}</Text>
                     </View>
                 </TouchableHighlight>
@@ -195,11 +158,11 @@ export default class LandingComponents extends Component {
                                 text="Please Wait..."
                                 color="#D44638"
                             />
-                            : renderproblems
+                            : !_.isEmpty(renderproblems)? renderproblems : <Text>Cannot connect to server</Text>
                         }
                         {/*<TouchableHighlight underlayColor="white" onPress={()=>dial(`${Config.CALL_BKB}`,false)}>*/}
                             {/*<View style={styles.button}>*/}
-                                {/*<Icon style={{fontSize:60 , color:'#ED1727',padding: 10}} name="phone"/>*/}
+                                {/*<Icon style={{fontSize:60 , color:'#ED1727',padding: 10}} name="call"/>*/}
                                 {/*<Text style={styles.buttonText}>Special assistance</Text>*/}
                             {/*</View>*/}
                         {/*</TouchableHighlight>*/}
@@ -234,10 +197,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff'
     },
     buttonText: {
+        width: DeviceRatio.computeWidthRatio(300),
+        textAlign:'center',
         padding: 5,
         color: '#000',
-        marginBottom: 10,
-        alignItems:'center',
-        alignContent:'center'
+        marginBottom: 10
     }
 });

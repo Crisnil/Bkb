@@ -16,7 +16,7 @@ import {
     Form,
     Label,
     Input,
-    Item, View,CheckBox,ListItem
+    Item, View,CheckBox,ListItem,DatePicker
 } from "native-base";
 import {dial} from "../utils/CallDialer";
 import { connect } from 'react-redux'
@@ -40,9 +40,15 @@ class RegisterComponenets extends Component {
             phone_number: '',
             email:'',
             j_password:'',
+            plateno:'',
+            insuranceno:'',
+            expirydate:new Date()
         }
     }
 
+    setDate=(newDate)=> {
+        this.setState({ expirydate: newDate });
+    }
 
     handleVerify = () => {
 
@@ -57,8 +63,9 @@ class RegisterComponenets extends Component {
                 email:email,
                 password:j_password,
                 callback: (result, error) => {
+
                     if (!result) {
-                        alert(error);
+                        alert("Sorry,Cannot process your request at this moment");
                     }
                 }
             },
@@ -68,7 +75,7 @@ class RegisterComponenets extends Component {
     handleSubmit = () => {
 
         const { dispatch,navigation } = this.props
-        const { ic_number, phone_number,email,j_password } = this.state
+        const { ic_number, phone_number,email,j_password,plateno,expirydate,insuranceno } = this.state
 
         dispatch({
             type: 'auth/verify',
@@ -77,13 +84,15 @@ class RegisterComponenets extends Component {
                 phone_number:phone_number,
                 email:email,
                 password:j_password,
+                plateno:plateno,
+                insuranceno:insuranceno,
+                expirydate:expirydate,
                 callback: (result, error) => {
                     if (result) {
                         CustomAlert.success("Successful");
                         navigation.navigate("Login");
-
                     }else{
-                        alert(error)
+                        alert(error);
                     }
                 }
             },
@@ -105,7 +114,7 @@ class RegisterComponenets extends Component {
 
     render() {
         const { auth } = this.props
-        const { j_password, j_username,ic_number,phone_number,email } = this.state
+        const { j_password, j_username,ic_number,phone_number,email,plateno,insuranceno } = this.state
 
         return (
             <>
@@ -128,11 +137,11 @@ class RegisterComponenets extends Component {
                     : (
                         <View style={{flex:1}}>
                             <Form>
-                                <Item inlineLabel>
-
+                                <Item floatingLabel>
+                                    <Label>Enter IC Number</Label>
                                     <Input
-                                        placeholder={'Enter IC Number'}
-                                        autoCapitalize={'none'}
+                                        placeholder={'Eg 00-111XXX '}
+                                        autoCapitalize={'characters'}
                                         value={ic_number}
                                         onChangeText={text => this.setState({ ic_number: text })}
                                         // onSubmitEditing={() => this.password.ref.focus()}
@@ -140,22 +149,69 @@ class RegisterComponenets extends Component {
                                         returnKeyType={'next'}
                                     />
                                 </Item>
-                                <Item inlineLabel >
-
+                                <Item floatingLabel >
+                                    <Label>Phone</Label>
                                     <Input
                                            placeholder={'Phone Number'}
                                            autoCapitalize={'none'}
                                            value={phone_number}
                                            onChangeText={text => this.setState({ phone_number: text })}
                                            onSubmitEditing={this.handleVerify}
-                                           returnKeyType={'go'}
+                                           returnKeyType={'next'}
 
                                     />
 
                                 </Item>
 
-                                <Item inlineLabel >
+                                <Item floatingLabel >
+                                    <Label>Car Plate No</Label>
+                                    <Input
+                                        placeholder={'Car Plate No.'}
+                                        autoCapitalize={'characters'}
+                                        value={plateno}
+                                        onChangeText={text => this.setState({ plateno: text })}
+                                        // onSubmitEditing={this.handleVerify}
+                                        returnKeyType={'next'}
 
+                                    />
+
+                                </Item>
+
+                                <Item floatingLabel >
+                                    <Label>Insurance No</Label>
+                                    <Input
+                                        placeholder={'Insurance No.'}
+                                        autoCapitalize={'characters'}
+                                        value={insuranceno}
+                                        onChangeText={text => this.setState({ insuranceno: text })}
+                                        // onSubmitEditing={this.handleVerify}
+                                        returnKeyType={'next'}
+
+                                    />
+
+                                </Item>
+
+                                <Item floatingLabel>
+                                    <DatePicker
+                                        defaultDate={new Date()}
+                                        minimumDate={new Date(2019, 1, 1)}
+                                        maximumDate={new Date(2030, 12, 31)}
+                                        locale={"en"}
+                                        timeZoneOffsetInMinutes={undefined}
+                                        modalTransparent={false}
+                                        animationType={"fade"}
+                                        androidMode={"default"}
+                                        placeHolderText="Select Expiry date"
+                                        textStyle={{ color: "green" }}
+                                        placeHolderTextStyle={{ color: "#d3d3d3" }}
+                                        onDateChange={this.setDate}
+                                        disabled={false}
+                                    />
+
+                                </Item>
+
+                                <Item floatingLabel >
+                                    <Label>Email</Label>
                                     <Input
                                            placeholder={'Email Address'}
                                            autoCapitalize={'none'}
@@ -168,8 +224,8 @@ class RegisterComponenets extends Component {
 
                                 </Item>
 
-                                <Item inlineLabel last>
-
+                                <Item floatingLabel last>
+                                    <Label>Password</Label>
                                     <Input secureTextEntry
                                            placeholder={'Password'}
                                            autoCapitalize={'none'}
@@ -231,10 +287,15 @@ class RegisterComponenets extends Component {
                                 <Text>Submit</Text>
                             </Button>
                             <Button block info style={{ margin: 15, marginTop: 10 }}
-                                    onPress={() => this.setState({ic_number: '',
+                                    onPress={() => this.setState({
+                                        ic_number: '',
                                         phone_number: '',
                                         email:'',
-                                        password:'',})}
+                                        j_password:'',
+                                        plateno:'',
+                                        insuranceno:'',
+                                        expirydate:new Date()
+                                    })}
                             >
                                 <Text>Clear</Text>
                             </Button>

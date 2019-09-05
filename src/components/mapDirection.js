@@ -51,7 +51,7 @@ class MapDirection extends Component {
     }
 
     render() {
-        console.log("details",this.props)
+        //console.log("details",this.props)
         return (
             <Modal
                 animationType="slide"

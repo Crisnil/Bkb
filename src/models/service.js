@@ -72,7 +72,7 @@ export default {
                         `${Config.DEFAULT_URL}/service_request_problem/`,
                         {timeout:5000}
                     );
-
+                    //sconsole.log("category",responseproblem);
                     yield put({ type: 'srsReceived', payload:{srCategory:responseproblem.data}});
 
                 } catch (error) {

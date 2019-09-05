@@ -6,13 +6,13 @@ import MyMapView from '../components/map-view';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import {getLocation, getReverseGeocoding} from '../services/location-service';
 import _, {debounce} from 'lodash';
-import {ScrollView,Dimensions,Platform,Image, Picker, TouchableOpacity,  PermissionsAndroid,} from "react-native"
+import {ScrollView,Dimensions,Platform,Image, Picker, TouchableOpacity,  PermissionsAndroid,BackHandler} from "react-native"
 import {Container,Body, Button, Header, Icon, Left, Right, Title,Content,ActionSheet} from "native-base"
 import update from 'react-addons-update'
 import MapView from 'react-native-maps';
 import * as DeviceRatio from "../layout/DeviceRatio";
 import {connect} from 'react-redux';
-import {CustomAlert} from "../layout";
+import {CustomAlert, CustomNavigationService} from "../layout";
 import RemarksModal from "../components/RemarksModal";
 import {reset} from "../layout/CustomNavigationService";
 
@@ -34,10 +34,10 @@ class MapContainer extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            region: { latitude: 34.662496,
-                    longitude: 135.503177,
-                    latitudeDelta:latitudeDelta,
-                    longitudeDelta: longitudeDelta,
+            region: { latitude: 4.88955,
+                        longitude: 114.942,
+                        latitudeDelta:latitudeDelta,
+                        longitudeDelta: longitudeDelta,
                      },
             pickupAddress:'Pick up',
             destinationAddress:'Destination',
@@ -47,7 +47,7 @@ class MapContainer extends React.Component {
             selectedRemarks:null,
             pickupRemarks:'',
             destinationRemarks:'',
-            selected:"destination"
+            selected:"Destination"
         };
         this.onPanDrag = debounce(this.onPanDrag, 1000, {
             leading: true,
@@ -59,6 +59,20 @@ class MapContainer extends React.Component {
         this.requestLocationPermission();
     }
 
+    componentWillMount() {
+        BackHandler.addEventListener('hardwareBackPress', this.backHandle)
+    }
+
+    componentWillUnmount() {
+        BackHandler.removeEventListener('hardwareBackPress', this.backHandle)
+    }forceUpdate(callBack: () => void): void {
+    }
+
+    backHandle = () => {
+        // console.log(this.props);
+        CustomNavigationService.back()()
+        return true
+    }
     async requestLocationPermission() {
 
         try {
@@ -221,6 +235,7 @@ class MapContainer extends React.Component {
         const{dispatch,navigation} = this.props;
         let pickup = _.find(this.state.markers, { 'key': 'Pickup'})
         let dest = _.find(this.state.markers, { 'key': 'Destination'})
+        const {selected}=this.props.service;
        // reset('Drawer');
         dispatch({
             type: 'service/submitRequest',
@@ -229,19 +244,19 @@ class MapContainer extends React.Component {
                 pickuplat :pickup.coordinate.latitude,
                 pickup_location :this.state.pickupAddress,
                 pickupremarks :this.state.pickupRemarks,
-                destination_long: dest.coordinate.longitude,
-                destination_lat :dest.coordinate.latitude,
+                destination_long:!_.isEmpty(dest)? dest.coordinate.longitude : "",
+                destination_lat : !_.isEmpty(dest)? dest.coordinate.latitude : "",
                 destination_remarks:this.state.destinationRemarks,
                 destination:this.state.destinationAddress,
-                problem:this.state.problem ,
+                problem:selected.description ,
                 callback: (result, error) => {
                     if (result) {
                         this.setState({
                             markers:[],
                         },() =>{
-                            CustomAlert.success("Service Request","Your service request is being processed. Our Customer Service agent will contact you shortly. Thank you!");
-                            //console.log(this.props);
-                            reset('Drawer');
+                            CustomAlert.success("Your service request is being processed. Our Customer Service agent will contact you shortly. Thank you!");
+                            CustomNavigationService.back()()
+                            // reset('Drawer');
                         })
 
                     }
@@ -264,7 +279,7 @@ class MapContainer extends React.Component {
                 break;
             case 'submit' : this.onSubmit()
                 break;
-            case 'cancel' : reset('Drawer');
+            case 'cancel' :  ActionSheet.hide();
                 break;
         }
 
@@ -309,6 +324,7 @@ class MapContainer extends React.Component {
                         mapType={"hybrid"}
                         followsUserLocation={true}
                         showsMyLocationButton={true}
+                        showsUserLocation={true}
                         showsCompass={true}
                         moveOnMarkerPress={true}
                         onPanDrag={this.onPanDrag}
@@ -351,7 +367,7 @@ class MapContainer extends React.Component {
 
                 <View style={styles.bottomContainer}>
 
-                    <TouchableOpacity  style={{ height:38, width:38,backgroundColor:"#fff",alignContent:'center',alignItems:'center'}}>
+                    <TouchableOpacity  onPress={() => this.getInitialState() }style={{ height:38, width:38,backgroundColor:"#fff",alignContent:'center',alignItems:'center'}}>
                         <Icon name = "gps-fixed" style={{lineHeight:38,color: '#5d5d5d'}}/>
                     </TouchableOpacity >
                     <View style={{marginTop:10}}>
@@ -366,7 +382,6 @@ class MapContainer extends React.Component {
                                     {
                                         options: BUTTONS,
                                         cancelButtonIndex: CANCEL_INDEX,
-                                        destructiveButtonIndex: DESTRUCTIVE_INDEX,
                                         title: "Select Action"
                                     },
                                     buttonIndex => {

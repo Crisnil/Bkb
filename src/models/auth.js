@@ -27,7 +27,7 @@ export default {
     effects: {
         verify: [
             function*({ payload }, { put }) {
-
+                console.log("payload",payload);
                 yield put({ type: 'loadStart' });
 
                 try {
@@ -35,11 +35,17 @@ export default {
                         `${Config.DEFAULT_URL}/api/auth/verify_user/`,
                         {ic_number: payload.ic_number,phone_number:payload.phone_number}
                     )
-                        console.log("verify",responseVerify.data);
 
-                    payload.customerid = responseVerify.data.data[0].customerid
+                    console.log("verify",responseVerify.data);
 
-                     yield put({ type: 'verifySuccess', payload});
+                    if(responseVerify.data == "no_p_e"){
+                        yield put({ type: 'loadEnd' });
+                        payload.callback(false, "Sorry,Cannot process your request at this moment");
+
+                    }else {
+                        payload.customerid = responseVerify.data.data[0].customerid
+                        yield put({ type: 'verifySuccess', payload});
+                    }
 
                 } catch (error) {
 
@@ -81,13 +87,10 @@ export default {
                     yield put({ type: 'loadEnd' });
 
                     const parsedError = JSON.parse(JSON.stringify(error))
-
-                    console.log(parsedError)
-
-                    if (parsedError) {
-                        payload.callback(false, parsedError)
+                    if (_.get(parsedError, 'response.data')) {
+                        payload.callback(false, parsedError.response.data.message)
                     } else {
-                        payload.callback(false, null)
+                        payload.callback(false, "Sorry,Cannot process your request at this moment")
                     }
                 }
                 yield put({ type: 'loadEnd' });

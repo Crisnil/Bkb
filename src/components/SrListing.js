@@ -70,7 +70,6 @@ export default  class Srlisting extends Component {
 
 
     renderItems =(item,x)=>{
-        console.log("item",item)
         return(
             <ListItem avatar key={x} onPress={this.onClickDetails(item)}>
                 <Left>
