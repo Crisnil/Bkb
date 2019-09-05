@@ -38,14 +38,10 @@ export default {
 
                     console.log("verify",responseVerify.data);
 
-                    if(responseVerify.data == "no_p_e"){
-                        yield put({ type: 'loadEnd' });
-                        payload.callback(false, "Sorry,Cannot process your request at this moment");
+                    payload.customerid = !_.isEmpty(responseVerify.data.data[0])? responseVerify.data.data[0].customerid : "";
 
-                    }else {
-                        payload.customerid = responseVerify.data.data[0].customerid
-                        yield put({ type: 'verifySuccess', payload});
-                    }
+                    yield put({ type: 'verifySuccess', payload});
+
 
                 } catch (error) {
 
@@ -68,7 +64,7 @@ export default {
         ],
         verifySuccess: [
             function*({ payload }, { put }) {
-
+                console.log("regpayload",payload);
                 yield put({ type: 'loadStart' });
 
                 try {
@@ -83,12 +79,13 @@ export default {
                     payload.callback(true, null)
 
                 } catch (error) {
-
                     yield put({ type: 'loadEnd' });
-
                     const parsedError = JSON.parse(JSON.stringify(error))
+
+                    console.log("reg",parsedError);
+
                     if (_.get(parsedError, 'response.data')) {
-                        payload.callback(false, parsedError.response.data.message)
+                        payload.callback(false, parsedError.response.error.message)
                     } else {
                         payload.callback(false, "Sorry,Cannot process your request at this moment")
                     }

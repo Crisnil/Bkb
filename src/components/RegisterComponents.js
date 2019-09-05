@@ -26,6 +26,8 @@ import CustomInput from "../layout/CustomInput";
 import CustomButton from "../layout/CustomButton";
 import * as DeviceRatio from "../layout/DeviceRatio";
 import {CustomAlert} from "../layout";
+import moment from 'moment';
+import { dateTimeDisplayFmt,dateDisplayFmt } from '../utils/constants';
 
 
 @connect(({ auth }) => ({ auth }))
@@ -86,7 +88,7 @@ class RegisterComponenets extends Component {
                 password:j_password,
                 plateno:plateno,
                 insuranceno:insuranceno,
-                expirydate:expirydate,
+                expirydate:moment(expirydate).format(dateDisplayFmt).toString(),
                 callback: (result, error) => {
                     if (result) {
                         CustomAlert.success("Successful");
@@ -156,7 +158,7 @@ class RegisterComponenets extends Component {
                                            autoCapitalize={'none'}
                                            value={phone_number}
                                            onChangeText={text => this.setState({ phone_number: text })}
-                                           onSubmitEditing={this.handleVerify}
+                                           //onSubmitEditing={this.handleVerify}
                                            returnKeyType={'next'}
 
                                     />
@@ -227,7 +229,6 @@ class RegisterComponenets extends Component {
                                 <Item stackedLabel last>
                                     <Label>Password</Label>
                                     <Input secureTextEntry
-
                                            autoCapitalize={'none'}
                                            value={j_password}
                                            onChangeText={text => this.setState({ j_password: text })}
