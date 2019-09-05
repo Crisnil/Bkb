@@ -34,14 +34,6 @@ const back = () => () => {
 	const currentScreen = getCurrentScreen(navigator.state.nav)
 
 	switch (currentScreen) {
-		case 'Register':
-			break
-		case 'Dashboard':
-			reset('Drawer')
-			break
-		case 'CreateSr':
-			reset('Drawer')
-			break
 		case 'Home':
 			CustomAlert.alert(
 				`Warning!`,
@@ -73,9 +65,8 @@ const backAfterSave = () => () => {
 const reset = routeName => {
 	navigator.dispatch(
 		StackActions.reset({
-			index: 1,
+			index: 0,
 			actions: [
-				// NavigationActions.navigate({ routeName: 'Home' }),
 				NavigationActions.navigate({ routeName: routeName }),
 			],
 			key: null,
@@ -86,8 +77,8 @@ const reset = routeName => {
 const resetNavigate = routeName => {
 	navigator.dispatch(
 		StackActions.reset({
-			index: 1,
-			actions: [NavigationActions.navigate({ routeName: 'Home' })],
+			index:0,
+			actions: [NavigationActions.navigate({ routeName: 'Drawer' })],
 			key: null,
 		})
 	)

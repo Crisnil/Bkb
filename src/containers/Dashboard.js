@@ -105,7 +105,7 @@ class Dashboard extends Component {
                     <Left>
                         <Button
                             transparent
-                            onPress={this.backHandle}
+                            onPress={() => this.props.navigation.goBack()}
                         >
                             <Icon name="chevron-left" />
                         </Button>
@@ -141,24 +141,24 @@ class Dashboard extends Component {
                       <Srlisting {...this.props}
                                  fetchSrHistory={this.fetchSrHistory}
                       />
-              <View>
-                  <Fab
-                      active={this.state.active}
-                      direction="up"
-                      containerStyle={{}}
-                      style={{ backgroundColor: "#D44638" }}
-                      position="bottomRight"
-                      onPress={() => this.setState({ active: !this.state.active })}
-                  >
-                      <IconNB name="add" />
-                      <Button style={{ backgroundColor: "#34A34F" }} onPress={()=>dial(`${Config.CALL_BKB}`,false)}>
-                         <IconNB name="call" />
-                      </Button>
-                      <Button style={{ backgroundColor: "#3B5998" }} onPress={()=>navigation.navigate("ProblemCategory")}>
-                          <IconNB name="build" />
-                      </Button>
-                  </Fab>
-              </View>
+
+                  {/*<Fab*/}
+                      {/*active={this.state.active}*/}
+                      {/*direction="up"*/}
+                      {/*containerStyle={{}}*/}
+                      {/*style={{ backgroundColor: "#D44638" }}*/}
+                      {/*position="bottomRight"*/}
+                      {/*onPress={() => this.setState({ active: !this.state.active })}*/}
+                  {/*>*/}
+                      {/*<IconNB name="add" />*/}
+                      {/*<Button style={{ backgroundColor: "#34A34F" }} onPress={()=>dial(`${Config.CALL_BKB}`,false)}>*/}
+                         {/*<IconNB name="call" />*/}
+                      {/*</Button>*/}
+                      {/*<Button style={{ backgroundColor: "#3B5998" }} onPress={()=>navigation.navigate("ProblemCategory")}>*/}
+                          {/*<IconNB name="build" />*/}
+                      {/*</Button>*/}
+                  {/*</Fab>*/}
+
           </Container>
         );
     }

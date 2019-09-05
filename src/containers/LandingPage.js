@@ -63,7 +63,12 @@ export default class LandingPage extends Component {
     onIconPress =(route)=>{
         const {auth,navigation} = this.props;
         return()=>{
+            if (auth.isAuthenticated) {
             navigation.navigate(route)
+            }
+            else {
+                this.props.navigation.navigate('Login');
+            }
         }
     }
 
@@ -125,21 +130,21 @@ export default class LandingPage extends Component {
                     <Content>
                          <LandingComponents {...this.props}/>
                     </Content>
-                        <View>
-                            <Fab
-                                active={this.state.fabActive}
-                                direction="up"
-                                containerStyle={{}}
-                                style={{ backgroundColor: "#fff" }}
-                                position="bottomRight"
-                                onPress={() =>  this.setState({ fabActive: !this.state.fabActive })}
-                                >
-                                <Icon name="eject" style={{color:'#D44638'}}/>
-                                <Button style={{ backgroundColor: "#D44638" }} onPress={()=>dial(`${Config.CALL_BKB}`,false)}>
-                                <Icon name="call" />
-                                </Button>
-                            </Fab>
-                        </View>
+                        {/*<View>*/}
+                            {/*<Fab*/}
+                                {/*active={this.state.fabActive}*/}
+                                {/*direction="up"*/}
+                                {/*containerStyle={{}}*/}
+                                {/*style={{ backgroundColor: "#fff" }}*/}
+                                {/*position="bottomRight"*/}
+                                {/*onPress={() =>  this.setState({ fabActive: !this.state.fabActive })}*/}
+                                {/*>*/}
+                                {/*<Icon name="eject" style={{color:'#D44638'}}/>*/}
+                                {/*<Button style={{ backgroundColor: "#D44638" }} onPress={()=>dial(`${Config.CALL_BKB}`,false)}>*/}
+                                {/*<Icon name="call" />*/}
+                                {/*</Button>*/}
+                            {/*</Fab>*/}
+                        {/*</View>*/}
                 <Footer>
                     <FooterTab>
                         <Button vertical>

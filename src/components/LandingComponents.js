@@ -160,12 +160,12 @@ export default class LandingComponents extends Component {
                             />
                             : !_.isEmpty(renderproblems)? renderproblems : <Text>Cannot connect to server</Text>
                         }
-                        {/*<TouchableHighlight underlayColor="white" onPress={()=>dial(`${Config.CALL_BKB}`,false)}>*/}
-                            {/*<View style={styles.button}>*/}
-                                {/*<Icon style={{fontSize:60 , color:'#ED1727',padding: 10}} name="call"/>*/}
-                                {/*<Text style={styles.buttonText}>Special assistance</Text>*/}
-                            {/*</View>*/}
-                        {/*</TouchableHighlight>*/}
+                        <TouchableHighlight underlayColor="white" onPress={()=>dial(`${Config.CALL_BKB}`,false)}>
+                            <View style={styles.button}>
+                                <Icon style={{fontSize:60 , color:'#ED1727',padding: 10}} name="call"/>
+                                <Text style={styles.buttonText}>Call BKB</Text>
+                            </View>
+                        </TouchableHighlight>
                         {this.state.modalVisible?
                             <Modal
                                 animationType="slide"
