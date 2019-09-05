@@ -137,10 +137,10 @@ class RegisterComponenets extends Component {
                     : (
                         <View style={{flex:1}}>
                             <Form>
-                                <Item floatingLabel>
-                                    <Label>Enter IC Number</Label>
+                                <Item stackedLabel>
+                                    <Label>Enter IC Number: Eg 00-111XXX </Label>
                                     <Input
-                                        placeholder={'Eg 00-111XXX '}
+
                                         autoCapitalize={'characters'}
                                         value={ic_number}
                                         onChangeText={text => this.setState({ ic_number: text })}
@@ -149,10 +149,10 @@ class RegisterComponenets extends Component {
                                         returnKeyType={'next'}
                                     />
                                 </Item>
-                                <Item floatingLabel >
+                                <Item stackedLabel >
                                     <Label>Phone</Label>
                                     <Input
-                                           placeholder={'Phone Number'}
+
                                            autoCapitalize={'none'}
                                            value={phone_number}
                                            onChangeText={text => this.setState({ phone_number: text })}
@@ -163,10 +163,10 @@ class RegisterComponenets extends Component {
 
                                 </Item>
 
-                                <Item floatingLabel >
+                                <Item stackedLabel >
                                     <Label>Car Plate No</Label>
                                     <Input
-                                        placeholder={'Car Plate No.'}
+
                                         autoCapitalize={'characters'}
                                         value={plateno}
                                         onChangeText={text => this.setState({ plateno: text })}
@@ -177,10 +177,10 @@ class RegisterComponenets extends Component {
 
                                 </Item>
 
-                                <Item floatingLabel >
+                                <Item stackedLabel >
                                     <Label>Insurance No</Label>
                                     <Input
-                                        placeholder={'Insurance No.'}
+
                                         autoCapitalize={'characters'}
                                         value={insuranceno}
                                         onChangeText={text => this.setState({ insuranceno: text })}
@@ -191,7 +191,8 @@ class RegisterComponenets extends Component {
 
                                 </Item>
 
-                                <Item floatingLabel>
+                                <Item stackedLabel>
+                                    <Label>Expiry</Label>
                                     <DatePicker
                                         defaultDate={new Date()}
                                         minimumDate={new Date(2019, 1, 1)}
@@ -201,7 +202,6 @@ class RegisterComponenets extends Component {
                                         modalTransparent={false}
                                         animationType={"fade"}
                                         androidMode={"default"}
-                                        placeHolderText="Select Expiry date"
                                         textStyle={{ color: "green" }}
                                         placeHolderTextStyle={{ color: "#d3d3d3" }}
                                         onDateChange={this.setDate}
@@ -210,10 +210,10 @@ class RegisterComponenets extends Component {
 
                                 </Item>
 
-                                <Item floatingLabel >
+                                <Item stackedLabel >
                                     <Label>Email</Label>
                                     <Input
-                                           placeholder={'Email Address'}
+
                                            autoCapitalize={'none'}
                                            value={email}
                                            onChangeText={text => this.setState({ email: text })}
@@ -224,10 +224,10 @@ class RegisterComponenets extends Component {
 
                                 </Item>
 
-                                <Item floatingLabel last>
+                                <Item stackedLabel last>
                                     <Label>Password</Label>
                                     <Input secureTextEntry
-                                           placeholder={'Password'}
+
                                            autoCapitalize={'none'}
                                            value={j_password}
                                            onChangeText={text => this.setState({ j_password: text })}
