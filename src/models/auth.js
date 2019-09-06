@@ -82,7 +82,7 @@ export default {
                     yield put({ type: 'loadEnd' });
                     const parsedError = JSON.parse(JSON.stringify(error))
 
-                    console.log("reg",parsedError);
+                    console.log("errorreg",parsedError);
 
                     if (_.get(parsedError, 'response.data')) {
                         payload.callback(false, parsedError.response.error.message)
