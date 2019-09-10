@@ -247,6 +247,30 @@ export default {
             yield put({type: 'loadEnd'});
         },
             { type: 'takeLatest' },
+        ],
+        forgotPassword:[
+            function*({ payload }, { put }) {
+
+                console.log("payload",payload);
+
+                yield put({type: 'loadStart'});
+
+                try {
+
+                    const res = yield RestClient.post(`${Config.DEFAULT_URL}/api/auth/request_forgot_password`, payload)
+
+                    console.log("aftercheck",res);
+                    if (payload.callback) payload.callback(true)
+
+                } catch (error) {
+                    const parsedError = JSON.parse(JSON.stringify(error));
+
+                    if (payload.callback) payload.callback(parsedError)
+                }
+
+                yield put({type: 'loadEnd'});
+            },
+            { type: 'takeLatest' },
         ]
     },
 }

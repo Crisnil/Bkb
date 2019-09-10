@@ -97,14 +97,25 @@ class MapContainer extends React.Component {
     }
 
     async getInitialState() {
+        const{dispatch,navigation} = this.props;
+        dispatch({
+            type: 'service/onLoad',
+        })
         getLocation().then(data => {
+            console.log("data",this.props.service.loading)
             this.onMapPress(data,"Pickup");
             this.getNearestAddress(data,"pickupAddress");
             this.updateState({
                 latitude:data.latitude,
                 longitude : data.longitude
             });
+        },error =>{
+            console.log("error",error);
+            CustomAlert.alert("GPS Location Provider",error.message,null,null)
         });
+        dispatch({
+            type: 'service/onLoadSuccess',
+        })
     }
 
     getNearestAddress =(coord,label)=>{
@@ -236,33 +247,39 @@ class MapContainer extends React.Component {
         let pickup = _.find(this.state.markers, { 'key': 'Pickup'})
         let dest = _.find(this.state.markers, { 'key': 'Destination'})
         const {selected}=this.props.service;
-       // reset('Drawer');
-        dispatch({
-            type: 'service/submitRequest',
-            payload: {
-                pickuplong :pickup.coordinate.longitude,
-                pickuplat :pickup.coordinate.latitude,
-                pickup_location :this.state.pickupAddress,
-                pickupremarks :this.state.pickupRemarks,
-                destination_long:!_.isEmpty(dest)? dest.coordinate.longitude : "",
-                destination_lat : !_.isEmpty(dest)? dest.coordinate.latitude : "",
-                destination_remarks:this.state.destinationRemarks,
-                destination:this.state.destinationAddress,
-                problem:selected.description ,
-                callback: (result, error) => {
-                    if (result) {
-                        this.setState({
-                            markers:[],
-                        },() =>{
-                            CustomAlert.success("Your service request is being processed. Our Customer Service agent will contact you shortly. Thank you!");
-                            CustomNavigationService.back()()
-                            // reset('Drawer');
-                        })
+        if(!_.isEmpty(pickup)){
 
+            dispatch({
+                type: 'service/submitRequest',
+                payload: {
+                    pickuplong :!_.isEmpty(pickup)? pickup.coordinate.longitude : "",
+                    pickuplat :!_.isEmpty(pickup)? pickup.coordinate.latitude :"",
+                    pickup_location :this.state.pickupAddress,
+                    pickupremarks :this.state.pickupRemarks,
+                    destination_long:!_.isEmpty(dest)? dest.coordinate.longitude : "",
+                    destination_lat : !_.isEmpty(dest)? dest.coordinate.latitude : "",
+                    destination_remarks:this.state.destinationRemarks,
+                    destination:this.state.destinationAddress,
+                    problem:selected.description ,
+                    callback: (result, error) => {
+                        if (result) {
+                            this.setState({
+                                markers:[],
+                            },() =>{
+                                CustomAlert.success("Your service request is being processed. Our Customer Service agent will contact you shortly. Thank you!");
+                                reset('Drawer')
+                                // reset('Drawer');
+                            })
+
+                        }
                     }
-                }
-            },
-        })
+                },
+            })
+
+        }else{
+            CustomAlert.alert("Service Request","You forgot to set your Location",null,null)
+        }
+
     }
 
     onSelecActions =(selected)=>{
@@ -306,7 +323,7 @@ class MapContainer extends React.Component {
 
     render() {
         //console.log("markers",this.state.markers,"region",this.state.region);
-        const {selected}=this.props.service;
+        const {selected,loading}=this.props.service;
         const grabcar_premium =require ("../assets/icons/ic_grabcar_premium.png");
 
         return (
@@ -376,7 +393,7 @@ class MapContainer extends React.Component {
                         </Button>
                     </View>
                     <View style={{marginTop:10}}>
-                        <Button block
+                        <Button block disabled={loading}
                             onPress={() =>
                                 ActionSheet.show(
                                     {

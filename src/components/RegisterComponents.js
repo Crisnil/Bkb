@@ -166,7 +166,7 @@ class RegisterComponenets extends Component {
                                 </Item>
 
                                 <Item stackedLabel >
-                                    <Label>Car Plate No</Label>
+                                    <Label>Vehicle Registration No.</Label>
                                     <Input
 
                                         autoCapitalize={'characters'}
@@ -180,7 +180,7 @@ class RegisterComponenets extends Component {
                                 </Item>
 
                                 <Item stackedLabel >
-                                    <Label>Insurance No</Label>
+                                    <Label>Insurance Cert No.</Label>
                                     <Input
 
                                         autoCapitalize={'characters'}
@@ -194,7 +194,7 @@ class RegisterComponenets extends Component {
                                 </Item>
 
                                 <Item stackedLabel>
-                                    <Label>Expiry</Label>
+                                    <Label>Insurance Expiry Date</Label>
                                     <DatePicker
                                         defaultDate={new Date()}
                                         minimumDate={new Date(2019, 1, 1)}
