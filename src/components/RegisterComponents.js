@@ -39,6 +39,7 @@ class RegisterComponenets extends Component {
             fetching:false,
             activity:false,
             ic_number: '',
+            customername:'',
             phone_number: '',
             email:'',
             j_password:'',
@@ -77,12 +78,13 @@ class RegisterComponenets extends Component {
     handleSubmit = () => {
 
         const { dispatch,navigation } = this.props
-        const { ic_number, phone_number,email,j_password,plateno,expirydate,insuranceno } = this.state
+        const { ic_number, phone_number,email,j_password,plateno,expirydate,insuranceno,customername } = this.state
 
         dispatch({
             type: 'auth/verify',
             payload: {
                 ic_number: ic_number,
+                customername:customername,
                 phone_number:phone_number,
                 email:email,
                 password:j_password,
@@ -116,7 +118,7 @@ class RegisterComponenets extends Component {
 
     render() {
         const { auth } = this.props
-        const { j_password, j_username,ic_number,phone_number,email,plateno,insuranceno } = this.state
+        const { j_password, j_username,ic_number,phone_number,email,plateno,insuranceno,customername } = this.state
 
         return (
             <>
@@ -140,9 +142,9 @@ class RegisterComponenets extends Component {
                         <View style={{flex:1}}>
                             <Form>
                                 <Item stackedLabel>
-                                    <Label>Enter IC Number: Eg 00-111XXX </Label>
+                                    <Label>Enter IC Number</Label>
                                     <Input
-
+                                        placeholder={'Eg 00-111XXX'}
                                         autoCapitalize={'characters'}
                                         value={ic_number}
                                         onChangeText={text => this.setState({ ic_number: text })}
@@ -151,10 +153,22 @@ class RegisterComponenets extends Component {
                                         returnKeyType={'next'}
                                     />
                                 </Item>
+                                <Item stackedLabel>
+                                    <Label>Customer Name </Label>
+                                    <Input
+                                        placeholder={'JOHN DOE'}
+                                        autoCapitalize={'characters'}
+                                        value={customername}
+                                        onChangeText={text => this.setState({ customername: text })}
+                                        // onSubmitEditing={() => this.password.ref.focus()}
+                                        blurOnSubmit={false}
+                                        returnKeyType={'next'}
+                                    />
+                                </Item>
                                 <Item stackedLabel >
                                     <Label>Phone</Label>
                                     <Input
-
+                                          placeholder={'1234444'}
                                            autoCapitalize={'none'}
                                            value={phone_number}
                                            onChangeText={text => this.setState({ phone_number: text })}
@@ -166,9 +180,9 @@ class RegisterComponenets extends Component {
                                 </Item>
 
                                 <Item stackedLabel >
-                                    <Label>Vehicle Registration No.</Label>
+                                    <Label>Car Plate No.</Label>
                                     <Input
-
+                                        placeholder={'ABC123'}
                                         autoCapitalize={'characters'}
                                         value={plateno}
                                         onChangeText={text => this.setState({ plateno: text })}
@@ -182,7 +196,7 @@ class RegisterComponenets extends Component {
                                 <Item stackedLabel >
                                     <Label>Insurance Cert No.</Label>
                                     <Input
-
+                                        placeholder={'AB/01234567/XYZ'}
                                         autoCapitalize={'characters'}
                                         value={insuranceno}
                                         onChangeText={text => this.setState({ insuranceno: text })}
@@ -198,16 +212,17 @@ class RegisterComponenets extends Component {
                                     <DatePicker
                                         defaultDate={new Date()}
                                         minimumDate={new Date(2019, 1, 1)}
-                                        maximumDate={new Date(2030, 12, 31)}
+                                        maximumDate={new Date(2050, 12, 31)}
                                         locale={"en"}
                                         timeZoneOffsetInMinutes={undefined}
                                         modalTransparent={false}
                                         animationType={"fade"}
-                                        androidMode={"default"}
-                                        textStyle={{ color: "green" }}
+                                        androidMode={"calendar"}
+                                        textStyle={{ color: "#000" }}
                                         placeHolderTextStyle={{ color: "#d3d3d3" }}
                                         onDateChange={this.setDate}
                                         disabled={false}
+
                                     />
 
                                 </Item>
@@ -215,7 +230,7 @@ class RegisterComponenets extends Component {
                                 <Item stackedLabel >
                                     <Label>Email</Label>
                                     <Input
-
+                                        placeholder={'myemail@domain.com'}
                                            autoCapitalize={'none'}
                                            value={email}
                                            onChangeText={text => this.setState({ email: text })}
