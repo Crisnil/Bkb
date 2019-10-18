@@ -144,6 +144,12 @@ class SideBar extends Component {
               bg: "#C5F442"
           },
           {
+              name: "Notification",
+              route: "Notification",
+              icon: "build",
+              bg: "#C5F442"
+          },
+          {
               name: "Logout",
               route: "Login",
               icon: "eject",

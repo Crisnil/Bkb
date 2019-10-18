@@ -31,6 +31,8 @@ import { connect } from 'react-redux'
 import {CustomAlert, CustomNavigationService} from "../layout";
 import _ from 'lodash';
 import * as Config from "../config/Config";
+
+
 const pratik = require("../assets/images/male.png");
 
 
@@ -47,6 +49,7 @@ class Dashboard extends Component {
     componentDidMount () {
         this.fetchProblemCategory();
         this.fetchSrHistory();
+
     }
 
     componentWillMount() {
@@ -63,6 +66,7 @@ class Dashboard extends Component {
         CustomNavigationService.back()()
         return true
     }
+
 
     fetchProblemCategory =()=>{
         const {dispatch} = this.props;

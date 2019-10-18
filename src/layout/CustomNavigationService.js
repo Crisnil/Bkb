@@ -34,6 +34,8 @@ const back = () => () => {
 	const currentScreen = getCurrentScreen(navigator.state.nav)
 
 	switch (currentScreen) {
+		case  'MapContainer' : reset('Drawer')
+			break;
 		case 'Home':
 			CustomAlert.alert(
 				`Warning!`,
@@ -51,7 +53,7 @@ const back = () => () => {
 					},
 				]
 			)
-			break
+			break;
 
 		default:
 			navigator.dispatch(NavigationActions.back())

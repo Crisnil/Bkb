@@ -7,7 +7,7 @@ export const getLocation = () => {
         (resolve, reject) => {
             navigator.geolocation.getCurrentPosition(
                 (data) => resolve(data.coords),
-                (err) => reject(err),
+                (err) =>{reject(err)},
                 { enableHighAccuracy: true, timeout: 10000, maximumAge: 10000 }
             );
         }

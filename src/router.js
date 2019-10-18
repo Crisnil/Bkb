@@ -19,11 +19,13 @@ import Registration from "./containers/Registration";
 import SrInformation from "./containers/SrInformation";
 import Terms from "./containers/Terms";
 import Dashboard from "./containers/Dashboard";
-import CreateServiceRequest from "./containers/CreateServiceRequest";
+
 import LandingPage from "./containers/LandingPage";
 import SplashScreen from 'react-native-splash-screen'
 import MapContainer from "./containers/MapContainer";
 import ProblemCategory from "./containers/problemCategory";
+import TestNotification from "./containers/TestNotification";
+import BackgroundTimer from 'react-native-background-timer';
 
 
 export async function request_location_runtime_permission() {
@@ -66,11 +68,12 @@ const Drawer = createDrawerNavigator(
         Services:{screen: ServiceRequest},
         SrInformation:{screen: SrInformation},
         TermsAndPrivacy: { screen: Terms },
-        CreateSr:{screen:CreateServiceRequest},
+        // CreateSr:{screen:CreateServiceRequest},
         Login: {screen:Login},
         Register: {screen:Registration},
         MapContainer:{screen:MapContainer},
-        ProblemCategory:{screen:ProblemCategory}
+        ProblemCategory:{screen:ProblemCategory},
+        Notification:{screen:TestNotification}
     },
     {
         contentOptions: {
