@@ -1,4 +1,4 @@
-package com.roadsideassist;
+package com.roadsideassistv1;
 
 import android.app.Application;
 
@@ -15,6 +15,7 @@ import com.facebook.soloader.SoLoader;
 import java.util.Arrays;
 import java.util.List;
 
+
 public class MainApplication extends Application implements ReactApplication {
 
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
@@ -27,11 +28,11 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new SvgPackage(),
-            new SplashScreenReactPackage(),
-            new MapsPackage(),
-            new RNGestureHandlerPackage(),
-            new AsyncStoragePackage()
+              new SvgPackage(),
+              new SplashScreenReactPackage(),
+              new MapsPackage(),
+              new RNGestureHandlerPackage(),
+              new AsyncStoragePackage()
       );
     }
 
