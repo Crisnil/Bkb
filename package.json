@@ -16,7 +16,7 @@
     "immutability-helper": "^3.0.0",
     "install": "^0.13.0",
     "jetifier": "^1.6.4",
-    "lodash": "4.17.11",
+    "lodash": "4.17.19",
     "moment": "2.24.0",
     "native-base": "2.12.1",
     "prop-types": "^15.7.2",
