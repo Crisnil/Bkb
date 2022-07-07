@@ -17,7 +17,7 @@
     "install": "^0.13.0",
     "jetifier": "^1.6.4",
     "lodash": "4.17.11",
-    "moment": "2.24.0",
+    "moment": "2.29.4",
     "native-base": "2.12.1",
     "prop-types": "^15.7.2",
     "rc-form": "^2.4.5",
